@@ -19,7 +19,7 @@ terraform apply -auto-approve
 ```
 
 ## Enable AGIC addon to deploy new Application Gateway
-Here is an example:
+Here is an example:  
 https://peterdaugaardrasmussen.com/2021/12/04/terraform-how-to-set-up-azure-application-gateway-ingress-controller/
-Another example:
+Another example:  
 https://thomasthornton.cloud/2021/10/25/creating-azure-kubernetes-service-with-application-gateway-ingress-using-terraform-and-deploying-a-sample-app/
