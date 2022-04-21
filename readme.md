@@ -13,9 +13,19 @@ https://docs.microsoft.com/en-us/azure/developer/terraform/create-k8s-cluster-wi
 
 Deploy the resources:
 ```bash
+# login to Azure
+az login
+# deploy AKS & Application Gateway with Terraform
 terraform init
-terraform plan
-terraform apply -auto-approve
+terraform validate
+terraform plan -out prod.tfplan
+terraform apply prod.tfplan -auto-approve
+# connect to AKS cluster
+az aks get-credentials --name aks-cluster --resource-group rg-aks-appgw-<011>
+# deploy sample app into AKS
+kubectl apply -f aspnetapp.yaml
+# view ingress resource
+kubectl get ingress
 ```
 
 ## Enable AGIC addon to deploy new Application Gateway
