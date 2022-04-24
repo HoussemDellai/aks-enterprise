@@ -124,6 +124,8 @@ resource "azurerm_user_assigned_identity" "identity-aks" {
   name                = "identity-aks"
   resource_group_name = azurerm_resource_group.rg.name
   location            = var.resources_location
+
+  tags = var.tags
 }
 
 resource "azurerm_role_assignment" "aks_mi_network_contributor" {
@@ -192,8 +194,9 @@ resource "azurerm_kubernetes_cluster" "aks" {
   azure_policy_enabled      = true
   open_service_mesh_enabled = true
 
+  tags = var.tags
+
   depends_on = [azurerm_virtual_network.vnet, azurerm_application_gateway.appgw]
-  tags       = var.tags
 }
 
 # AppGW (generated with addon) Identity needs also Contributor role over AKS/VNET RG
@@ -214,19 +217,19 @@ data "azurerm_user_assigned_identity" "identity-appgw" {
 }
 
 resource "azurerm_kubernetes_cluster_node_pool" "appspool" {
-  name                         = "appspool"
-  kubernetes_cluster_id        = azurerm_kubernetes_cluster.aks.id
-  vm_size                      = "Standard_DS2_v2"
-  node_count                   = 1
-  availability_zones           = ["1", "2", "3"]
-  mode                         = "User"
-  orchestrator_version         = var.kubernetes_version
-  os_type                      = "Linux"
-  enable_host_encryption       = false
-  enable_node_public_ip        = false
-  max_pods                     = 110
-  os_disk_size_gb              = 60
-  os_disk_type                 = "Ephemeral" # "Managed"
+  name                   = "appspool"
+  kubernetes_cluster_id  = azurerm_kubernetes_cluster.aks.id
+  vm_size                = "Standard_DS2_v2"
+  node_count             = 1
+  availability_zones     = ["1", "2", "3"]
+  mode                   = "User"
+  orchestrator_version   = var.kubernetes_version
+  os_type                = "Linux"
+  enable_host_encryption = false
+  enable_node_public_ip  = false
+  max_pods               = 110
+  os_disk_size_gb        = 60
+  os_disk_type           = "Ephemeral" # "Managed"
   # node_taints                = "CriticalAddonsOnly=true:NoSchedule"
   # node_labels = 
 
@@ -239,7 +242,30 @@ resource "azurerm_kubernetes_cluster_node_pool" "appspool" {
     max_surge = 1
   }
 
-  tags = {
-    Environment = "Production"
-  }
+  tags = var.tags
+}
+
+resource "azurerm_container_registry" "acr" {
+  name                = var.acr_name
+  resource_group_name = azurerm_resource_group.rg.name
+  location            = var.resources_location
+  sku                 = "Standard"
+  admin_enabled       = false # true
+
+  tags = var.tags
+}
+
+data "azurerm_client_config" "current" {
+}
+
+data "azurerm_user_assigned_identity" "identity-agentpool" {
+  name                = "${azurerm_kubernetes_cluster.aks.name}-agentpool"
+  resource_group_name = azurerm_kubernetes_cluster.aks.node_resource_group
+}
+
+resource "azurerm_role_assignment" "role_acrpull" {
+  scope                            = azurerm_container_registry.acr.id
+  role_definition_name             = "AcrPull"
+  principal_id                     = data.azurerm_user_assigned_identity.identity-agentpool.principal_id
+  skip_service_principal_aad_check = true
 }

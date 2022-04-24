@@ -1,5 +1,5 @@
 variable "resource_group_name" {
-  default     = "rg-aks-appgw-07"
+  default     = "rg-aks-appgw"
   description = "Name of the resource group."
 }
 
@@ -57,10 +57,15 @@ variable "app_gateway_tier" {
   default     = "Standard_v2"
 }
 
+variable "acr_name" {
+  description = "Name of ACR container registry"
+}
+
 variable "aks_name" {
   description = "AKS cluster name"
   default     = "aks-cluster"
 }
+
 variable "aks_dns_prefix" {
   description = "Optional DNS prefix to use with hosted Kubernetes API server FQDN."
   default     = "aks"
@@ -121,5 +126,6 @@ variable "tags" {
 
   default = {
     source = "terraform"
+    environment : "development"
   }
 }
