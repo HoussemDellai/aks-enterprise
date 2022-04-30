@@ -36,6 +36,7 @@ data "azurerm_subnet" "kubesubnet" {
   name                 = var.aks_subnet_name
   virtual_network_name = azurerm_virtual_network.vnet.name
   resource_group_name  = azurerm_resource_group.rg.name
+
   depends_on           = [azurerm_virtual_network.vnet]
 }
 
@@ -43,6 +44,7 @@ data "azurerm_subnet" "appgwsubnet" {
   name                 = var.app_gateway_subnet_name
   virtual_network_name = azurerm_virtual_network.vnet.name
   resource_group_name  = azurerm_resource_group.rg.name
+  
   depends_on           = [azurerm_virtual_network.vnet]
 }
 
