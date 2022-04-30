@@ -1,6 +1,3 @@
-data "azurerm_resource_group" "rg" {
-  name     = var.resource_group_name
-}
 # resource "azurerm_resource_group" "rg" {
 #   name     = var.resource_group_name
 #   location = var.resources_location
@@ -8,33 +5,22 @@ data "azurerm_resource_group" "rg" {
 #   tags = var.tags
 # }
 
-# Locals block for hardcoded names for Application Gateway
-locals {
-  backend_address_pool_name      = "${azurerm_virtual_network.vnet.name}-beap"
-  frontend_port_name             = "${azurerm_virtual_network.vnet.name}-feport"
-  frontend_ip_configuration_name = "${azurerm_virtual_network.vnet.name}-feip"
-  http_setting_name              = "${azurerm_virtual_network.vnet.name}-be-htst"
-  listener_name                  = "${azurerm_virtual_network.vnet.name}-httplstn"
-  request_routing_rule_name      = "${azurerm_virtual_network.vnet.name}-rqrt"
+data "azurerm_resource_group" "rg" {
+  name     = var.resource_group_name
 }
 
-resource "azurerm_virtual_network" "vnet" {
+# resource "azurerm_virtual_network" "vnet" {
+#   name                = var.virtual_network_name
+#   location            = var.resources_location
+#   resource_group_name = var.resource_group_name
+#   address_space       = [var.virtual_network_address_prefix]
+
+#   tags = var.tags
+# }
+
+data "azurerm_virtual_network" "vnet" {
   name                = var.virtual_network_name
-  location            = var.resources_location
   resource_group_name = var.resource_group_name
-  address_space       = [var.virtual_network_address_prefix]
-
-  # subnet {
-  #   name           = var.aks_subnet_name
-  #   address_prefix = var.aks_subnet_address_prefix
-  # }
-
-  # subnet {
-  #   name           = var.app_gateway_subnet_name
-  #   address_prefix = var.app_gateway_subnet_address_prefix
-  # }
-
-  tags = var.tags
 }
 
 resource "azurerm_subnet" "subnetaks" {
@@ -51,22 +37,6 @@ resource "azurerm_subnet" "subnetappgw" {
   address_prefixes     = var.app_gateway_subnet_address_prefix
 }
 
-# data "azurerm_subnet" "subnetaks" {
-#   name                 = var.aks_subnet_name
-#   virtual_network_name = azurerm_virtual_network.vnet.name
-#   resource_group_name  = var.resource_group_name
-
-#   depends_on           = [azurerm_virtual_network.vnet]
-# }
-
-# data "azurerm_subnet" "subnetappgw" {
-#   name                 = var.app_gateway_subnet_name
-#   virtual_network_name = azurerm_virtual_network.vnet.name
-#   resource_group_name  = var.resource_group_name
-
-#   depends_on           = [azurerm_virtual_network.vnet]
-# }
-
 # Public Ip 
 resource "azurerm_public_ip" "pip" {
   name                = "publicIp-appgw"
@@ -76,6 +46,16 @@ resource "azurerm_public_ip" "pip" {
   sku                 = "Standard"
 
   tags = var.tags
+}
+
+# Locals block for hardcoded names for Application Gateway
+locals {
+  backend_address_pool_name      = "${var.virtual_network_name}-beap"
+  frontend_port_name             = "${var.virtual_network_name}-feport"
+  frontend_ip_configuration_name = "${var.virtual_network_name}-feip"
+  http_setting_name              = "${var.virtual_network_name}-be-htst"
+  listener_name                  = "${var.virtual_network_name}-httplstn"
+  request_routing_rule_name      = "${var.virtual_network_name}-rqrt"
 }
 
 resource "azurerm_application_gateway" "appgw" {
@@ -138,7 +118,7 @@ resource "azurerm_application_gateway" "appgw" {
 
   tags = var.tags
 
-  depends_on = [azurerm_virtual_network.vnet, azurerm_public_ip.pip]
+  depends_on = [azurerm_public_ip.pip]
 }
 
 resource "azurerm_user_assigned_identity" "identity-aks" {
@@ -150,7 +130,7 @@ resource "azurerm_user_assigned_identity" "identity-aks" {
 }
 
 resource "azurerm_role_assignment" "aks_mi_network_contributor" {
-  scope                            = azurerm_virtual_network.vnet.id
+  scope                            = data.azurerm_virtual_network.vnet.id
   role_definition_name             = "Network Contributor"
   principal_id                     = azurerm_user_assigned_identity.identity-aks.principal_id
   skip_service_principal_aad_check = true
@@ -217,7 +197,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
 
   tags = var.tags
 
-  depends_on = [azurerm_virtual_network.vnet, azurerm_application_gateway.appgw]
+  depends_on = [azurerm_application_gateway.appgw]
 }
 
 # AppGW (generated with addon) Identity needs also Contributor role over AKS/VNET RG
