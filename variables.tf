@@ -1,10 +1,10 @@
 variable "resource_group_name" {
-  default     = "rg-aks-appgw"
+  default     = "rg-aks-cluster"
   description = "Name of the resource group."
 }
 
 variable "node_resource_group" {
-  default = "rg-aks-appgw-07-managed"
+  default = "rg-aks-cluster-managed"
 }
 
 variable "resources_location" {
@@ -14,7 +14,7 @@ variable "resources_location" {
 
 variable "virtual_network_name" {
   description = "Virtual network name"
-  default     = "vnet-aks"
+  default     = "vnet-spoke-aks"
 }
 
 variable "virtual_network_address_prefix" {
@@ -34,12 +34,12 @@ variable "app_gateway_subnet_name" {
 
 variable "aks_subnet_address_prefix" {
   description = "Subnet address prefix."
-  default     = "10.240.0.0/16"
+  default     = ["10.240.0.0/16"]
 }
 
 variable "app_gateway_subnet_address_prefix" {
   description = "Subnet server IP address."
-  default     = "10.1.0.0/16"
+  default     = ["10.1.0.0/16"]
 }
 
 variable "app_gateway_name" {
@@ -88,7 +88,7 @@ variable "aks_agent_vm_size" {
 
 variable "kubernetes_version" {
   description = "Kubernetes version"
-  default     = "1.22.6"
+  default     = "1.23.5"
 }
 
 variable "aks_service_cidr" {
