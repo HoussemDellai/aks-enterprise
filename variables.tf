@@ -83,7 +83,7 @@ variable "aks_agent_count" {
 
 variable "aks_agent_vm_size" {
   description = "VM size"
-  default     = "Standard_D2s_v3"
+  default     = "Standard_D2as_v5"
 }
 
 variable "kubernetes_version" {
