@@ -21,7 +21,7 @@ terraform validate
 terraform plan -out prod.tfplan
 terraform apply prod.tfplan -auto-approve
 # connect to AKS cluster
-az aks get-credentials --name aks-cluster --resource-group rg-aks-appgw-<011>
+az aks get-credentials --name aks-cluster --resource-group rg-aks-cluster
 # deploy sample app into AKS
 kubectl apply -f aspnetapp.yaml
 # view ingress resource
