@@ -3,6 +3,11 @@ variable "resource_group_name" {
   description = "Name of the resource group."
 }
 
+variable "resource_group_name_vnet" {
+  default     = "rg-aks-network-spoke"
+  description = "Name of the resource group for existing VNET."
+}
+
 variable "node_resource_group" {
   default = "rg-aks-cluster-managed"
 }
