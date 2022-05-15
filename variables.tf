@@ -22,9 +22,14 @@ variable "virtual_network_address_prefix" {
   default     = "10.0.0.0/8"
 }
 
-variable "aks_subnet_name" {
+variable "subnet_nodes_name" {
   description = "Subnet Name."
-  default     = "subnet-aks"
+  default     = "subnet-aks-nodes"
+}
+
+variable "subnet_pods_name" {
+  description = "Subnet Name."
+  default     = "subnet-aks-pods"
 }
 
 variable "app_gateway_subnet_name" {
@@ -32,9 +37,14 @@ variable "app_gateway_subnet_name" {
   default     = "subnet-appgw"
 }
 
-variable "aks_subnet_address_prefix" {
+variable "subnet_nodes_address_prefix" {
   description = "Subnet address prefix."
   default     = ["10.240.0.0/16"]
+}
+
+variable "subnet_pods_address_prefix" {
+  description = "Subnet address prefix."
+  default     = ["10.241.0.0/16"]
 }
 
 variable "app_gateway_subnet_address_prefix" {
@@ -119,6 +129,15 @@ variable "vm_user_name" {
 variable "public_ssh_key_path" {
   description = "Public key path for SSH."
   default     = "~/.ssh/id_rsa.pub"
+}
+
+variable "keyvault_name" {
+  description = "Key Vault instance name"
+  default     = "kvforaks011"
+}
+
+variable "aks_admin_group_object_ids" {
+  description = "Azure AD admin group for AKS."
 }
 
 variable "tags" {
