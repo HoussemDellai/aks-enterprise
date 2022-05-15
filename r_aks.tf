@@ -68,7 +68,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
     vm_size                      = var.aks_agent_vm_size
     os_disk_size_gb              = var.aks_agent_os_disk_size
     only_critical_addons_enabled = true # taint default node pool with CriticalAddonsOnly=true:NoSchedule
-    zones                        = [1, 2, 3]
+    zones                        = [1,2,3]
     tags                         = var.tags
     vnet_subnet_id               = azurerm_subnet.subnetnodes.id
     pod_subnet_id                = azurerm_subnet.subnetpods.id
@@ -154,7 +154,7 @@ resource "azurerm_kubernetes_cluster_node_pool" "appspool" {
   kubernetes_cluster_id  = azurerm_kubernetes_cluster.aks.id
   vm_size                = "Standard_D2as_v5"
   node_count             = 1
-  zones                  = ["1", "2", "3"]
+  zones                  = [1,2,3]
   mode                   = "User"
   orchestrator_version   = var.kubernetes_version
   os_type                = "Linux"
@@ -169,12 +169,12 @@ resource "azurerm_kubernetes_cluster_node_pool" "appspool" {
   fips_enabled           = false
   vnet_subnet_id         = azurerm_subnet.subnetnodes.id
   pod_subnet_id          = azurerm_subnet.subnetpods.id
-  priority               = "Spot"
-  eviction_policy        = "Delete"
-  spot_max_price         = 0.5 # note: this is the "maximum" price
-  node_labels = {
-    "kubernetes.azure.com/scalesetpriority" = "spot"
-  }
+  # priority               = "Spot"
+  # eviction_policy        = "Delete"
+  # spot_max_price         = 0.5 # note: this is the "maximum" price
+  # node_labels = {
+  #   "kubernetes.azure.com/scalesetpriority" = "spot"
+  # }
   # node_taints = [
   #   "kubernetes.azure.com/scalesetpriority=spot:NoSchedule"
   # ]
