@@ -68,26 +68,29 @@ resource "azurerm_application_gateway" "appgw" {
     backend_http_settings_name = local.http_setting_name
     priority                   = 10000 # value from 1 to 20000
   }
-  tags       = var.tags
+  tags = var.tags
+
   depends_on = [azurerm_virtual_network.vnet, azurerm_public_ip.pip]
 }
 
-# generated managed identity for app gateway
-data "azurerm_user_assigned_identity" "identity-appgw" {
-  name                = "ingressapplicationgateway-${var.aks_name}" # convention name for AGIC Identity
-  resource_group_name = var.node_resource_group
-  depends_on          = [azurerm_kubernetes_cluster.aks]
-}
+# # generated managed identity for app gateway
+# data "azurerm_user_assigned_identity" "identity-appgw" {
+#   name                = "ingressapplicationgateway-${var.aks_name}" # convention name for AGIC Identity
+#   resource_group_name = var.node_resource_group
+
+#   depends_on          = [azurerm_kubernetes_cluster.aks]
+# }
 
 # AppGW (generated with addon) Identity needs also Contributor role over AKS/VNET RG
 resource "azurerm_role_assignment" "role-contributor" {
   scope                = azurerm_resource_group.rg.id
   role_definition_name = "Contributor"
-  principal_id         = data.azurerm_user_assigned_identity.identity-appgw.principal_id
+  principal_id         = azurerm_kubernetes_cluster.aks.ingress_application_gateway.0.ingress_application_gateway_identity.0.object_id
+  # principal_id       = data.azurerm_user_assigned_identity.identity-appgw.principal_id
 
-  depends_on = [
-    azurerm_kubernetes_cluster.aks,
-    azurerm_application_gateway.appgw
-  ]
+  # depends_on = [
+  #   azurerm_kubernetes_cluster.aks,
+  #   azurerm_application_gateway.appgw
+  # ]
 }
 
