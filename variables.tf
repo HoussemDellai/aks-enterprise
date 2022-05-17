@@ -1,3 +1,8 @@
+# variable "prefix" {
+#   type        = string
+#   description = "A prefix used for all resources in this example"
+# }
+
 variable "resource_group_name" {
   default     = "rg-aks-cluster"
   description = "Name of the resource group."
