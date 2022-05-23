@@ -49,10 +49,11 @@ resource "azurerm_kubernetes_cluster" "aks" {
   open_service_mesh_enabled           = true
   local_account_disabled              = true
   oidc_issuer_enabled                 = true
-  private_cluster_public_fqdn_enabled = true
+  private_cluster_public_fqdn_enabled = false
   public_network_access_enabled       = true
   api_server_authorized_ip_ranges     = ["0.0.0.0/0"]
   run_command_enabled                 = true
+  # outbound_type                       = "loadBalancer" # loadBalancer, userDefinedRouting, managedNATGateway, userAssignedNATGateway
   # automatic_channel_upgrade         = "patch" # none, patch, rapid, node-image, stable
 
   linux_profile {
@@ -86,8 +87,8 @@ resource "azurerm_kubernetes_cluster" "aks" {
   }
 
   network_profile {
-    network_plugin     = "azure"  # "kubenet" # 
-    network_policy     = "calico" # "azure" 
+    network_plugin     = var.aks_network_plugin # "kubenet", "azure" 
+    network_policy     = "calico"               # "azure" 
     dns_service_ip     = var.aks_dns_service_ip
     docker_bridge_cidr = var.aks_docker_bridge_cidr
     service_cidr       = var.aks_service_cidr

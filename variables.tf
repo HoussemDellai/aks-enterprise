@@ -150,6 +150,11 @@ variable "aks_admin_group_object_ids" {
   description = "Azure AD admin group for AKS."
 }
 
+variable "aks_network_plugin" {
+  type        = string
+  description = "AKS network Plugin (Azure CNI or Kubenet)"
+}
+
 variable "tags" {
   type = map(string)
 
