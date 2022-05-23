@@ -22,7 +22,12 @@ variable "resources_location" {
   description = "Location of the resource group."
 }
 
-variable "virtual_network_name" {
+variable "virtual_network_name_hub" {
+  description = "Virtual network name"
+  default     = "vnet-hub"
+}
+
+variable "virtual_network_name_spoke" {
   description = "Virtual network name"
   default     = "vnet-spoke-aks"
 }

@@ -8,7 +8,7 @@ resource "azurerm_resource_group" "rg" {
 # --------------------------------------------------------------------------------------------------------------------------
 
 resource "azurerm_virtual_network" "vnet-hub" {
-  name                = var.virtual_network_name
+  name                = var.virtual_network_name_hub
   location            = var.resources_location
   resource_group_name = azurerm_resource_group.rg.name
   address_space       = [var.virtual_network_address_prefix_hub]
@@ -28,7 +28,7 @@ resource "azurerm_subnet" "subnetappgw" {
 # --------------------------------------------------------------------------------------------------------------------------
 
 resource "azurerm_virtual_network" "vnet-spoke" {
-  name                = var.virtual_network_name
+  name                = var.virtual_network_name_spoke
   location            = var.resources_location
   resource_group_name = azurerm_resource_group.rg.name
   address_space       = [var.virtual_network_address_prefix_spoke]
@@ -60,3 +60,7 @@ resource "azurerm_subnet" "subnetpods" {
     }
   }
 }
+
+# --------------------------------------------------------------------------------------------------------------------------
+# VNET PEERING (HUB-SPOKE)
+# --------------------------------------------------------------------------------------------------------------------------
