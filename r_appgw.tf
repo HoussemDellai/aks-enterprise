@@ -1,12 +1,12 @@
 
 # Locals block for hardcoded names
 locals {
-  backend_address_pool_name      = "${var.virtual_network_name}-beap"
-  frontend_port_name             = "${var.virtual_network_name}-feport"
-  frontend_ip_configuration_name = "${var.virtual_network_name}-feip"
-  http_setting_name              = "${var.virtual_network_name}-be-htst"
-  listener_name                  = "${var.virtual_network_name}-httplstn"
-  request_routing_rule_name      = "${var.virtual_network_name}-rqrt"
+  backend_address_pool_name      = "${var.virtual_network_name_hub}-beap"
+  frontend_port_name             = "${var.virtual_network_name_hub}-feport"
+  frontend_ip_configuration_name = "${var.virtual_network_name_hub}-feip"
+  http_setting_name              = "${var.virtual_network_name_hub}-be-htst"
+  listener_name                  = "${var.virtual_network_name_hub}-httplstn"
+  request_routing_rule_name      = "${var.virtual_network_name_hub}-rqrt"
 }
 
 # Public Ip 
@@ -70,7 +70,7 @@ resource "azurerm_application_gateway" "appgw" {
   }
   tags = var.tags
 
-  depends_on = [azurerm_virtual_network.vnet, azurerm_public_ip.pip]
+  depends_on = [azurerm_virtual_network.vnet-hub, azurerm_public_ip.pip]
 }
 
 # # generated managed identity for app gateway

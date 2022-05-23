@@ -64,3 +64,17 @@ resource "azurerm_subnet" "subnetpods" {
 # --------------------------------------------------------------------------------------------------------------------------
 # VNET PEERING (HUB-SPOKE)
 # --------------------------------------------------------------------------------------------------------------------------
+
+resource "azurerm_virtual_network_peering" "peering-hub-spoke" {
+  name                      = "peering-hub-spoke"
+  resource_group_name       = azurerm_resource_group.rg.name
+  virtual_network_name      = azurerm_virtual_network.vnet-hub.name
+  remote_virtual_network_id = azurerm_virtual_network.vnet-spoke.id
+}
+
+resource "azurerm_virtual_network_peering" "peering-spoke-hub" {
+  name                      = "peering-spoke-hub"
+  resource_group_name       = azurerm_resource_group.rg.name
+  virtual_network_name      = azurerm_virtual_network.vnet-spoke.name
+  remote_virtual_network_id = azurerm_virtual_network.vnet-hub.id
+}
