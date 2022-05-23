@@ -49,7 +49,7 @@ variable "subnet_nodes_address_prefix" {
 
 variable "subnet_pods_address_prefix" {
   description = "Subnet address prefix."
-  default     = ["10.1.1.0/20"]
+  default     = ["10.1.1.0/24"]
 }
 
 variable "app_gateway_subnet_address_prefix" {
