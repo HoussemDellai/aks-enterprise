@@ -164,7 +164,7 @@ variable "tags" {
   type = map(string)
 
   default = {
-    source = "terraform"
-    environment : "development"
+    "source" = "terraform"
+    "environment" : "development"
   }
 }
