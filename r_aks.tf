@@ -49,10 +49,11 @@ resource "azurerm_kubernetes_cluster" "aks" {
   open_service_mesh_enabled           = true
   local_account_disabled              = true
   oidc_issuer_enabled                 = true
-  private_cluster_public_fqdn_enabled = true
+  private_cluster_public_fqdn_enabled = false
   public_network_access_enabled       = true
   api_server_authorized_ip_ranges     = ["0.0.0.0/0"]
   run_command_enabled                 = true
+  # outbound_type                       = "loadBalancer" # loadBalancer, userDefinedRouting, managedNATGateway, userAssignedNATGateway
   # automatic_channel_upgrade         = "patch" # none, patch, rapid, node-image, stable
 
   linux_profile {
@@ -71,7 +72,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
     zones                        = [1, 2, 3]
     tags                         = var.tags
     vnet_subnet_id               = azurerm_subnet.subnetnodes.id
-    pod_subnet_id                = azurerm_subnet.subnetpods.id
+    # pod_subnet_id                = azurerm_subnet.subnetpods.id
   }
 
   identity {
@@ -86,13 +87,13 @@ resource "azurerm_kubernetes_cluster" "aks" {
   }
 
   network_profile {
-    network_plugin     = "azure"  # "kubenet" # 
-    network_policy     = "calico" # "azure" 
+    network_plugin     = var.aks_network_plugin # "kubenet", "azure" 
+    network_policy     = "calico"               # "azure" 
     dns_service_ip     = var.aks_dns_service_ip
     docker_bridge_cidr = var.aks_docker_bridge_cidr
     service_cidr       = var.aks_service_cidr
     outbound_type      = "loadBalancer" # userDefinedRouting, managedNATGateway, userAssignedNATGateway
-    # pod_cidr         = var.aks_subnet_address_prefix # can only be set when network_plugin is set to kubenet
+    pod_cidr         = var.aks_subnet_address_prefix # can only be set when network_plugin is set to kubenet
   }
 
   azure_active_directory_role_based_access_control {
@@ -168,7 +169,7 @@ resource "azurerm_kubernetes_cluster_node_pool" "appspool" {
   max_count              = 2
   fips_enabled           = false
   vnet_subnet_id         = azurerm_subnet.subnetnodes.id
-  pod_subnet_id          = azurerm_subnet.subnetpods.id
+  # pod_subnet_id          = azurerm_subnet.subnetpods.id
   # priority               = "Spot"
   # eviction_policy        = "Delete"
   # spot_max_price         = 0.5 # note: this is the "maximum" price
