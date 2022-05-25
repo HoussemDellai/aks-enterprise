@@ -138,7 +138,10 @@ resource "azurerm_kubernetes_cluster" "aks" {
   ]
 
   lifecycle {
+    prevent_destroy       = true
+    create_before_destroy = true
     ignore_changes = [
+      # all, # ignore all attributes
       default_node_pool[0].node_count
     ]
   }

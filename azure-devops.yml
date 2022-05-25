@@ -1,0 +1,134 @@
+trigger: none
+# - main
+pr: none
+  # branches:
+  #   include:
+  #   - features/*
+  #   exclude:
+  #   - features/experimental/*
+  # paths:
+  #   exclude:
+  #   - README.md
+
+variables:
+  tf_version: 1.2.1
+
+stages:
+- stage: Terraform_init_plan
+
+  pool:
+    vmImage: ubuntu-latest
+
+  jobs:
+ 
+  - job: terraform_init_plan
+
+    steps:
+    
+    - task: TerraformInstaller@0
+      displayName: Install TF $(tf_version)
+      inputs:
+        terraformVersion: $(tf_version)
+
+    - task: TerraformTaskV2@2
+      displayName: $ terraform init
+      inputs:
+        provider: 'azurerm'
+        command: 'init'
+        workingDirectory: '$(System.DefaultWorkingDirectory)'
+        backendServiceArm: 'Microsoft-Azure-5(0cb12691-4f8e-4a66-abab-4481e2f0517e)'
+        backendAzureRmResourceGroupName: 'terraform-state-poc'
+        backendAzureRmStorageAccountName: 'terraformdemo01poc'
+        backendAzureRmContainerName: 'tfstate'
+        backendAzureRmKey: 'terraform.state'
+    
+    - task: TerraformTaskV2@2
+      displayName: $ terraform plan
+      inputs:
+        provider: 'azurerm'
+        command: 'plan'
+        workingDirectory: '$(System.DefaultWorkingDirectory)'
+        commandOptions: '-out tfplan'
+        environmentServiceNameAzureRM: 'Microsoft-Azure-5(0cb12691-4f8e-4a66-abab-4481e2f0517e)'
+    
+    - script: |
+          cd $(System.DefaultWorkingDirectory)
+          terraform show -json tfplan >> tfplan.json
+          # Format tfplan.json file
+          terraform show -json tfplan | jq '.' > tfplan.json
+          # show only the changes
+          cat tfplan.json | jq '[.resource_changes[] | {type: .type, name: .change.after.name, actions: .change.actions[]}]' 
+      displayName: Create tfplan.json
+
+    - task: PublishBuildArtifacts@1
+      displayName: Upload tfplan
+      inputs:
+        PathtoPublish: '$(System.DefaultWorkingDirectory)'
+        ArtifactName: 'drop'
+        publishLocation: 'Container'
+  
+  - job: waitForValidation
+    displayName: Wait for external validation 
+    dependsOn: terraform_init_plan
+    pool: server    
+    timeoutInMinutes: 4320 # job times out in 3 days
+    steps:   
+
+    - task: ManualValidation@0
+      inputs:
+        notifyUsers: 'houssem.dellai@live.com'
+        instructions: |
+          you should validate the Terraform Plan file
+          $(Build.BuildId)
+    
+- stage: Terraform_apply
+
+  pool:
+    vmImage: ubuntu-latest
+
+  jobs:
+ 
+  - job: terraform_apply
+
+    steps:
+    
+    - task: DownloadBuildArtifacts@0
+      displayName: Download tfplan
+      inputs:
+        buildType: 'current'
+        downloadType: 'specific'
+        itemPattern: 'drop/tfplan'
+        downloadPath: '$(System.ArtifactsDirectory)'
+ 
+    - task: CopyFiles@2
+      displayName: Copy tfplan
+      inputs:
+        SourceFolder: '$(System.ArtifactsDirectory)/drop'
+        Contents: 'tfplan'
+        TargetFolder: '$(System.DefaultWorkingDirectory)'
+ 
+    - task: TerraformInstaller@0
+      displayName: Install TF $(tf_version)
+      inputs:
+        terraformVersion: $(tf_version)
+
+    - task: TerraformTaskV2@2
+      displayName: $ terraform init
+      inputs:
+        provider: 'azurerm'
+        command: 'init'
+        workingDirectory: '$(System.DefaultWorkingDirectory)'
+        backendServiceArm: 'Microsoft-Azure-5(0cb12691-4f8e-4a66-abab-4481e2f0517e)'
+        backendAzureRmResourceGroupName: 'terraform-state-poc'
+        backendAzureRmStorageAccountName: 'terraformdemo01poc'
+        backendAzureRmContainerName: 'tfstate'
+        backendAzureRmKey: 'terraform.state'
+
+    - task: TerraformTaskV2@2
+      displayName: $ terraform apply
+      inputs:
+        provider: 'azurerm'
+        command: 'apply'
+        workingDirectory: '$(System.DefaultWorkingDirectory)'
+        commandOptions: 'tfplan'
+        environmentServiceNameAzureRM: 'Microsoft-Azure-5(0cb12691-4f8e-4a66-abab-4481e2f0517e)'
