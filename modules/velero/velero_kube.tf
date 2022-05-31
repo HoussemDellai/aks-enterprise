@@ -1,7 +1,5 @@
 
-data "azurerm_subscription" "current" {
-}
-
+data "azurerm_subscription" "current" {}
 
 resource "kubernetes_namespace" "velero" {
   metadata {
@@ -12,7 +10,6 @@ resource "kubernetes_namespace" "velero" {
   }
 }
 
-
 resource "kubernetes_secret" "velero" {
   metadata {
     name      = "cloud-credentials"
@@ -22,7 +19,6 @@ resource "kubernetes_secret" "velero" {
     cloud = local.velero_credentials
   }
 }
-
 
 resource "helm_release" "velero" {
   depends_on = [
@@ -42,5 +38,4 @@ resource "helm_release" "velero" {
       value = setting.value
     }
   }
-
 }
