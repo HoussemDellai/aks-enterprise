@@ -1,10 +1,10 @@
 # prefix = "demo041"
-resource_group_name               = "rg-aks-cluster"
-node_resource_group               = "rg-aks-cluster-managed"
+resource_group_name               = "rg-aks-cluster1"
+node_resource_group               = "rg-aks-cluster1-managed"
 resources_location                = "westeurope"
 aks_name                          = "aks-cluster"
 acr_name                          = "acrforakstf017"
-keyvault_name                     = "kvforaks059"
+keyvault_name                     = "kvforaks061"
 kubernetes_version                = "1.23.5"
 aks_network_plugin                = "azure"                                  # "azure", "kubenet"
 aks_admin_group_object_ids        = ["1eb16a7c-42cc-49e3-8ff0-d179433be6a6"] # HoussemDellaiGroup
