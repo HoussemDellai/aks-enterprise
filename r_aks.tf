@@ -26,14 +26,14 @@ resource "azurerm_role_assignment" "aks_mi_contributor_aks_rg" {
   skip_service_principal_aad_check = true
 }
 
-# resource "azurerm_role_assignment" "aks_mi_contributor_aks_nodes_rg" {
-#   scope                            = data.azurerm_resource_group.aks_nodes_rg.id # azurerm_kubernetes_cluster.aks.node_resource_group.id
-#   role_definition_name             = "Contributor"
-#   principal_id                     = azurerm_user_assigned_identity.identity-aks.principal_id
-#   skip_service_principal_aad_check = true
+resource "azurerm_role_assignment" "aks_mi_contributor_aks_nodes_rg" {
+  scope                            = data.azurerm_resource_group.aks_nodes_rg.id
+  role_definition_name             = "Contributor"
+  principal_id                     = azurerm_user_assigned_identity.identity-aks.principal_id
+  skip_service_principal_aad_check = true
 
-#   depends_on = [azurerm_kubernetes_cluster.aks]
-# }
+  depends_on = [azurerm_kubernetes_cluster.aks]
+}
 
 resource "azurerm_kubernetes_cluster" "aks" {
   name                                = var.aks_name
