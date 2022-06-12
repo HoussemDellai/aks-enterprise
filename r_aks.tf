@@ -56,12 +56,12 @@ resource "azurerm_kubernetes_cluster" "aks" {
   # outbound_type                       = "loadBalancer" # loadBalancer, userDefinedRouting, managedNATGateway, userAssignedNATGateway
   # automatic_channel_upgrade         = "patch" # none, patch, rapid, node-image, stable
 
-  linux_profile {
-    admin_username = var.vm_user_name
-    ssh_key {
-      key_data = file(var.public_ssh_key_path)
-    }
-  }
+  # linux_profile {
+  #   admin_username = var.vm_user_name
+  #   ssh_key {
+  #     key_data = file(var.public_ssh_key_path)
+  #   }
+  # }
 
   default_node_pool {
     name                         = "systempool"
@@ -99,7 +99,9 @@ resource "azurerm_kubernetes_cluster" "aks" {
   azure_active_directory_role_based_access_control {
     managed                = true
     azure_rbac_enabled     = true
-    admin_group_object_ids = var.aks_admin_group_object_ids
+    admin_group_object_ids = [azuread_group.aks_admins.object_id]
+    tenant_id              = data.azurerm_subscription.current.tenant_id
+    # admin_group_object_ids = var.aks_admin_group_object_ids
   }
 
   ingress_application_gateway {
@@ -138,7 +140,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
   ]
 
   lifecycle {
-    prevent_destroy       = true
+    # prevent_destroy       = true
     create_before_destroy = true
     ignore_changes = [
       # all, # ignore all attributes

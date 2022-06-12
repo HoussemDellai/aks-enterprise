@@ -146,13 +146,23 @@ variable "keyvault_name" {
   default     = "kvforaks011"
 }
 
-variable "aks_admin_group_object_ids" {
-  description = "Azure AD admin group for AKS."
-}
+# variable "aks_admin_group_object_ids" {
+#   description = "Azure AD admin group for AKS."
+# }
 
 variable "aks_network_plugin" {
   type        = string
   description = "AKS network Plugin (Azure CNI or Kubenet)"
+}
+
+variable "spn_name" {
+  type        = string
+  description = "Name of Service Principal"
+}
+
+variable "aad_group_aks_admins" {
+  type        = string
+  description = "Name of AAD group for AKS admins"
 }
 
 variable "tags" {
