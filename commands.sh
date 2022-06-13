@@ -7,6 +7,14 @@ curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
 sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
 sudo apt-get update && sudo apt-get install terraform
 
+# register Azure preview fetures
+az feature register --name EnableOIDCIssuerPreview --namespace Microsoft.ContainerService
+az feature list -o table --query "[?contains(name, 'Microsoft.ContainerService/EnableOIDCIssuerPreview')].{Name:name,State:properties.state}"
+# wait until feature is registered (about 10 minutes)
+# while (1) {az feature list -o table --query "[?contains(name, 'Microsoft.ContainerService/EnableOIDCIssuerPreview')].{Name:name,State:properties.state}"; sleep 5}
+
+az provider register --namespace Microsoft.ContainerService
+
 # install kubelogin CLI
 sudo az aks install-cli
 kubectl version --client
@@ -35,3 +43,4 @@ az aks get-credentials --resource-group rg-aks-cluster --name aks-cluster
 kubelogin convert-kubeconfig -l azurecli
 
 # push git changes
+git add . | git commit -m "configured aks aad app" | git push

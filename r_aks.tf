@@ -160,7 +160,7 @@ data "azurerm_resource_group" "aks_nodes_rg" {
 resource "azurerm_kubernetes_cluster_node_pool" "appspool" {
   name                   = "appspool"
   kubernetes_cluster_id  = azurerm_kubernetes_cluster.aks.id
-  vm_size                = "Standard_D2as_v5"
+  vm_size                = "Standard_D2ds_v5" # "Standard_D2as_v5" doesn't support Ephemeral disk
   node_count             = 1
   zones                  = [1, 2, 3]
   mode                   = "User"
@@ -170,7 +170,7 @@ resource "azurerm_kubernetes_cluster_node_pool" "appspool" {
   enable_node_public_ip  = false
   max_pods               = 110
   os_disk_size_gb        = 60
-  os_disk_type           = "Managed" # "Ephemeral" # 
+  os_disk_type           = "Ephemeral" # "Managed" # 
   enable_auto_scaling    = true
   min_count              = 1
   max_count              = 2

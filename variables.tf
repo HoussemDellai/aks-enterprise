@@ -103,7 +103,7 @@ variable "aks_agent_count" {
 
 variable "aks_agent_vm_size" {
   description = "VM size"
-  default     = "Standard_D2as_v5"
+  default     = "Standard_D2ds_v5"
 }
 
 variable "kubernetes_version" {
@@ -163,6 +163,21 @@ variable "spn_name" {
 variable "aad_group_aks_admins" {
   type        = string
   description = "Name of AAD group for AKS admins"
+}
+
+variable "storage_account_name_backup" {
+  type        = string
+  description = "Name of Storage Account for Backup"
+}
+
+variable "backups_rg_name" {
+  type        = string
+  description = "Name of Resource Group for AKS backups"
+}
+
+variable "backups_region" {
+  type        = string
+  description = "Region for AKS backups"
 }
 
 variable "tags" {
