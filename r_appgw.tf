@@ -1,4 +1,3 @@
-
 # Locals block for hardcoded names
 locals {
   backend_address_pool_name      = "${var.virtual_network_name}-beap"

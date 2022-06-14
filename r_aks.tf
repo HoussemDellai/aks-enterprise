@@ -66,8 +66,13 @@ resource "azurerm_kubernetes_cluster" "aks" {
   default_node_pool {
     name                         = "systempool"
     node_count                   = var.aks_agent_count
+    enable_auto_scaling          = true
+    min_count                    = 1
+    max_count                    = 3
+    max_pods                     = 110
     vm_size                      = var.aks_agent_vm_size
     os_disk_size_gb              = var.aks_agent_os_disk_size
+    os_disk_type                 = "Ephemeral"
     only_critical_addons_enabled = true # taint default node pool with CriticalAddonsOnly=true:NoSchedule
     zones                        = [1, 2, 3]
     tags                         = var.tags
@@ -173,7 +178,7 @@ resource "azurerm_kubernetes_cluster_node_pool" "appspool" {
   os_disk_type           = "Ephemeral" # "Managed" # 
   enable_auto_scaling    = true
   min_count              = 1
-  max_count              = 2
+  max_count              = 5
   fips_enabled           = false
   vnet_subnet_id         = azurerm_subnet.subnetnodes.id
   pod_subnet_id          = azurerm_subnet.subnetpods.id
@@ -188,12 +193,12 @@ resource "azurerm_kubernetes_cluster_node_pool" "appspool" {
   # ]
 
   upgrade_settings {
-    max_surge = 1
+    max_surge = 3
   }
 
   lifecycle {
     ignore_changes = [
-      vnet_subnet_id
+      node_count
     ]
   }
 
