@@ -30,7 +30,7 @@ EOF
     "schedules.daily.template.snapshotVolumes"                  = "true"
     "schedules.daily.template.ttl"                              = "240h"
     "serviceAccount.server.create"                              = "true"
-    "snapshotsEnabled"                                          = "true" # "false"
+    "snapshotsEnabled"                                          = "false" # "true" # 
     "initContainers[0].name"                                    = "velero-plugin-for-azure"
     "initContainers[0].image"                                   = "velero/velero-plugin-for-microsoft-azure:v1.4.1"
     "initContainers[0].volumeMounts[0].mountPath"               = "/target"
@@ -39,7 +39,7 @@ EOF
     # "initContainers[1].image"                                   = "velero/velero-plugin-for-csi:v0.1.1"
     # "initContainers[1].volumeMounts[0].mountPath"               = "/target"
     # "initContainers[1].volumeMounts[0].name"                    = "plugins"
-    "features"                                                  = "EnableCSI"
+    # "features"                                                  = "EnableCSI"
     "image.repository"                                          = "velero/velero"
     "image.tag"                                                 = "v1.8.1"
     "image.pullPolicy"                                          = "IfNotPresent"
@@ -47,10 +47,6 @@ EOF
     "tolerations[0].key" = "CriticalAddonsOnly"
     "restic.tolerations[0].operator" = "Exists"
     "restic.tolerations[0].key" = "CriticalAddonsOnly"
-      # tolerations:
-      #   - key: CriticalAddonsOnly
-      #     operator: Exists
-    # --set promtail.tolerations[0].operator=Exists,promtail.tolerations[0].effect=NoSchedule,promtail.tolerations[0].key=storage-node
   }
 
   velero_credentials = local.credentials

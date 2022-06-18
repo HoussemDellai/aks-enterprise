@@ -1,17 +1,14 @@
-
 data "azurerm_subscription" "current" {
 }
-
 
 resource "kubernetes_namespace" "velero" {
   metadata {
     name = var.velero_namespace
     labels = {
-      deployed-by = "Terraform"
+      deployed-by = "terraform"
     }
   }
 }
-
 
 resource "kubernetes_secret" "velero" {
   metadata {
@@ -23,11 +20,7 @@ resource "kubernetes_secret" "velero" {
   }
 }
 
-
 resource "helm_release" "velero" {
-  depends_on = [
-    kubernetes_secret.velero,
-    kubernetes_namespace.velero]
   name       = "velero"
   chart      = "velero"
   repository = var.velero_chart_repository
@@ -43,4 +36,7 @@ resource "helm_release" "velero" {
     }
   }
 
+  depends_on = [
+    kubernetes_secret.velero,
+    kubernetes_namespace.velero]
 }

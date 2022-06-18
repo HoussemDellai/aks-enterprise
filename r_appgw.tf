@@ -70,21 +70,21 @@ resource "azurerm_application_gateway" "appgw" {
 
   tags = var.tags
 
-  # lifecycle {
-  #   prevent_destroy       = true
-  #   create_before_destroy = true
+  lifecycle {
+    prevent_destroy       = true
+    create_before_destroy = true
 
-  #   ignore_changes = [
-  #     # all, # ignore all attributes
-  #     tags,
-  #     backend_address_pool,
-  #     backend_http_settings,
-  #     http_listener,
-  #     probe,
-  #     frontend_port,
-  #     request_routing_rule
-  #   ]
-  # }
+    ignore_changes = [
+      # all, # ignore all attributes
+      tags,
+      backend_address_pool,
+      backend_http_settings,
+      http_listener,
+      probe,
+      frontend_port,
+      request_routing_rule
+    ]
+  }
 
   depends_on = [azurerm_virtual_network.vnet, azurerm_public_ip.pip]
 }

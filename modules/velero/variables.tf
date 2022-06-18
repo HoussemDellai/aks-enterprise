@@ -65,7 +65,6 @@ variable "velero_chart_repository" {
   default     = "https://vmware-tanzu.github.io/helm-charts"
 }
 
-
 variable "velero_values" {
   description = <<EOVV
 Settings for Velero helm chart
@@ -124,17 +123,13 @@ variable "velero_chart_version" {
   default     = "2.29.3"
 }
 
-
-
 variable "backups_region" {
   description = "Azure region to use"
   type        = string
 }
-
 
 variable "environment" {
   description = "Project environment"
   type        = string
   default     = "DEV"
 }
-

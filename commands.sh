@@ -38,12 +38,16 @@ terraform show -json tfplan | jq '.' | jq -r '(.resource_changes[] | [.change.ac
 terraform apply tfplan
 
 # connect to AKS cluster
-az aks get-credentials --resource-group rg-aks-cluster --name aks-cluster
+az aks get-credentials --name aks-cluster --resource-group $(terraform output -raw resource_group_name) --overwrite-existing
 
 kubelogin convert-kubeconfig -l azurecli
 
+kubectl get nodes
 
+kubectl get all -n velero
 
+# deploy sample apps with PVCs
+kubectl apply -f applications_samples
 
 # create some data files (to test backups and restores):
 kubectl exec -it nginx-csi-disk-zrs -n csi-disk-zrs -- touch /mnt/azuredisk/some-data-file.txt
@@ -60,7 +64,7 @@ kubectl exec -it nginx-file-lrs -n file-lrs -- ls /mnt/azuredisk/some-data-file.
 kubectl exec -it nginxstatefulset-0 -n diskstatefulset -- ls /mnt/azuredisk/some-data-file.txt
 
 # Create a backup for primary AKS cluster: (https://velero.io/docs/v1.8/resource-filtering/)
-velero backup create manual-backup1  -w
+velero backup create manual-backup1 -w
 
 # Describe created backup:
 velero backup describe manual-backup1 --details

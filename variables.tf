@@ -165,6 +165,11 @@ variable "aad_group_aks_admins" {
   description = "Name of AAD group for AKS admins"
 }
 
+variable "enable_velero_backups" {
+  type        = bool
+  description = "Enable installing Velero and creating backups for AKS"
+}
+
 variable "storage_account_name_backup" {
   type        = string
   description = "Name of Storage Account for Backup"
@@ -218,6 +223,24 @@ map(object({
 EOVV
   type        = map(string)
   default     = {}
+}
+
+variable "harbor_admin_password" {
+  type        = string
+  description = "Password for Harbor"
+  default     = "@Aa123456789"
+}
+
+variable "grafana_admin_user" {
+  type        = string
+  description = "Admin user for Grafana"
+  default     = "grafana"
+}
+
+variable "grafana_admin_password" {
+  type        = string
+  description = "Password for Grafana"
+  default     = "@Aa123456789"
 }
 
 variable "tags" {

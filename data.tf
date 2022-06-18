@@ -13,3 +13,10 @@ data "azuread_client_config" "current" {}
 data "azurerm_kubernetes_service_versions" "current" {
   location = var.resources_location
 }
+
+# data "azurerm_kubernetes_cluster" "aks_cluster" {
+#   name                = var.aks_name
+#   resource_group_name = azurerm_resource_group.rg.name
+
+#   depends_on          = [azurerm_kubernetes_cluster.aks]
+# }
