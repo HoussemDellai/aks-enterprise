@@ -71,7 +71,7 @@ resource "azurerm_application_gateway" "appgw" {
   tags = var.tags
 
   lifecycle {
-    prevent_destroy       = true
+    # prevent_destroy       = true
     create_before_destroy = true
 
     ignore_changes = [
