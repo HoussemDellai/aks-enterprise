@@ -103,7 +103,7 @@ variable "aks_agent_count" {
 
 variable "aks_agent_vm_size" {
   description = "VM size"
-  default     = "Standard_D2as_v5"
+  default     = "Standard_D2ds_v5"
 }
 
 variable "kubernetes_version" {
@@ -146,13 +146,101 @@ variable "keyvault_name" {
   default     = "kvforaks011"
 }
 
-variable "aks_admin_group_object_ids" {
-  description = "Azure AD admin group for AKS."
-}
+# variable "aks_admin_group_object_ids" {
+#   description = "Azure AD admin group for AKS."
+# }
 
 variable "aks_network_plugin" {
   type        = string
   description = "AKS network Plugin (Azure CNI or Kubenet)"
+}
+
+variable "spn_name" {
+  type        = string
+  description = "Name of Service Principal"
+}
+
+variable "aad_group_aks_admins" {
+  type        = string
+  description = "Name of AAD group for AKS admins"
+}
+
+variable "enable_velero_backups" {
+  type        = bool
+  description = "Enable installing Velero and creating backups for AKS"
+}
+
+variable "storage_account_name_backup" {
+  type        = string
+  description = "Name of Storage Account for Backup"
+}
+
+variable "backups_rg_name" {
+  type        = string
+  description = "Name of Resource Group for AKS backups"
+}
+
+variable "backups_region" {
+  type        = string
+  description = "Region for AKS backups"
+}
+
+variable "velero_values" {
+  description = <<EOVV
+Settings for Velero helm chart:
+```
+map(object({
+  configuration.backupStorageLocation.bucket                = string 
+  configuration.backupStorageLocation.config.resourceGroup  = string 
+  configuration.backupStorageLocation.config.storageAccount = string 
+  configuration.backupStorageLocation.name                  = string 
+  configuration.provider                                    = string 
+  configuration.volumeSnapshotLocation.config.resourceGroup = string 
+  configuration.volumeSnapshotLocation.name                 = string 
+  credential.exstingSecret                                  = string 
+  credentials.useSecret                                     = string 
+  deployRestic                                              = string 
+  env.AZURE_CREDENTIALS_FILE                                = string 
+  metrics.enabled                                           = string 
+  rbac.create                                               = string 
+  schedules.daily.schedule                                  = string 
+  schedules.daily.template.includedNamespaces               = string 
+  schedules.daily.template.snapshotVolumes                  = string 
+  schedules.daily.template.ttl                              = string 
+  serviceAccount.server.create                              = string 
+  snapshotsEnabled                                          = string 
+  initContainers[0].name                                    = string 
+  initContainers[0].image                                   = string 
+  initContainers[0].volumeMounts[0].mountPath               = string 
+  initContainers[0].volumeMounts[0].name                    = string 
+  image.repository                                          = string 
+  image.tag                                                 = string 
+  image.pullPolicy                                          = string 
+  podAnnotations.aadpodidbinding                            = string
+  podLabels.aadpodidbinding                                 = string
+}))
+```
+EOVV
+  type        = map(string)
+  default     = {}
+}
+
+variable "harbor_admin_password" {
+  type        = string
+  description = "Password for Harbor"
+  default     = "@Aa123456789"
+}
+
+variable "grafana_admin_user" {
+  type        = string
+  description = "Admin user for Grafana"
+  default     = "grafana"
+}
+
+variable "grafana_admin_password" {
+  type        = string
+  description = "Password for Grafana"
+  default     = "@Aa123456789"
 }
 
 variable "tags" {

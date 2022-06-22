@@ -1,4 +1,3 @@
-
 # Locals block for hardcoded names
 locals {
   backend_address_pool_name      = "${var.virtual_network_name}-beap"
@@ -68,13 +67,13 @@ resource "azurerm_application_gateway" "appgw" {
     backend_http_settings_name = local.http_setting_name
     priority                   = 10000 # value from 1 to 20000
   }
-  
+
   tags = var.tags
 
   lifecycle {
-    prevent_destroy       = true
+    # prevent_destroy       = true
     create_before_destroy = true
-  
+
     ignore_changes = [
       # all, # ignore all attributes
       tags,

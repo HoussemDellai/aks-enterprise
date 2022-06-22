@@ -53,22 +53,26 @@ resource "azurerm_kubernetes_cluster" "aks" {
   public_network_access_enabled       = true
   api_server_authorized_ip_ranges     = ["0.0.0.0/0"]
   run_command_enabled                 = true
-  # outbound_type                       = "loadBalancer" # loadBalancer, userDefinedRouting, managedNATGateway, userAssignedNATGateway
-  # automatic_channel_upgrade         = "patch" # none, patch, rapid, node-image, stable
+  # automatic_channel_upgrade           = # none, patch, rapid, node-image, stable
 
-  linux_profile {
-    admin_username = var.vm_user_name
-    ssh_key {
-      key_data = file(var.public_ssh_key_path)
-    }
-  }
+  # linux_profile {
+  #   admin_username = var.vm_user_name
+  #   ssh_key {
+  #     key_data = file(var.public_ssh_key_path)
+  #   }
+  # }
 
   default_node_pool {
-    name                         = "systempool"
+    name                         = "poolsystem"
     node_count                   = var.aks_agent_count
+    enable_auto_scaling          = true
+    min_count                    = 1
+    max_count                    = 3
+    max_pods                     = 110
     vm_size                      = var.aks_agent_vm_size
     os_disk_size_gb              = var.aks_agent_os_disk_size
-    only_critical_addons_enabled = true # taint default node pool with CriticalAddonsOnly=true:NoSchedule
+    os_disk_type                 = "Ephemeral" # "Managed"
+    only_critical_addons_enabled = true        # taint default node pool with CriticalAddonsOnly=true:NoSchedule
     zones                        = [1, 2, 3]
     tags                         = var.tags
     vnet_subnet_id               = azurerm_subnet.subnetnodes.id
@@ -99,7 +103,9 @@ resource "azurerm_kubernetes_cluster" "aks" {
   azure_active_directory_role_based_access_control {
     managed                = true
     azure_rbac_enabled     = true
-    admin_group_object_ids = var.aks_admin_group_object_ids
+    admin_group_object_ids = [azuread_group.aks_admins.object_id]
+    tenant_id              = data.azurerm_subscription.current.tenant_id
+    # admin_group_object_ids = var.aks_admin_group_object_ids
   }
 
   ingress_application_gateway {
@@ -138,8 +144,8 @@ resource "azurerm_kubernetes_cluster" "aks" {
   ]
 
   lifecycle {
-    prevent_destroy       = true
-    create_before_destroy = true
+    # prevent_destroy       = true
+    # create_before_destroy = true
     ignore_changes = [
       # all, # ignore all attributes
       default_node_pool[0].node_count,
@@ -149,16 +155,16 @@ resource "azurerm_kubernetes_cluster" "aks" {
   }
 }
 
-data "azurerm_resource_group" "aks_nodes_rg" {
-  name = var.node_resource_group
+# data "azurerm_resource_group" "aks_nodes_rg" {
+#   name = azurerm_kubernetes_cluster.aks.node_resource_group # var.node_resource_group
 
-  depends_on = [azurerm_kubernetes_cluster.aks]
-}
+#   # depends_on = [azurerm_kubernetes_cluster.aks]
+# }
 
 resource "azurerm_kubernetes_cluster_node_pool" "appspool" {
-  name                   = "appspool"
+  name                   = "poolapps"
   kubernetes_cluster_id  = azurerm_kubernetes_cluster.aks.id
-  vm_size                = "Standard_D2as_v5"
+  vm_size                = "Standard_D2ds_v5" # "Standard_D2as_v5" doesn't support Ephemeral disk
   node_count             = 1
   zones                  = [1, 2, 3]
   mode                   = "User"
@@ -168,10 +174,10 @@ resource "azurerm_kubernetes_cluster_node_pool" "appspool" {
   enable_node_public_ip  = false
   max_pods               = 110
   os_disk_size_gb        = 60
-  os_disk_type           = "Managed" # "Ephemeral" # 
+  os_disk_type           = "Ephemeral" # "Managed" # 
   enable_auto_scaling    = true
   min_count              = 1
-  max_count              = 2
+  max_count              = 5
   fips_enabled           = false
   vnet_subnet_id         = azurerm_subnet.subnetnodes.id
   pod_subnet_id          = azurerm_subnet.subnetpods.id
@@ -186,14 +192,42 @@ resource "azurerm_kubernetes_cluster_node_pool" "appspool" {
   # ]
 
   upgrade_settings {
-    max_surge = 1
+    max_surge = 3
   }
 
   lifecycle {
+    # create_before_destroy = true
     ignore_changes = [
-      vnet_subnet_id
+      node_count,
+      node_taints
     ]
   }
 
   tags = var.tags
 }
+
+# resource "azurerm_kubernetes_cluster_node_pool" "poolspot" {
+#   kubernetes_cluster_id  = azurerm_kubernetes_cluster.aks.id
+#   name                   = "poolspot"
+#   mode                   = "User"
+#   priority               = "Spot"
+#   eviction_policy        = "Delete"
+#   spot_max_price         = -1 # note: this is the "maximum" price
+#   os_type                = "Linux"
+#   vm_size                = "Standard_DS2_v2" # "Standard_D2ds_v5"
+#   os_disk_type           = "Ephemeral" # https://docs.microsoft.com/en-us/azure/virtual-machines/ephemeral-os-disks#size-requirements
+#   node_count             = 0
+#   enable_auto_scaling    = true
+#   max_count              = 3
+#   min_count              = 0
+#   fips_enabled           = false
+#   vnet_subnet_id         = azurerm_subnet.subnetnodes.id
+#   pod_subnet_id          = azurerm_subnet.subnetpods.id
+#   enable_host_encryption = false
+#   enable_node_public_ip  = false
+#   max_pods               = 110
+#   os_disk_size_gb        = 60
+#   zones                  = [1, 2, 3]
+#   # node_taints            = ["kubernetes.azure.com/scalesetpriority=spot:NoSchedule"]
+#   tags                   = var.tags
+# }
