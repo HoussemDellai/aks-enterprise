@@ -73,3 +73,24 @@ velero backup describe manual-backup1 --details
 
 # push git changes
 git add . | git commit -m "configured aks aad app" | git push
+
+# cleanup resources using terraform
+terraform destroy
+
+# cleanup resources using Azure CLI
+# delete AKS admin group
+$groups = (az ad group list --query "[?displayName=='group_aks_admins']" | ConvertFrom-Json)
+ForEach($group in $groups)
+{
+    echo "Deleting $($group.displayName) ..."
+    az ad group delete --group $group.id
+}
+
+# delete SPNs
+
+# delete resources groups
+ForEach($rg_name in $(az group list --query [*].name -o tsv))
+{
+    echo "Deleting $rg_name ..."
+    az group delete -n $rg_name --yes --no-wait
+}
