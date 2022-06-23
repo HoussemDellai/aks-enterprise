@@ -3,8 +3,6 @@ resource "kubernetes_namespace" "keda" {
   metadata {
     name = "keda"
   }
-
-  depends_on = [azurerm_kubernetes_cluster.aks]
 }
 
 # https://github.com/kedacore/charts

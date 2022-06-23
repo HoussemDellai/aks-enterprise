@@ -3,8 +3,6 @@ resource "kubernetes_namespace" "nginx_ingress" {
   metadata {
     name = "ingress"
   }
-
-  depends_on = [azurerm_kubernetes_cluster.aks]
 }
 
 # https://github.com/kubernetes/ingress-nginx/tree/main/charts/ingress-nginx

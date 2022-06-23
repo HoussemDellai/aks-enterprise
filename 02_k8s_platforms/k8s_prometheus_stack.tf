@@ -3,8 +3,6 @@ resource "kubernetes_namespace" "prometheus_stack" {
   metadata {
     name = "monitoring"
   }
-
-  depends_on = [azurerm_kubernetes_cluster.aks]
 }
 
 # https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack

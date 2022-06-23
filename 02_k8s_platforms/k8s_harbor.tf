@@ -3,8 +3,6 @@ resource "kubernetes_namespace" "harbor" {
   metadata {
     name = "harbor"
   }
-
-  depends_on = [azurerm_kubernetes_cluster.aks]
 }
 
 # https://github.com/goharbor/harbor-helm

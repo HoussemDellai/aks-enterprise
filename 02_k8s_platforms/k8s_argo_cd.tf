@@ -3,8 +3,6 @@ resource "kubernetes_namespace" "argo_cd" {
   metadata {
     name = "gitops"
   }
-
-  depends_on = [azurerm_kubernetes_cluster.aks]
 }
 
 resource "helm_release" "argo_cd" {

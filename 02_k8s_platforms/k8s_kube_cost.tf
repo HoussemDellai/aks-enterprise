@@ -2,10 +2,8 @@
 resource "kubernetes_namespace" "kubecost" {
   provider = kubernetes.aks-module
   metadata {
-    name = "kubecost"
+    name = "finops"
   }
-
-  depends_on = [azurerm_kubernetes_cluster.aks]
 }
 
 # Install kubecost using the hem chart
@@ -50,13 +48,13 @@ resource "helm_release" "kubecost" {
   # Azure Client ID
   set {
     name  = "kubecostProductConfigs.azureClientID"
-    value = azuread_application.kubecost.application_id
+    value = azuread_application.app_kubecost.application_id
   }
 
   # Azure Client Password
   set {
     name  = "kubecostProductConfigs.azureClientPassword"
-    value = azuread_service_principal_password.kubecost.value
+    value = azuread_service_principal_password.password_spn_kubecost.value
   }
 
   # Azure Tenant ID
@@ -68,6 +66,4 @@ resource "helm_release" "kubecost" {
     name  = "global.prometheus.enabled"
     value = "true"
   }
-
-  depends_on = [azurerm_kubernetes_cluster.aks]
 }

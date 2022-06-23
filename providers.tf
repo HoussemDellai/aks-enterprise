@@ -1,6 +1,6 @@
 terraform {
 
-  required_version = ">= 1.2.2"
+  required_version = ">= 1.2.3"
 
   required_providers {
 
@@ -40,62 +40,62 @@ provider "azurerm" {
   }
 }
 
-provider "kubernetes" {
-  alias                  = "aks-module"
-  host                   = azurerm_kubernetes_cluster.aks.kube_config.0.host
-  cluster_ca_certificate = base64decode(azurerm_kubernetes_cluster.aks.kube_config.0.cluster_ca_certificate)
-  # config_path = "~/.kube/config"
+# provider "kubernetes" {
+#   alias                  = "aks-module"
+#   host                   = azurerm_kubernetes_cluster.aks.kube_config.0.host
+#   cluster_ca_certificate = base64decode(azurerm_kubernetes_cluster.aks.kube_config.0.cluster_ca_certificate)
+#   # config_path = "~/.kube/config"
 
-  # using kubelogin to get an AAD token for the cluster.
-  exec {
-    api_version = "client.authentication.k8s.io/v1beta1"
-    command     = "kubelogin"
-    args = [
-      "get-token",
-      "--environment",
-      "AzurePublicCloud",
-      "--server-id",
-      data.azuread_service_principal.aks_aad_server.application_id, # Note: The AAD server app ID of AKS Managed AAD is always 6dae42f8-4368-4678-94ff-3960e28e3630 in any environments.
-      "--client-id",
-      azuread_service_principal.spn_velero.application_id, # SPN App Id created via terraform
-      "--client-secret",
-      azuread_service_principal_password.password_spn_velero.value,
-      "--tenant-id",
-      data.azurerm_subscription.current.tenant_id, # AAD Tenant Id
-      "--login",
-      "spn"
-    ]
-  }
-}
+#   # using kubelogin to get an AAD token for the cluster.
+#   exec {
+#     api_version = "client.authentication.k8s.io/v1beta1"
+#     command     = "kubelogin"
+#     args = [
+#       "get-token",
+#       "--environment",
+#       "AzurePublicCloud",
+#       "--server-id",
+#       data.azuread_service_principal.aks_aad_server.application_id, # Note: The AAD server app ID of AKS Managed AAD is always 6dae42f8-4368-4678-94ff-3960e28e3630 in any environments.
+#       "--client-id",
+#       azuread_service_principal.spn_velero.application_id, # SPN App Id created via terraform
+#       "--client-secret",
+#       azuread_service_principal_password.password_spn_velero.value,
+#       "--tenant-id",
+#       data.azurerm_subscription.current.tenant_id, # AAD Tenant Id
+#       "--login",
+#       "spn"
+#     ]
+#   }
+# }
 
-provider "helm" {
-  alias = "aks-module"
-  kubernetes {
-    # host                   = data.azurerm_kubernetes_cluster.aks_cluster.kube_config.0.host
-    # cluster_ca_certificate = base64decode(data.azurerm_kubernetes_cluster.aks_cluster.kube_config.0.cluster_ca_certificate)
-    host                   = azurerm_kubernetes_cluster.aks.kube_config.0.host
-    cluster_ca_certificate = base64decode(azurerm_kubernetes_cluster.aks.kube_config.0.cluster_ca_certificate)
-    # config_path = "~/.kube/config"
+# provider "helm" {
+#   alias = "aks-module"
+#   kubernetes {
+#     # host                   = data.azurerm_kubernetes_cluster.aks_cluster.kube_config.0.host
+#     # cluster_ca_certificate = base64decode(data.azurerm_kubernetes_cluster.aks_cluster.kube_config.0.cluster_ca_certificate)
+#     host                   = azurerm_kubernetes_cluster.aks.kube_config.0.host
+#     cluster_ca_certificate = base64decode(azurerm_kubernetes_cluster.aks.kube_config.0.cluster_ca_certificate)
+#     # config_path = "~/.kube/config"
 
-    # using kubelogin to get an AAD token for the cluster.
-    exec {
-      api_version = "client.authentication.k8s.io/v1beta1"
-      command     = "kubelogin"
-      args = [
-        "get-token",
-        "--environment",
-        "AzurePublicCloud",
-        "--server-id",
-        data.azuread_service_principal.aks_aad_server.application_id, # Note: The AAD server app ID of AKS Managed AAD is always 6dae42f8-4368-4678-94ff-3960e28e3630 in any environments.
-        "--client-id",
-        azuread_service_principal.spn_velero.application_id, # SPN App Id created via terraform
-        "--client-secret",
-        azuread_service_principal_password.password_spn_velero.value,
-        "--tenant-id",
-        data.azurerm_subscription.current.tenant_id, # AAD Tenant Id
-        "--login",
-        "spn"
-      ]
-    }
-  }
-}
+#     # using kubelogin to get an AAD token for the cluster.
+#     exec {
+#       api_version = "client.authentication.k8s.io/v1beta1"
+#       command     = "kubelogin"
+#       args = [
+#         "get-token",
+#         "--environment",
+#         "AzurePublicCloud",
+#         "--server-id",
+#         data.azuread_service_principal.aks_aad_server.application_id, # Note: The AAD server app ID of AKS Managed AAD is always 6dae42f8-4368-4678-94ff-3960e28e3630 in any environments.
+#         "--client-id",
+#         azuread_service_principal.spn_velero.application_id, # SPN App Id created via terraform
+#         "--client-secret",
+#         azuread_service_principal_password.password_spn_velero.value,
+#         "--tenant-id",
+#         data.azurerm_subscription.current.tenant_id, # AAD Tenant Id
+#         "--login",
+#         "spn"
+#       ]
+#     }
+#   }
+# }

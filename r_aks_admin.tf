@@ -5,6 +5,6 @@ resource "azuread_group" "aks_admins" {
 
   members = [
     data.azuread_client_config.current.object_id,
-    azuread_service_principal.spn_velero.object_id,
+    # azuread_service_principal.spn_velero.object_id
   ]
 }
