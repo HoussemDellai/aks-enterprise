@@ -40,3 +40,10 @@
 # output "application_ip_address" {
 #   value = azurerm_public_ip.pip.ip_address
 # }
+
+output "aks_private_zone_id" {
+  value = azurerm_private_dns_zone.private_dns_aks.id
+}
+output "aks_private_zone_name" {
+  value = azurerm_private_dns_zone.private_dns_aks.name
+}

@@ -79,17 +79,17 @@ resource "azurerm_virtual_network_peering" "peering_vnet_vm_jumpbox_vnet_aks" {
 }
 
 #---------------------------------------------------------------------------------------#
-#   PRIVATE DNS ZONE LINK                                                               #
+#   PRIVATE DNS ZONE LINK (existing)                                                    #
 #---------------------------------------------------------------------------------------#
 
-data "azurerm_private_dns_zone" "private_dns_aks" {
-  name                = "01e40daf-b242-4075-a3ca-3a106e498f89.privatelink.westeurope.azmk8s.io"
-  resource_group_name = "rg-aks-cluster-managed"
-}
+# data "azurerm_private_dns_zone" "private_dns_aks" {
+#   name                = "01e40daf-b242-4075-a3ca-3a106e498f89.privatelink.westeurope.azmk8s.io"
+#   resource_group_name = "rg-aks-cluster-managed"
+# }
 
-resource "azurerm_private_dns_zone_virtual_network_link" "link_private_dns_aks_vnet_vm_devbox" {
-  name                  = "link_private_dns_aks_vnet_vm_devbox"
-  resource_group_name   = "rg-aks-cluster-managed"
-  private_dns_zone_name = data.azurerm_private_dns_zone.private_dns_aks.name
-  virtual_network_id    = data.azurerm_virtual_network.vnet_vm_jumpbox.id
-}
+# resource "azurerm_private_dns_zone_virtual_network_link" "link_private_dns_aks_vnet_vm_devbox" {
+#   name                  = "link_private_dns_aks_vnet_vm_devbox"
+#   resource_group_name   = "rg-aks-cluster-managed"
+#   private_dns_zone_name = data.azurerm_private_dns_zone.private_dns_aks.name
+#   virtual_network_id    = data.azurerm_virtual_network.vnet_vm_jumpbox.id
+# }

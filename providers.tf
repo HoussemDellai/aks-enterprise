@@ -6,7 +6,7 @@ terraform {
 
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = ">= 3.10.0"
+      version = ">= 3.11.0"
     }
 
     azuread = {
@@ -38,8 +38,12 @@ provider "azurerm" {
   auxiliary_tenant_ids = ["72f988bf-86f1-41af-91ab-2d7cd011db47"]
 
   features {
+    resource_group {
+      prevent_deletion_if_contains_resources = true
+    }
     key_vault {
-      purge_soft_delete_on_destroy = false
+      purge_soft_delete_on_destroy    = true
+      recover_soft_deleted_key_vaults = true
     }
   }
 }

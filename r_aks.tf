@@ -51,6 +51,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
   oidc_issuer_enabled                 = true
   private_cluster_public_fqdn_enabled = false
   public_network_access_enabled       = true
+  private_dns_zone_id     = azurerm_private_dns_zone.private_dns_aks.id
   # api_server_authorized_ip_ranges     = ["0.0.0.0/0"] # when private cluster, this should not be enabled
   run_command_enabled = true
   # automatic_channel_upgrade           = # none, patch, rapid, node-image, stable
