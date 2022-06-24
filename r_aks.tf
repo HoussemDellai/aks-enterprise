@@ -41,7 +41,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
   location                            = var.resources_location
   kubernetes_version                  = var.kubernetes_version
   dns_prefix                          = var.aks_dns_prefix
-  private_cluster_enabled             = false
+  private_cluster_enabled             = true
   node_resource_group                 = var.node_resource_group
   role_based_access_control_enabled   = true
   sku_tier                            = "Free" # "Paid"
@@ -51,8 +51,8 @@ resource "azurerm_kubernetes_cluster" "aks" {
   oidc_issuer_enabled                 = true
   private_cluster_public_fqdn_enabled = false
   public_network_access_enabled       = true
-  api_server_authorized_ip_ranges     = ["0.0.0.0/0"]
-  run_command_enabled                 = true
+  # api_server_authorized_ip_ranges     = ["0.0.0.0/0"] # when private cluster, this should not be enabled
+  run_command_enabled = true
   # automatic_channel_upgrade           = # none, patch, rapid, node-image, stable
 
   # linux_profile {
