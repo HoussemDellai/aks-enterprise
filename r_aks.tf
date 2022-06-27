@@ -109,10 +109,6 @@ resource "azurerm_kubernetes_cluster" "aks" {
     # admin_group_object_ids = var.aks_admin_group_object_ids
   }
 
-  ingress_application_gateway {
-    gateway_id = var.enable_container_insights ? azurerm_application_gateway.appgw.0.id : null
-  }
-
   dynamic "ingress_application_gateway" {
     for_each = var.enable_application_gateway ? ["any_value"] : []
     # count = var.enable_application_gateway ? 1 : 0 # count couldn't be used inside nested block
@@ -125,18 +121,20 @@ resource "azurerm_kubernetes_cluster" "aks" {
       # subnet_cidr  = # specify the CIDR range for the Subnet that will be created
     }
   }
-
-  oms_agent {
-    log_analytics_workspace_id = var.enable_container_insights ? azurerm_log_analytics_workspace.workspace.0.id : null
-  }
-  # dynamic "oms_agent" {
-  #   for_each = var.enable_container_insights ? ["any_value"] : []
-  #   # count = var.enable_container_insights ? 1 : 0 # count couldn't be used inside nested block
-  #   content {
-  #     log_analytics_workspace_id = azurerm_log_analytics_workspace.workspace.0.id
-  #   }
+  # ingress_application_gateway {
+  #   gateway_id = var.enable_application_gateway ? azurerm_application_gateway.appgw.0.id : null # doesn't work when resource disabled
   # }
 
+  dynamic "oms_agent" {
+    for_each = var.enable_container_insights ? ["any_value"] : []
+    # count = var.enable_container_insights ? 1 : 0 # count couldn't be used inside nested block
+    content {
+      log_analytics_workspace_id = azurerm_log_analytics_workspace.workspace.0.id
+    }
+  }
+  # oms_agent {
+  #   log_analytics_workspace_id = var.enable_container_insights ? azurerm_log_analytics_workspace.workspace.0.id : null # doesn't work when resource disabled
+  # }
   # microsoft_defender {
   #   log_analytics_workspace_id = ""
   # }
