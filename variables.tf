@@ -181,7 +181,7 @@ variable "enable_container_insights" {
 }
 
 variable "log_analytics_workspace_name" {
-  type = string
+  type        = string
   description = "Name of Log Analytics Workspace"
 }
 
