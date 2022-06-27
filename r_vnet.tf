@@ -40,6 +40,7 @@ resource "azurerm_subnet" "subnetpods" {
 }
 
 resource "azurerm_subnet" "subnetappgw" {
+  count                = var.enable_application_gateway ? 1 : 0
   name                 = var.app_gateway_subnet_name
   virtual_network_name = azurerm_virtual_network.vnet.name
   resource_group_name  = azurerm_resource_group.rg.name

@@ -10,6 +10,7 @@ locals {
 
 # Public Ip 
 resource "azurerm_public_ip" "pip" {
+  count               = var.enable_application_gateway ? 1 : 0
   name                = "publicIp-appgw"
   location            = var.resources_location
   resource_group_name = azurerm_resource_group.rg.name
@@ -19,6 +20,9 @@ resource "azurerm_public_ip" "pip" {
 }
 
 resource "azurerm_application_gateway" "appgw" {
+  # for_each            = var.enable_application_gateway ? ["any_value"] : []
+  # for_each            = var.enable_application_gateway ? toset(["any_value"]) : toset([])
+  count               = var.enable_application_gateway ? 1 : 0
   name                = var.app_gateway_name
   resource_group_name = azurerm_resource_group.rg.name
   location            = var.resources_location
@@ -29,7 +33,7 @@ resource "azurerm_application_gateway" "appgw" {
   }
   gateway_ip_configuration {
     name      = "appGatewayIpConfig"
-    subnet_id = azurerm_subnet.subnetappgw.id
+    subnet_id = azurerm_subnet.subnetappgw.0.id
   }
   frontend_port {
     name = local.frontend_port_name
@@ -41,7 +45,7 @@ resource "azurerm_application_gateway" "appgw" {
   }
   frontend_ip_configuration {
     name                 = local.frontend_ip_configuration_name
-    public_ip_address_id = azurerm_public_ip.pip.id
+    public_ip_address_id = azurerm_public_ip.pip.0.id
   }
   backend_address_pool {
     name = local.backend_address_pool_name
@@ -99,6 +103,7 @@ resource "azurerm_application_gateway" "appgw" {
 
 # AppGW (generated with addon) Identity needs also Contributor role over AKS/VNET RG
 resource "azurerm_role_assignment" "role-contributor" {
+  count                = var.enable_application_gateway ? 1 : 0
   scope                = azurerm_resource_group.rg.id
   role_definition_name = "Contributor"
   principal_id         = azurerm_kubernetes_cluster.aks.ingress_application_gateway.0.ingress_application_gateway_identity.0.object_id

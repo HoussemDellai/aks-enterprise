@@ -51,9 +51,9 @@ resource "azurerm_kubernetes_cluster" "aks" {
   oidc_issuer_enabled                 = true
   private_cluster_public_fqdn_enabled = false
   public_network_access_enabled       = true
-  private_dns_zone_id     = azurerm_private_dns_zone.private_dns_aks.id
+  run_command_enabled                 = true
+  private_dns_zone_id                 = var.enable_private_cluster ? azurerm_private_dns_zone.private_dns_aks.id : null # "" #
   # api_server_authorized_ip_ranges     = ["0.0.0.0/0"] # when private cluster, this should not be enabled
-  run_command_enabled = true
   # automatic_channel_upgrade           = # none, patch, rapid, node-image, stable
 
   # linux_profile {
@@ -109,14 +109,26 @@ resource "azurerm_kubernetes_cluster" "aks" {
     # admin_group_object_ids = var.aks_admin_group_object_ids
   }
 
-  ingress_application_gateway {
-    gateway_id = azurerm_application_gateway.appgw.id
-    # other options if we want to allow the AGIC addon to create a new AppGW 
-    # and not use an existing one
-    # subnet_id    = # link AppGW to specific Subnet
-    # gateway_name = # give a name to the generated AppGW
-    # subnet_cidr  = # specify the CIDR range for the Subnet that will be created
+  dynamic "ingress_application_gateway" {
+    for_each = var.enable_application_gateway ? ["any_value"] : []
+    content {
+      gateway_id = azurerm_application_gateway.appgw.0.id
+      # other options if we want to allow the AGIC addon to create a new AppGW 
+      # and not use an existing one
+      # subnet_id    = # link AppGW to specific Subnet
+      # gateway_name = # give a name to the generated AppGW
+      # subnet_cidr  = # specify the CIDR range for the Subnet that will be created
+    }
   }
+
+  # ingress_application_gateway {
+  #   gateway_id = azurerm_application_gateway.appgw.id
+  #   # other options if we want to allow the AGIC addon to create a new AppGW 
+  #   # and not use an existing one
+  #   # subnet_id    = # link AppGW to specific Subnet
+  #   # gateway_name = # give a name to the generated AppGW
+  #   # subnet_cidr  = # specify the CIDR range for the Subnet that will be created
+  # }
 
   key_vault_secrets_provider {
     secret_rotation_enabled  = true
