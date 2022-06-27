@@ -42,8 +42,9 @@ output "application_ip_address" {
 }
 
 output "aks_private_zone_id" {
-  value = azurerm_private_dns_zone.private_dns_aks.id
+  value = var.enable_private_cluster ? azurerm_private_dns_zone.private_dns_aks.0.id : "Private cluster is disabled"
 }
+
 output "aks_private_zone_name" {
-  value = azurerm_private_dns_zone.private_dns_aks.name
+  value = var.enable_private_cluster ? azurerm_private_dns_zone.private_dns_aks.0.name : "Private cluster is disabled"
 }

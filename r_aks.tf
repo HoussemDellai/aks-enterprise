@@ -52,7 +52,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
   private_cluster_public_fqdn_enabled = false
   public_network_access_enabled       = true
   run_command_enabled                 = true
-  private_dns_zone_id                 = var.enable_private_cluster ? azurerm_private_dns_zone.private_dns_aks.id : null # "" #
+  private_dns_zone_id                 = var.enable_private_cluster ? azurerm_private_dns_zone.private_dns_aks.0.id : null # "" #
   # api_server_authorized_ip_ranges     = ["0.0.0.0/0"] # when private cluster, this should not be enabled
   # automatic_channel_upgrade           = # none, patch, rapid, node-image, stable
 
@@ -142,9 +142,9 @@ resource "azurerm_kubernetes_cluster" "aks" {
     }
   }
 
-  # oms_agent {
-  #   log_analytics_workspace_id = ""
-  # }
+  oms_agent {
+    log_analytics_workspace_id = azurerm_log_analytics_workspace.test.id
+  }
 
   # microsoft_defender {
   #   log_analytics_workspace_id = ""

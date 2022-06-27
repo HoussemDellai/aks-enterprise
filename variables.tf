@@ -176,8 +176,13 @@ variable "enable_private_cluster" {
 }
 
 variable "enable_container_insights" {
-  type = bool
+  type        = bool
   description = "Enable cluster monitoring using Azure Container Insights"
+}
+
+variable "log_analytics_workspace_name" {
+  type = string
+  description = "Name of Log Analytics Workspace"
 }
 
 # variable "enable_velero_backups" {

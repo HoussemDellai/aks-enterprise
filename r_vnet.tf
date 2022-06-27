@@ -53,26 +53,29 @@ resource "azurerm_subnet" "subnetappgw" {
 #-----------------------------------------------------------------------------------------------------------------#
 
 data "azurerm_virtual_network" "vnet_vm_jumpbox" {
+  count               = var.enable_private_cluster ? 1 : 0
   provider            = azurerm.ms-internal
   name                = "rg-vm-devbox-vnet"
   resource_group_name = "rg-vm-devbox"
 }
 
 resource "azurerm_virtual_network_peering" "peering_vnet_aks_vnet_vm_jumpbox" {
+  count                        = var.enable_private_cluster ? 1 : 0
   name                         = "peering_vnet_aks_vnet_vm_jumpbox"
   resource_group_name          = azurerm_resource_group.rg.name
   virtual_network_name         = azurerm_virtual_network.vnet.name
-  remote_virtual_network_id    = data.azurerm_virtual_network.vnet_vm_jumpbox.id
+  remote_virtual_network_id    = data.azurerm_virtual_network.vnet_vm_jumpbox.0.id
   allow_virtual_network_access = true
   allow_forwarded_traffic      = true
   allow_gateway_transit        = false # `allow_gateway_transit` must be set to false for vnet Global Peering
 }
 
 resource "azurerm_virtual_network_peering" "peering_vnet_vm_jumpbox_vnet_aks" {
+  count                        = var.enable_private_cluster ? 1 : 0
   provider                     = azurerm.ms-internal
   name                         = "peering_vnet_vm_jumpbox_vnet_aks"
-  resource_group_name          = "rg-vm-devbox"
-  virtual_network_name         = "rg-vm-devbox-vnet"
+  virtual_network_name         = data.azurerm_virtual_network.vnet_vm_jumpbox.0.name
+  resource_group_name          = data.azurerm_virtual_network.vnet_vm_jumpbox.0.resource_group_name
   remote_virtual_network_id    = azurerm_virtual_network.vnet.id
   allow_virtual_network_access = true
   allow_forwarded_traffic      = true
