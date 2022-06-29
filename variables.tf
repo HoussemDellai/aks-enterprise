@@ -165,6 +165,26 @@ variable "aad_group_aks_admins" {
   description = "Name of AAD group for AKS admins"
 }
 
+variable "enable_application_gateway" {
+  type        = bool
+  description = "Enable AGIC addon for AKS"
+}
+
+variable "enable_private_cluster" {
+  type        = bool
+  description = "Enable private AKS cluster"
+}
+
+variable "enable_container_insights" {
+  type        = bool
+  description = "Enable cluster monitoring using Azure Container Insights"
+}
+
+variable "log_analytics_workspace_name" {
+  type        = string
+  description = "Name of Log Analytics Workspace"
+}
+
 # variable "enable_velero_backups" {
 #   type        = bool
 #   description = "Enable installing Velero and creating backups for AKS"

@@ -71,6 +71,12 @@ velero backup describe manual-backup1 --details
 
 
 
+# creating VNET Peering across different tenants and subscriptions
+# AKS is private and peering is not yet set
+terraform plan -out tfplan -target="azurerm_virtual_network_peering.peering_vnet_aks_vnet_vm_jumpbox" -target="azurerm_virtual_network_peering.peering_vnet_vm_jumpbox_vnet_aks" -target="azurerm_private_dns_zone_virtual_network_link.link_private_dns_aks_vnet_vm_devbox"
+
+
+
 # push git changes
 git add . | git commit -m "configured aks aad app" | git push
 
