@@ -1,22 +1,23 @@
+
 terraform {
 
-  required_version = ">= 1.2.3"
+  required_version = ">= 1.2.8"
 
   required_providers {
 
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = ">= 3.13.0"
+      version = ">= 3.20.0"
     }
 
     azuread = {
       source  = "hashicorp/azuread"
-      version = ">= 2.25.0"
+      version = ">= 2.28.0"
     }
 
     kubernetes = {
       source  = "hashicorp/kubernetes"
-      version = ">= 2.11.0"
+      version = ">= 2.13.1"
     }
 
     helm = {
@@ -28,7 +29,7 @@ terraform {
 
 provider "azurerm" {
   # alias           = "ms-azure"
-  subscription_id = "7b1f7584-2f78-4923-851d-04a91bb32a57"
+  subscription_id = "17b12858-3960-4e6f-a663-a06fdae23428" # Microsoft-Azure-0
   tenant_id       = "558506eb-9459-4ef3-b920-ad55c555e729"
   # alias           = "ms-internal"
   # subscription_id = "4b72ed90-7ca3-4e76-8d0f-31a2c0bee7a3" # "Microsoft Internal"

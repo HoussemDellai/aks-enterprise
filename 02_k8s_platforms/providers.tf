@@ -1,22 +1,22 @@
 terraform {
 
-  required_version = ">= 1.2.3"
+  required_version = ">= 1.2.8"
 
   required_providers {
 
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = ">= 3.11.0"
+      version = ">= 3.20.0"
     }
 
     azuread = {
       source  = "hashicorp/azuread"
-      version = ">= 2.25.0"
+      version = ">= 2.28.0"
     }
 
     kubernetes = {
       source  = "hashicorp/kubernetes"
-      version = ">= 2.11.0"
+      version = ">= 2.13.1"
     }
 
     helm = {
