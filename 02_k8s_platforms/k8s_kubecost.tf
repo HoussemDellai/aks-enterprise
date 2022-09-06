@@ -7,12 +7,16 @@ resource "kubernetes_namespace" "kubecost" {
 }
 
 # Install kubecost using the hem chart
+# https://github.com/kubecost/cost-analyzer-helm-chart/blob/develop/cost-analyzer/
+# kubectl create namespace kubecost
+# helm repo add kubecost https://kubecost.github.io/cost-analyzer/
+# helm install kubecost kubecost/cost-analyzer --namespace kubecost --set kubecostToken="aG91c3NlbS5kZWxsYWlAbGl2ZS5jb20=xm343yadf98"
 resource "helm_release" "kubecost" {
   provider   = helm.aks-module
   name       = "kubecost"
   chart      = "cost-analyzer"
   namespace  = kubernetes_namespace.kubecost.metadata[0].name
-  version    = "1.91.2"
+  version    = "1.96.0"
   repository = "https://kubecost.github.io/cost-analyzer/"
 
   # Set the cluster name
@@ -62,8 +66,29 @@ resource "helm_release" "kubecost" {
     name  = "kubecostProductConfigs.azureTenantID"
     value = data.azurerm_subscription.current.tenant_id
   }
+  
   set {
     name  = "global.prometheus.enabled"
-    value = "true"
+    value = true
+  }
+
+  set { # not required
+    name = "kubecostToken"
+    value = "aG91c3NlbS5kZWxsYWlAbGl2ZS5jb20=xm343yadf98"
+  }
+}
+
+# kubectl port-forward --namespace kubecost deployment/kubecost-cost-analyzer 9090
+# Access dashboard: http://localhost:9090
+
+resource "null_resource" "portforward" {
+  provisioner "local-exec" {
+    command = "kubectl port-forward --namespace finops deployment/kubecost-cost-analyzer 9090"
+    interpreter = ["PowerShell", "-Command"]
+  }
+
+  provisioner "local-exec" {
+    command = "kubectl --namespace kasten-io port-forward service/gateway 8000:8000"
+    interpreter = ["PowerShell", "-Command"]
   }
 }
