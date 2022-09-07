@@ -36,11 +36,6 @@ resource "helm_release" "kasten" {
     name = "services.dashboardbff.hostNetwork"
     value = true
   }
-
-  set {
-    name = "externalGateway.create"
-    value = true
-  }
 }
 
 # kubectl --namespace kasten-io port-forward service/gateway 8000:8000

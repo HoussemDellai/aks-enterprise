@@ -15,7 +15,7 @@ resource "azuread_service_principal_password" "password_spn_kubecost" {
 
 # Create kubecost custom role
 resource "azurerm_role_definition" "kubecost" {
-  name        = "rate_card_query_kubecost"
+  name        = "rate_card_query_kubecost_aks"
   scope       = data.azurerm_subscription.current.id
   description = "kubecost Rate Card query role"
 

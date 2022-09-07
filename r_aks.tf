@@ -101,12 +101,15 @@ resource "azurerm_kubernetes_cluster" "aks" {
     load_balancer_sku  = "standard"            # "basic"
     # pod_cidr           = var.aks_network_plugin == "kubenet" ? var.subnet_pods_address_prefix : null # null # can only be set when network_plugin is set to kubenet
 
-    load_balancer_profile {
-      idle_timeout_in_minutes   = 30
-      managed_outbound_ip_count = 2
-      # outbound_ip_address_ids   = []
-      # outbound_ip_prefix_ids    = []
-      # outbound_ports_allocated  = []
+    dynamic "load_balancer_profile" {
+      for_each = var.aks_outbound_type == "loadBalancer" ? ["any_value"] : []
+      content {
+        idle_timeout_in_minutes   = 30
+        managed_outbound_ip_count = 2
+        # outbound_ip_address_ids   = []
+        # outbound_ip_prefix_ids    = []
+        # outbound_ports_allocated  = []
+      }
     }
 
     dynamic "nat_gateway_profile" {

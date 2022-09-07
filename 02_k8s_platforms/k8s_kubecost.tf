@@ -81,14 +81,15 @@ resource "helm_release" "kubecost" {
 # kubectl port-forward --namespace kubecost deployment/kubecost-cost-analyzer 9090
 # Access dashboard: http://localhost:9090
 
-resource "null_resource" "portforward" {
-  provisioner "local-exec" {
-    command = "kubectl port-forward --namespace finops deployment/kubecost-cost-analyzer 9090"
-    interpreter = ["PowerShell", "-Command"]
-  }
+# resource "null_resource" "portforward" {
+#   provisioner "local-exec" {
+#     command = "kubectl port-forward --namespace finops deployment/kubecost-cost-analyzer 9090"
+#     interpreter = ["PowerShell", "-Command"]
+#   }
 
-  provisioner "local-exec" {
-    command = "kubectl --namespace kasten-io port-forward service/gateway 8000:8000"
-    interpreter = ["PowerShell", "-Command"]
-  }
-}
+# Access dashboard: http://127.0.0.1:8000/k10/#/
+#   provisioner "local-exec" {
+#     command = "kubectl --namespace kasten-io port-forward service/gateway 8000:8000"
+#     interpreter = ["PowerShell", "-Command"]
+#   }
+# }
