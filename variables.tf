@@ -185,6 +185,11 @@ variable "log_analytics_workspace_name" {
   description = "Name of Log Analytics Workspace"
 }
 
+variable "aks_outbound_type" {
+  type        = string
+  description = "userAssignedNATGateway, loadBalancer, userDefinedRouting, managedNATGateway"
+}
+
 # variable "enable_velero_backups" {
 #   type        = bool
 #   description = "Enable installing Velero and creating backups for AKS"
