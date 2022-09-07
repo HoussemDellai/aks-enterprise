@@ -92,13 +92,28 @@ resource "azurerm_kubernetes_cluster" "aks" {
   }
 
   network_profile {
-    network_plugin     = var.aks_network_plugin # "kubenet", "azure" 
+    network_plugin     = var.aks_network_plugin # "kubenet", "azure", "transparent"
     network_policy     = "calico"               # "azure" 
     dns_service_ip     = var.aks_dns_service_ip
     docker_bridge_cidr = var.aks_docker_bridge_cidr
     service_cidr       = var.aks_service_cidr
-    outbound_type      = "loadBalancer" # userDefinedRouting, managedNATGateway, userAssignedNATGateway
-    # pod_cidr         = var.aks_subnet_address_prefix # can only be set when network_plugin is set to kubenet
+    outbound_type      = "userAssignedNATGateway" # "loadBalancer" # userDefinedRouting, managedNATGateway, userAssignedNATGateway
+    load_balancer_sku  = "standard"                                                                  # "basic"
+    # pod_cidr           = var.aks_network_plugin == "kubenet" ? var.subnet_pods_address_prefix : null # null # can only be set when network_plugin is set to kubenet
+
+    load_balancer_profile {
+      idle_timeout_in_minutes   = 30
+      managed_outbound_ip_count = 2
+      # outbound_ip_address_ids   = []
+      # outbound_ip_prefix_ids    = []
+      # outbound_ports_allocated  = []
+    }
+
+    # TODO: if NAT Gateway is enabled
+    # nat_gateway_profile {
+    #   idle_timeout_in_minutes   = 4
+    #   managed_outbound_ip_count = 2
+    # }
   }
 
   azure_active_directory_role_based_access_control {
