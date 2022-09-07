@@ -41,7 +41,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
   location                            = var.resources_location
   kubernetes_version                  = var.kubernetes_version
   dns_prefix                          = var.aks_dns_prefix
-  private_cluster_enabled             = true
+  private_cluster_enabled             = var.enable_private_cluster
   node_resource_group                 = var.node_resource_group
   role_based_access_control_enabled   = true
   sku_tier                            = "Free" # "Paid"
