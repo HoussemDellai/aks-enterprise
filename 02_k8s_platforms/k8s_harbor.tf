@@ -11,11 +11,15 @@ resource "helm_release" "harbor" {
   name       = "harbor"
   repository = "https://helm.goharbor.io"
   chart      = "harbor"
-  namespace  = kubernetes_namespace.harbor.metadata[0].name
+  namespace  = kubernetes_namespace.harbor.metadata.0.name
 
   set {
     name  = "expose.type"
-    value = "ingress"
+    value = "clusterIP" # "ingress"
+  }
+  set { # test
+    name  = "expose.tls.enabled"
+    value = false
   }
   set {
     name  = "harborAdminPassword"

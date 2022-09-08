@@ -15,7 +15,7 @@ resource "helm_release" "kubecost" {
   provider   = helm.aks-module
   name       = "kubecost"
   chart      = "cost-analyzer"
-  namespace  = kubernetes_namespace.kubecost.metadata[0].name
+  namespace  = kubernetes_namespace.kubecost.metadata.0.name
   version    = "1.96.0"
   repository = "https://kubecost.github.io/cost-analyzer/"
 
@@ -66,14 +66,14 @@ resource "helm_release" "kubecost" {
     name  = "kubecostProductConfigs.azureTenantID"
     value = data.azurerm_subscription.current.tenant_id
   }
-  
+
   set {
     name  = "global.prometheus.enabled"
     value = true
   }
 
   set { # not required
-    name = "kubecostToken"
+    name  = "kubecostToken"
     value = "aG91c3NlbS5kZWxsYWlAbGl2ZS5jb20=xm343yadf98"
   }
 }

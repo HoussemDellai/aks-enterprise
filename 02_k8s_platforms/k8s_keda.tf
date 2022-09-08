@@ -12,5 +12,5 @@ resource "helm_release" "keda" {
   repository = "https://kedacore.github.io/charts"
   chart      = "keda"
   version    = "2.7.2"
-  namespace  = kubernetes_namespace.keda.metadata[0].name
+  namespace  = kubernetes_namespace.keda.metadata.0.name
 }

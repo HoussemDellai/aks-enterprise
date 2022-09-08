@@ -228,19 +228,21 @@ EOVV
 variable "harbor_admin_password" {
   type        = string
   description = "Password for Harbor"
-  default     = "@Aa123456789"
 }
 
 variable "grafana_admin_user" {
   type        = string
   description = "Admin user for Grafana"
-  default     = "grafana"
 }
 
 variable "grafana_admin_password" {
   type        = string
   description = "Password for Grafana"
-  default     = "@Aa123456789"
+}
+
+variable "argocd_admin_password" {
+  type        = string
+  description = "Password for Argo CD, should be bcrypt"
 }
 
 variable "tags" {

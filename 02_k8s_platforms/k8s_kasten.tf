@@ -16,24 +16,24 @@ resource "helm_release" "kasten" {
   name       = "k10"
   repository = "https://charts.kasten.io/"
   chart      = "k10"
-  namespace  = kubernetes_namespace.kasten.metadata[0].name
+  namespace  = kubernetes_namespace.kasten.metadata.0.name
 
   set {
-    name = "secrets.azureTenantId"
+    name  = "secrets.azureTenantId"
     value = data.azurerm_subscription.current.tenant_id
   }
 
   set {
-    name = "secrets.azureClientId"
+    name  = "secrets.azureClientId"
     value = azuread_application.app_kasten.application_id
   }
   set {
-    name = "secrets.azureClientSecret"
+    name  = "secrets.azureClientSecret"
     value = azuread_service_principal_password.password_spn_kasten.value
   }
 
   set {
-    name = "services.dashboardbff.hostNetwork"
+    name  = "services.dashboardbff.hostNetwork"
     value = true
   }
 }

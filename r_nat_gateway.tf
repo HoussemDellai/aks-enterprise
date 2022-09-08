@@ -46,7 +46,7 @@ resource "azurerm_subnet_nat_gateway_association" "subnetpods_assoc" {
 }
 
 resource "azurerm_subnet_nat_gateway_association" "subnetappgw_assoc" {
-  count = var.aks_outbound_type == "userAssignedNATGateway" ? 1 : 0
+  count = var.aks_outbound_type == "userAssignedNATGateway" && var.enable_application_gateway ? 1 : 0
   nat_gateway_id = azurerm_nat_gateway.natgw.0.id
   subnet_id      = azurerm_subnet.subnetappgw.0.id
 }
