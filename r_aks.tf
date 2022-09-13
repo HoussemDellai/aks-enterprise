@@ -69,7 +69,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
     enable_auto_scaling          = true
     min_count                    = 1
     max_count                    = 3
-    max_pods                     = 110
+    max_pods                     = 109
     vm_size                      = var.aks_agent_vm_size
     os_disk_size_gb              = var.aks_agent_os_disk_size
     os_disk_type                 = "Ephemeral" # "Managed"
@@ -202,10 +202,10 @@ resource "azurerm_kubernetes_cluster" "aks" {
 #   # depends_on = [azurerm_kubernetes_cluster.aks]
 # }
 
-resource "azurerm_kubernetes_cluster_node_pool" "appspool" {
+resource "azurerm_kubernetes_cluster_node_pool" "poolapps" {
   name                   = "poolapps"
   kubernetes_cluster_id  = azurerm_kubernetes_cluster.aks.id
-  vm_size                = "Standard_D2ds_v5" # "Standard_D2as_v5" doesn't support Ephemeral disk
+  vm_size                = "Standard_D4pls_v5" # "Standard_D2ds_v5" # "Standard_D4s_v5" #  # "Standard_D2as_v5" doesn't support Ephemeral disk
   node_count             = 1
   zones                  = [1, 2, 3]
   mode                   = "User"
