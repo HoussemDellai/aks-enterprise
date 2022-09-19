@@ -16,11 +16,11 @@ output "prometheus_stack_manifest" {
 # https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack
 resource "helm_release" "prometheus_stack" {
   provider   = helm.aks-module
-  name       = "prometheus-stack"
+  name       = "prom"
   repository = "https://prometheus-community.github.io/helm-charts"
   chart      = "kube-prometheus-stack"
   namespace  = kubernetes_namespace.prometheus_stack.metadata.0.name
-  timeout    = 180 # 300
+  timeout    = 300 # 180 # 
 
   set {
     name  = "grafana.adminUser"

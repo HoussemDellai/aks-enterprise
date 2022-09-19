@@ -47,6 +47,24 @@ resource "azurerm_subnet" "subnetappgw" {
   address_prefixes     = var.app_gateway_subnet_address_prefix
 }
 
+resource "azurerm_subnet" "subnetapiserver" {
+  count                = var.enable_apiserver_vnet_integration ? 1 : 0
+  name                 = var.apiserver_subnet_name
+  virtual_network_name = azurerm_virtual_network.vnet.name
+  resource_group_name  = azurerm_resource_group.rg.name
+  address_prefixes     = var.apiserver_subnet_address_prefix
+
+  delegation {
+    name = "aks-delegation"
+    service_delegation {
+      actions = [
+        "Microsoft.Network/virtualNetworks/subnets/join/action",
+      ]
+      name = "Microsoft.ContainerService/managedClusters"
+    }
+  }
+}
+
 #-----------------------------------------------------------------------------------------------------------------#
 #   VNET PEERINGS
 #   https://medium.com/microsoftazure/configure-azure-virtual-network-peerings-with-terraform-762b708a28d4                                                                       #

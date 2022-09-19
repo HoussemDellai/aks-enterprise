@@ -51,16 +51,22 @@ helm upgrade --install loki --namespace=loki grafana/loki-distributed --create-n
 helm install loki-grafana grafana/grafana -n loki
 helm upgrade --install promtail grafana/promtail --set "config.clients[0].url=http://loki-loki-distributed-gateway/loki/api/v1/push" -n loki
 
-# EFK
+# ELK
 helm repo add elastic https://helm.elastic.co
-helm install elasticsearch elastic/elasticsearch -n efk --create-namespace
-helm test elasticsearch -n efk
-kubectl port-forward svc/elasticsearch-master 9200 -n efk
-helm install filebeat elastic/filebeat -n efk
-helm install metricbeat elastic/metricbeat -n efk
-helm install apm-server elastic/apm-server -n efk
-helm install kibana elastic/kibana -n efk
-kubectl port-forward svc/kibana-kibana 5601 -n efk
+helm install elasticsearch elastic/elasticsearch -n elk --create-namespace
+helm test elasticsearch -n elk
+kubectl port-forward svc/elasticsearch-master 9200 -n elk
+helm install filebeat elastic/filebeat -n elk
+helm install metricbeat elastic/metricbeat -n elk
+helm install apm-server elastic/apm-server -n elk
+helm install kibana elastic/kibana -n elk
+kubectl port-forward svc/kibana-kibana 5601 -n elk
 # sample Kibana dashboards here:
 # https://elastic-content-share.eu/downloads/filebeat-log-analysis-canvas-example/
 # https://elastic-content-share.eu/downloads/category/kibana/kibana-visualizations/
+
+# PORTAINER
+helm repo add portainer https://portainer.github.io/k8s/
+helm install --create-namespace -n portainer portainer portainer/portainer --set tls.force=true
+kubectl port-forward svc/portainer 9443 -n portainer
+# https://localhost:9443/

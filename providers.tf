@@ -24,12 +24,17 @@ terraform {
       source  = "hashicorp/helm"
       version = ">= 2.6.0"
     }
+
+    azapi = {
+      source  = "Azure/azapi"
+      version = "0.6.0"
+    }
   }
 }
 
 provider "azurerm" {
   # alias           = "ms-azure"
-  subscription_id = "17b12858-3960-4e6f-a663-a06fdae23428" # Microsoft-Azure-0
+  subscription_id = "25a98a18-5e94-4b21-9d17-e8cf45bfd81f" # -1 # "17b12858-3960-4e6f-a663-a06fdae23428" # Microsoft-Azure-0
   tenant_id       = "558506eb-9459-4ef3-b920-ad55c555e729"
   # alias           = "ms-internal"
   # subscription_id = "4b72ed90-7ca3-4e76-8d0f-31a2c0bee7a3" # "Microsoft Internal"
@@ -57,4 +62,8 @@ provider "azurerm" {
   # client_secret   = "BAFHTR3235FEHsdfb%#$W%weF#@a"
   auxiliary_tenant_ids = ["558506eb-9459-4ef3-b920-ad55c555e729"]
   features {}
+}
+
+provider "azapi" {
+  # Configuration options
 }

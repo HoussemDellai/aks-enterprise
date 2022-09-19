@@ -26,6 +26,18 @@ resource "azurerm_role_assignment" "aks_mi_contributor_aks_rg" {
   skip_service_principal_aad_check = true
 }
 
+# Assign Network Contributor to the API server subnet
+# az role assignment create --scope <apiserver-subnet-resource-id> \
+#     --role "Network Contributor" \
+#     --assignee <managed-identity-client-id>
+resource "azurerm_role_assignment" "aks_mi_network_contributor_apiserver_subnet" {
+  count                            = var.enable_apiserver_vnet_integration ? 1 : 0
+  scope                            = azurerm_subnet.subnetapiserver.0.id
+  role_definition_name             = "Network Contributor"
+  principal_id                     = azurerm_user_assigned_identity.identity-aks.principal_id
+  skip_service_principal_aad_check = true
+}
+
 # resource "azurerm_role_assignment" "aks_mi_contributor_aks_nodes_rg" {
 #   scope                            = data.azurerm_resource_group.aks_nodes_rg.id # azurerm_kubernetes_cluster.aks.node_resource_group.id
 #   role_definition_name             = "Contributor"
@@ -69,7 +81,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
     enable_auto_scaling          = true
     min_count                    = 1
     max_count                    = 3
-    max_pods                     = 109
+    max_pods                     = 110
     vm_size                      = var.aks_agent_vm_size
     os_disk_size_gb              = var.aks_agent_os_disk_size
     os_disk_type                 = "Ephemeral" # "Managed"
@@ -271,4 +283,28 @@ resource "azurerm_kubernetes_cluster_node_pool" "poolapps" {
 #   zones                  = [1, 2, 3]
 #   # node_taints            = ["kubernetes.azure.com/scalesetpriority=spot:NoSchedule"]
 #   tags                   = var.tags
+# }
+
+# az aks update -n <cluster-name> \
+#     -g <resource-group> \
+#     --enable-apiserver-vnet-integration \
+#     --apiserver-subnet-id <apiserver-subnet-resource-id>
+# resource "azapi_update_resource" "aks_api_vnet_integration" {
+#   count       = var.enable_apiserver_vnet_integration ? 1 : 0
+#   type        = "Microsoft.ContainerService/managedClusters@2022-06-02-preview"
+#   resource_id = azurerm_kubernetes_cluster.aks.id
+
+#   body = jsonencode({
+#     properties = {
+#       inboundNatRules = [
+#         {
+#           properties = {
+#             idleTimeoutInMinutes = 15
+#           }
+#         }
+#       ]
+#     }
+#   })
+
+#   depends_on = []
 # }

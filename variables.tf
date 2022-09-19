@@ -47,6 +47,11 @@ variable "app_gateway_subnet_name" {
   default     = "subnet-appgw"
 }
 
+variable "apiserver_subnet_name" {
+  description = "AKS API Server subnet name."
+  default     = "subnet-apiserver"
+}
+
 variable "subnet_nodes_address_prefix" {
   description = "Subnet address prefix."
   default     = ["10.240.0.0/16"]
@@ -60,6 +65,11 @@ variable "subnet_pods_address_prefix" {
 variable "app_gateway_subnet_address_prefix" {
   description = "Subnet server IP address."
   default     = ["10.1.0.0/16"]
+}
+
+variable "apiserver_subnet_address_prefix" {
+  description = "AKS API Server IP address."
+  default     = ["10.2.0.0/28"]
 }
 
 variable "app_gateway_name" {
@@ -163,6 +173,11 @@ variable "spn_name" {
 variable "aad_group_aks_admins" {
   type        = string
   description = "Name of AAD group for AKS admins"
+}
+
+variable "enable_apiserver_vnet_integration" {
+  type        = bool
+  description = "Enable AKS API Server VNET Integration"
 }
 
 variable "enable_application_gateway" {
