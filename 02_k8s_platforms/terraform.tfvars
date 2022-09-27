@@ -1,7 +1,7 @@
 resource_group_name         = "rg-aks-cluster"
 aks_name                    = "aks-cluster"
 aad_group_aks_admins        = "group_aks_admins"
-storage_account_name_backup = "storageforaksbackup001"
+storage_account_name_backup = "storageforaksbackup0011"
 backups_rg_name             = "rg-aks-cluster-backups"
 backups_region              = "northeurope"
 grafana_admin_user          = "grafana"

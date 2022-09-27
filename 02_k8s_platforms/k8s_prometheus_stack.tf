@@ -62,3 +62,24 @@ resource "helm_release" "prometheus_stack" {
   #     value = "/$1"
   #   }
 }
+
+# resource "kubernetes_service_v1" "prometheus_stack" {
+#   metadata {
+#     name = "prom-grafana-public"
+#     namespace = kubernetes_namespace.prometheus_stack.metadata.0.name
+#   }
+
+#   spec {
+#     selector = {
+#       "app.kubernetes.io/instance" = "prom"
+#       "app.kubernetes.io/name" = "grafana"
+#     }
+
+#     port {
+#       port        = 8080
+#       target_port = 3000
+#     }
+
+#     type = "LoadBalancer"
+#   }
+# }

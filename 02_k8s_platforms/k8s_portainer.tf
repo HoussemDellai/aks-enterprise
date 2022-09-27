@@ -2,7 +2,7 @@
 resource "kubernetes_namespace" "portainer" {
   provider = kubernetes.aks-module
   metadata {
-    name = "portainer-dashbord"
+    name = "portainer"
   }
 }
 

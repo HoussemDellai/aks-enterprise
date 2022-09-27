@@ -1,10 +1,11 @@
 # PROMETHEUS & GRAFANA
 # helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
-# helm install prom prometheus-community/kube-prometheus-stack -n monitoring --create-namespace
-start powershell {kubectl port-forward service/prometheus-stack-grafana 8000:80 -n monitoring}
+# helm install prom prometheus-community/kube-prometheus-stack -n monitoring --create-namespace `
+       --set grafana.adminUser="grafana" --set grafana.adminPassword="@Aa123456789"
+start powershell {kubectl port-forward service/prom-grafana 8000:80 -n monitoring}
 start microsoft-edge:http://localhost:8000
 # Access dashboard: http://localhost:8000
-# login: admin, password: @Aa123456789
+# login: grafana, password: @Aa123456789
 
 # KASTEN
 start powershell {kubectl port-forward service/gateway 8001:8000 --namespace kasten-io}
@@ -12,6 +13,7 @@ start microsoft-edge:http://localhost:8001/k10/#/
 # Access dashboard: http://localhost:8001/k10/#/
 
 # ARGOCD
+# helm repo add argo https://argoproj.github.io/argo-helm
 start powershell {kubectl port-forward service/argo-argocd-server 8002:80 -n gitops}
 start microsoft-edge:http://localhost:8002
 # pip3 install bcrypt
@@ -19,6 +21,11 @@ start microsoft-edge:http://localhost:8002
 # $2b$12$DsmD/P54.U4qMhf9dZbAp.dtPQMumJ7b5VCz36nwSR1k2FUpux4Sm
 # Access dashboard: http://localhost:8002
 # login: admin, password: @Aa123456789
+
+# ARGO ROLLOUT
+helm repo add argo https://argoproj.github.io/argo-helm
+helm install argo-rollouts argo/argo-rollouts -n argo-rollouts --create-namespace --set dashboard.enabled=true
+kubectl port-forward service/argo-rollouts-dashboard 3100:3100 -n argo-rollouts
 
 # KUBECOST
 start powershell {kubectl port-forward service/kubecost-cost-analyzer 9090:9090 -n finops}
@@ -67,6 +74,8 @@ kubectl port-forward svc/kibana-kibana 5601 -n elk
 
 # PORTAINER
 helm repo add portainer https://portainer.github.io/k8s/
-helm install --create-namespace -n portainer portainer portainer/portainer --set tls.force=true
-kubectl port-forward svc/portainer 9443 -n portainer
+helm install -n portainer portainer portainer/portainer --set tls.force=true --create-namespace 
+
+start powershell {kubectl port-forward svc/portainer 9443 -n portainer}
+start microsoft-edge:https://localhost:9443
 # https://localhost:9443/

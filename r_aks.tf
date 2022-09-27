@@ -53,16 +53,16 @@ resource "azurerm_kubernetes_cluster" "aks" {
   location                            = var.resources_location
   kubernetes_version                  = var.kubernetes_version
   dns_prefix                          = var.aks_dns_prefix
-  private_cluster_enabled             = var.enable_private_cluster
   node_resource_group                 = var.node_resource_group
+  private_cluster_enabled             = var.enable_private_cluster
+  private_cluster_public_fqdn_enabled = false # true # 
+  public_network_access_enabled       = true  # false #
   role_based_access_control_enabled   = true
   sku_tier                            = "Free" # "Paid"
   azure_policy_enabled                = true
   open_service_mesh_enabled           = true
   local_account_disabled              = true
   oidc_issuer_enabled                 = true
-  private_cluster_public_fqdn_enabled = false
-  public_network_access_enabled       = true
   run_command_enabled                 = true
   private_dns_zone_id                 = var.enable_private_cluster ? azurerm_private_dns_zone.private_dns_aks.0.id : null
   # api_server_authorized_ip_ranges     = ["0.0.0.0/0"] # when private cluster, this should not be enabled
@@ -80,12 +80,13 @@ resource "azurerm_kubernetes_cluster" "aks" {
     node_count                   = var.aks_agent_count
     enable_auto_scaling          = true
     min_count                    = 1
-    max_count                    = 3
+    max_count                    = 5
     max_pods                     = 110
-    vm_size                      = var.aks_agent_vm_size
+    vm_size                      = var.aks_agent_vm_size # "Standard_D2ds_v5"
     os_disk_size_gb              = var.aks_agent_os_disk_size
-    os_disk_type                 = "Ephemeral" # "Managed"
-    only_critical_addons_enabled = true        # taint default node pool with CriticalAddonsOnly=true:NoSchedule
+    os_disk_type                 = "Ephemeral"  # "Managed"
+    os_sku                       = "Ubuntu" # "CBLMariner" #
+    only_critical_addons_enabled = true         # taint default node pool with CriticalAddonsOnly=true:NoSchedule
     zones                        = [1, 2, 3]
     tags                         = var.tags
     vnet_subnet_id               = azurerm_subnet.subnetnodes.id
@@ -204,6 +205,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
       default_node_pool[0].node_count,
       microsoft_defender,
       # oms_agent
+      private_cluster_enabled
     ]
   }
 }
@@ -227,10 +229,11 @@ resource "azurerm_kubernetes_cluster_node_pool" "poolapps" {
   enable_node_public_ip  = false
   max_pods               = 110
   os_disk_size_gb        = 60
-  os_disk_type           = "Ephemeral" # "Managed" # 
+  os_disk_type           = "Ephemeral"  # "Managed" # 
+  os_sku                 = "Ubuntu" # "CBLMariner" #
   enable_auto_scaling    = true
   min_count              = 1
-  max_count              = 5
+  max_count              = 9
   fips_enabled           = false
   vnet_subnet_id         = azurerm_subnet.subnetnodes.id
   pod_subnet_id          = azurerm_subnet.subnetpods.id
@@ -259,52 +262,59 @@ resource "azurerm_kubernetes_cluster_node_pool" "poolapps" {
   tags = var.tags
 }
 
-# resource "azurerm_kubernetes_cluster_node_pool" "poolspot" {
-#   kubernetes_cluster_id  = azurerm_kubernetes_cluster.aks.id
-#   name                   = "poolspot"
-#   mode                   = "User"
-#   priority               = "Spot"
-#   eviction_policy        = "Delete"
-#   spot_max_price         = -1 # note: this is the "maximum" price
-#   os_type                = "Linux"
-#   vm_size                = "Standard_DS2_v2" # "Standard_D2ds_v5"
-#   os_disk_type           = "Ephemeral" # https://docs.microsoft.com/en-us/azure/virtual-machines/ephemeral-os-disks#size-requirements
-#   node_count             = 0
-#   enable_auto_scaling    = true
-#   max_count              = 3
-#   min_count              = 0
-#   fips_enabled           = false
-#   vnet_subnet_id         = azurerm_subnet.subnetnodes.id
-#   pod_subnet_id          = azurerm_subnet.subnetpods.id
-#   enable_host_encryption = false
-#   enable_node_public_ip  = false
-#   max_pods               = 110
-#   os_disk_size_gb        = 60
-#   zones                  = [1, 2, 3]
-#   # node_taints            = ["kubernetes.azure.com/scalesetpriority=spot:NoSchedule"]
-#   tags                   = var.tags
-# }
+resource "azurerm_kubernetes_cluster_node_pool" "poolspot" {
+  count                  = var.enable_nodepool_spot ? 1 : 0
+  kubernetes_cluster_id  = azurerm_kubernetes_cluster.aks.id
+  name                   = "poolspot"
+  mode                   = "User"
+  priority               = "Spot"
+  eviction_policy        = "Delete"
+  spot_max_price         = -1 # note: this is the "maximum" price
+  os_type                = "Linux"
+  vm_size                = "Standard_D2ds_v5" # "Standard_DS2_v2" # 
+  os_disk_type           = "Ephemeral"       # https://docs.microsoft.com/en-us/azure/virtual-machines/ephemeral-os-disks#size-requirements
+  os_sku                 = "Ubuntu" # "CBLMariner" # 
+  node_count             = 0
+  enable_auto_scaling    = true
+  max_count              = 3
+  min_count              = 1
+  fips_enabled           = false
+  vnet_subnet_id         = azurerm_subnet.subnetnodes.id
+  pod_subnet_id          = azurerm_subnet.subnetpods.id
+  enable_host_encryption = false
+  enable_node_public_ip  = false
+  max_pods               = 110
+  os_disk_size_gb        = 60
+  zones                  = [1, 2, 3]
+  # node_taints            = ["kubernetes.azure.com/scalesetpriority=spot:NoSchedule"]
+  tags = var.tags
+}
 
 # az aks update -n <cluster-name> \
 #     -g <resource-group> \
 #     --enable-apiserver-vnet-integration \
 #     --apiserver-subnet-id <apiserver-subnet-resource-id>
-# resource "azapi_update_resource" "aks_api_vnet_integration" {
-#   count       = var.enable_apiserver_vnet_integration ? 1 : 0
-#   type        = "Microsoft.ContainerService/managedClusters@2022-06-02-preview"
-#   resource_id = azurerm_kubernetes_cluster.aks.id
+resource "azapi_update_resource" "aks_api_vnet_integration" {
+  count       = var.enable_apiserver_vnet_integration ? 1 : 0
+  type        = "Microsoft.ContainerService/managedClusters@2022-06-02-preview"
+  resource_id = azurerm_kubernetes_cluster.aks.id
 
-#   body = jsonencode({
-#     properties = {
-#       inboundNatRules = [
-#         {
-#           properties = {
-#             idleTimeoutInMinutes = 15
-#           }
-#         }
-#       ]
-#     }
-#   })
+  # "properties": {
+  #   "apiServerAccessProfile": {
+  #       "enablePrivateCluster": false,
+  #       "enableVnetIntegration": true,
+  #       "subnetId": "[concat(parameters('virtualNetworks_vnet_spoke_aks_externalid'), '/subnets/subnet-apiserver')]"
+  #   },
+  # }
+  body = jsonencode({
+    properties = {
+      apiServerAccessProfile = {
+        enablePrivateCluster  = var.enable_private_cluster,
+        enableVnetIntegration = var.enable_apiserver_vnet_integration,
+        subnetId              = azurerm_subnet.subnetapiserver.0.id
+      },
+    }
+  })
 
-#   depends_on = []
-# }
+  depends_on = []
+}

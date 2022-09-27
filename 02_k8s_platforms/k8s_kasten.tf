@@ -22,7 +22,6 @@ resource "helm_release" "kasten" {
     name  = "secrets.azureTenantId"
     value = data.azurerm_subscription.current.tenant_id
   }
-
   set {
     name  = "secrets.azureClientId"
     value = azuread_application.app_kasten.application_id
@@ -31,7 +30,6 @@ resource "helm_release" "kasten" {
     name  = "secrets.azureClientSecret"
     value = azuread_service_principal_password.password_spn_kasten.value
   }
-
   set {
     name  = "services.dashboardbff.hostNetwork"
     value = true

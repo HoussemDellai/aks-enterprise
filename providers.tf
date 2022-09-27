@@ -7,12 +7,12 @@ terraform {
 
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = ">= 3.20.0"
+      version = ">= 3.23.0"
     }
 
     azuread = {
       source  = "hashicorp/azuread"
-      version = ">= 2.28.0"
+      version = ">= 2.28.1"
     }
 
     kubernetes = {
@@ -34,7 +34,7 @@ terraform {
 
 provider "azurerm" {
   # alias           = "ms-azure"
-  subscription_id = "25a98a18-5e94-4b21-9d17-e8cf45bfd81f" # -1 # "17b12858-3960-4e6f-a663-a06fdae23428" # Microsoft-Azure-0
+  subscription_id = "1ee6a30c-7308-4dc8-babf-6b6bd7839bf8" # -2 # "25a98a18-5e94-4b21-9d17-e8cf45bfd81f" # -1 # "17b12858-3960-4e6f-a663-a06fdae23428" # Microsoft-Azure-0
   tenant_id       = "558506eb-9459-4ef3-b920-ad55c555e729"
   # alias           = "ms-internal"
   # subscription_id = "4b72ed90-7ca3-4e76-8d0f-31a2c0bee7a3" # "Microsoft Internal"

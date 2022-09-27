@@ -195,6 +195,16 @@ variable "enable_container_insights" {
   description = "Enable cluster monitoring using Azure Container Insights"
 }
 
+variable "enable_nodepool_spot" {
+  type        = bool
+  description = "Creates Spot Nodepool"
+}
+
+variable "enable_vnet_peering" {
+  type        = bool
+  description = "Enable VNET peering between AKS VNET and Jumpbox VNET"
+}
+
 variable "log_analytics_workspace_name" {
   type        = string
   description = "Name of Log Analytics Workspace"
