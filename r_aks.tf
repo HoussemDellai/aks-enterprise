@@ -84,9 +84,9 @@ resource "azurerm_kubernetes_cluster" "aks" {
     max_pods                     = 110
     vm_size                      = var.aks_agent_vm_size # "Standard_D2ds_v5"
     os_disk_size_gb              = var.aks_agent_os_disk_size
-    os_disk_type                 = "Ephemeral"  # "Managed"
-    os_sku                       = "Ubuntu" # "CBLMariner" #
-    only_critical_addons_enabled = true         # taint default node pool with CriticalAddonsOnly=true:NoSchedule
+    os_disk_type                 = "Ephemeral" # "Managed"
+    os_sku                       = "Ubuntu"    # "CBLMariner" #
+    only_critical_addons_enabled = true        # taint default node pool with CriticalAddonsOnly=true:NoSchedule
     zones                        = [1, 2, 3]
     tags                         = var.tags
     vnet_subnet_id               = azurerm_subnet.subnetnodes.id
@@ -229,8 +229,8 @@ resource "azurerm_kubernetes_cluster_node_pool" "poolapps" {
   enable_node_public_ip  = false
   max_pods               = 110
   os_disk_size_gb        = 60
-  os_disk_type           = "Ephemeral"  # "Managed" # 
-  os_sku                 = "Ubuntu" # "CBLMariner" #
+  os_disk_type           = "Ephemeral" # "Managed" # 
+  os_sku                 = "Ubuntu"    # "CBLMariner" #
   enable_auto_scaling    = true
   min_count              = 1
   max_count              = 9
@@ -272,8 +272,8 @@ resource "azurerm_kubernetes_cluster_node_pool" "poolspot" {
   spot_max_price         = -1 # note: this is the "maximum" price
   os_type                = "Linux"
   vm_size                = "Standard_D2ds_v5" # "Standard_DS2_v2" # 
-  os_disk_type           = "Ephemeral"       # https://docs.microsoft.com/en-us/azure/virtual-machines/ephemeral-os-disks#size-requirements
-  os_sku                 = "Ubuntu" # "CBLMariner" # 
+  os_disk_type           = "Ephemeral"        # https://docs.microsoft.com/en-us/azure/virtual-machines/ephemeral-os-disks#size-requirements
+  os_sku                 = "Ubuntu"           # "CBLMariner" # 
   node_count             = 0
   enable_auto_scaling    = true
   max_count              = 3
