@@ -11,7 +11,7 @@ locals {
 # Public Ip 
 resource "azurerm_public_ip" "appgw_pip" {
   count               = var.enable_application_gateway ? 1 : 0
-  name                = "publicIp-appgw"
+  name                = "public-ip-appgw"
   location            = var.resources_location
   resource_group_name = azurerm_resource_group.rg.name
   allocation_method   = "Static"
