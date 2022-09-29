@@ -9,7 +9,7 @@ locals {
 }
 
 # Public Ip 
-resource "azurerm_public_ip" "pip" {
+resource "azurerm_public_ip" "appgw_pip" {
   count               = var.enable_application_gateway ? 1 : 0
   name                = "publicIp-appgw"
   location            = var.resources_location
@@ -45,7 +45,7 @@ resource "azurerm_application_gateway" "appgw" {
   }
   frontend_ip_configuration {
     name                 = local.frontend_ip_configuration_name
-    public_ip_address_id = azurerm_public_ip.pip.0.id
+    public_ip_address_id = azurerm_public_ip.appgw_pip.0.id
   }
   backend_address_pool {
     name = local.backend_address_pool_name
@@ -90,7 +90,7 @@ resource "azurerm_application_gateway" "appgw" {
     ]
   }
 
-  depends_on = [azurerm_virtual_network.vnet, azurerm_public_ip.pip]
+  depends_on = [azurerm_virtual_network.vnet, azurerm_public_ip.appgw_pip]
 }
 
 # # generated managed identity for app gateway
