@@ -1,52 +1,3 @@
-resource "azurerm_user_assigned_identity" "identity-aks" {
-  name                = "identity-aks"
-  resource_group_name = azurerm_resource_group.rg.name
-  location            = var.resources_location
-  tags                = var.tags
-}
-
-resource "azurerm_role_assignment" "aks_mi_network_contributor" {
-  scope                            = azurerm_virtual_network.vnet.id
-  role_definition_name             = "Network Contributor"
-  principal_id                     = azurerm_user_assigned_identity.identity-aks.principal_id
-  skip_service_principal_aad_check = true
-}
-
-resource "azurerm_role_assignment" "aks_mi_operator" {
-  scope                            = azurerm_user_assigned_identity.identity-kubelet.id
-  role_definition_name             = "Managed Identity Operator"
-  principal_id                     = azurerm_user_assigned_identity.identity-aks.principal_id
-  skip_service_principal_aad_check = true
-}
-
-resource "azurerm_role_assignment" "aks_mi_contributor_aks_rg" {
-  scope                            = azurerm_resource_group.rg.id
-  role_definition_name             = "Contributor"
-  principal_id                     = azurerm_user_assigned_identity.identity-aks.principal_id
-  skip_service_principal_aad_check = true
-}
-
-# Assign Network Contributor to the API server subnet
-# az role assignment create --scope <apiserver-subnet-resource-id> \
-#     --role "Network Contributor" \
-#     --assignee <managed-identity-client-id>
-resource "azurerm_role_assignment" "aks_mi_network_contributor_apiserver_subnet" {
-  count                            = var.enable_apiserver_vnet_integration ? 1 : 0
-  scope                            = azurerm_subnet.subnetapiserver.0.id
-  role_definition_name             = "Network Contributor"
-  principal_id                     = azurerm_user_assigned_identity.identity-aks.principal_id
-  skip_service_principal_aad_check = true
-}
-
-# resource "azurerm_role_assignment" "aks_mi_contributor_aks_nodes_rg" {
-#   scope                            = data.azurerm_resource_group.aks_nodes_rg.id # azurerm_kubernetes_cluster.aks.node_resource_group.id
-#   role_definition_name             = "Contributor"
-#   principal_id                     = azurerm_user_assigned_identity.identity-aks.principal_id
-#   skip_service_principal_aad_check = true
-
-#   depends_on = [azurerm_kubernetes_cluster.aks]
-# }
-
 resource "azurerm_kubernetes_cluster" "aks" {
   name                                = var.aks_name
   resource_group_name                 = azurerm_resource_group.rg.name
@@ -65,6 +16,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
   oidc_issuer_enabled                 = true
   run_command_enabled                 = true
   private_dns_zone_id                 = var.enable_private_cluster ? azurerm_private_dns_zone.private_dns_aks.0.id : null
+  tags                                = var.tags
   # api_server_authorized_ip_ranges     = ["0.0.0.0/0"] # when private cluster, this should not be enabled
   # automatic_channel_upgrade           = # none, patch, rapid, node-image, stable
 
@@ -119,9 +71,6 @@ resource "azurerm_kubernetes_cluster" "aks" {
       content {
         idle_timeout_in_minutes   = 30
         managed_outbound_ip_count = 2
-        # outbound_ip_address_ids   = []
-        # outbound_ip_prefix_ids    = []
-        # outbound_ports_allocated  = []
       }
     }
 
@@ -129,24 +78,17 @@ resource "azurerm_kubernetes_cluster" "aks" {
       for_each = var.aks_outbound_type == "userAssignedNATGateway" ? ["any_value"] : []
       # count = var.enable_container_insights ? 1 : 0 # count couldn't be used inside nested block
       content {
-        idle_timeout_in_minutes   = 4
-        managed_outbound_ip_count = 2
+        idle_timeout_in_minutes   = 4 # Must be between 4 and 120 inclusive. Defaults to 4
+        managed_outbound_ip_count = 2 # Must be between 1 and 100 inclusive
       }
     }
-
-    # TODO: if NAT Gateway is enabled
-    # nat_gateway_profile { # doesn't have any effect
-    #   idle_timeout_in_minutes   = 4
-    #   managed_outbound_ip_count = 2
-    # }
   }
 
   azure_active_directory_role_based_access_control {
     managed                = true
     azure_rbac_enabled     = true
-    admin_group_object_ids = [azuread_group.aks_admins.object_id]
-    tenant_id              = data.azurerm_subscription.current.tenant_id
-    # admin_group_object_ids = var.aks_admin_group_object_ids
+    admin_group_object_ids = var.enable_aks_admin_group ? [azuread_group.aks_admins.0.object_id] : null
+    tenant_id              = var.enable_aks_admin_group ? data.azurerm_subscription.current.tenant_id : null
   }
 
   dynamic "ingress_application_gateway" {
@@ -191,7 +133,6 @@ resource "azurerm_kubernetes_cluster" "aks" {
     }
   }
 
-  tags = var.tags
   depends_on = [
     azurerm_virtual_network.vnet,
     azurerm_application_gateway.appgw
@@ -205,89 +146,9 @@ resource "azurerm_kubernetes_cluster" "aks" {
       default_node_pool[0].node_count,
       microsoft_defender,
       # oms_agent
-      private_cluster_enabled
+      network_profile.0.nat_gateway_profile
     ]
   }
-}
-
-# data "azurerm_resource_group" "aks_nodes_rg" {
-#   name = azurerm_kubernetes_cluster.aks.node_resource_group # var.node_resource_group
-
-#   # depends_on = [azurerm_kubernetes_cluster.aks]
-# }
-
-resource "azurerm_kubernetes_cluster_node_pool" "poolapps" {
-  name                   = "poolapps"
-  kubernetes_cluster_id  = azurerm_kubernetes_cluster.aks.id
-  vm_size                = "Standard_D4pls_v5" # "Standard_D2ds_v5" # "Standard_D4s_v5" #  # "Standard_D2as_v5" doesn't support Ephemeral disk
-  node_count             = 1
-  zones                  = [1, 2, 3]
-  mode                   = "User"
-  orchestrator_version   = var.kubernetes_version
-  os_type                = "Linux"
-  enable_host_encryption = false
-  enable_node_public_ip  = false
-  max_pods               = 110
-  os_disk_size_gb        = 60
-  os_disk_type           = "Ephemeral" # "Managed" # 
-  os_sku                 = "Ubuntu"    # "CBLMariner" #
-  enable_auto_scaling    = true
-  min_count              = 1
-  max_count              = 9
-  fips_enabled           = false
-  vnet_subnet_id         = azurerm_subnet.subnetnodes.id
-  pod_subnet_id          = azurerm_subnet.subnetpods.id
-  # priority               = "Spot"
-  # eviction_policy        = "Delete"
-  # spot_max_price         = 0.5 # note: this is the "maximum" price
-  # node_labels = {
-  #   "kubernetes.azure.com/scalesetpriority" = "spot"
-  # }
-  # node_taints = [
-  #   "kubernetes.azure.com/scalesetpriority=spot:NoSchedule"
-  # ]
-
-  upgrade_settings {
-    max_surge = 3
-  }
-
-  lifecycle {
-    # create_before_destroy = true
-    ignore_changes = [
-      node_count,
-      node_taints
-    ]
-  }
-
-  tags = var.tags
-}
-
-resource "azurerm_kubernetes_cluster_node_pool" "poolspot" {
-  count                  = var.enable_nodepool_spot ? 1 : 0
-  kubernetes_cluster_id  = azurerm_kubernetes_cluster.aks.id
-  name                   = "poolspot"
-  mode                   = "User"
-  priority               = "Spot"
-  eviction_policy        = "Delete"
-  spot_max_price         = -1 # note: this is the "maximum" price
-  os_type                = "Linux"
-  vm_size                = "Standard_D2ds_v5" # "Standard_DS2_v2" # 
-  os_disk_type           = "Ephemeral"        # https://docs.microsoft.com/en-us/azure/virtual-machines/ephemeral-os-disks#size-requirements
-  os_sku                 = "Ubuntu"           # "CBLMariner" # 
-  node_count             = 0
-  enable_auto_scaling    = true
-  max_count              = 3
-  min_count              = 1
-  fips_enabled           = false
-  vnet_subnet_id         = azurerm_subnet.subnetnodes.id
-  pod_subnet_id          = azurerm_subnet.subnetpods.id
-  enable_host_encryption = false
-  enable_node_public_ip  = false
-  max_pods               = 110
-  os_disk_size_gb        = 60
-  zones                  = [1, 2, 3]
-  # node_taints            = ["kubernetes.azure.com/scalesetpriority=spot:NoSchedule"]
-  tags = var.tags
 }
 
 # az aks update -n <cluster-name> \

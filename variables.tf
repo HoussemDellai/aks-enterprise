@@ -195,6 +195,11 @@ variable "enable_container_insights" {
   description = "Enable cluster monitoring using Azure Container Insights"
 }
 
+variable "enable_nodepool_apps" {
+  type        = bool
+  description = "Creates Apps Nodepool"
+}
+
 variable "enable_nodepool_spot" {
   type        = bool
   description = "Creates Spot Nodepool"
@@ -203,6 +208,16 @@ variable "enable_nodepool_spot" {
 variable "enable_vnet_peering" {
   type        = bool
   description = "Enable VNET peering between AKS VNET and Jumpbox VNET"
+}
+
+variable "enable_aks_admin_group" {
+  type        = bool
+  description = "Creates Azure AD admin group for AKS"
+}
+
+variable "enable_aks_admin_rbac" {
+  type        = bool
+  description = "Adds admin role for AKS"
 }
 
 variable "log_analytics_workspace_name" {
