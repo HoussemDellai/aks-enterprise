@@ -42,6 +42,22 @@ resource "azurerm_private_dns_zone_virtual_network_link" "link_private_dns_aks_v
   virtual_network_id    = data.azurerm_virtual_network.vnet_vm_jumpbox.0.id
 }
 
+resource "azurerm_private_dns_zone_virtual_network_link" "private_dns_zone_link_to_vnet_hub_acr" {
+  count                 = var.enable_vnet_peering && var.enable_private_acr ? 1 : 0
+  name                  = "link-p-dns-zone-acr-to-vnet-hub"
+  resource_group_name   = azurerm_resource_group.rg.name
+  private_dns_zone_name = azurerm_private_dns_zone.private_dns_zone_acr.name
+  virtual_network_id    = data.azurerm_virtual_network.vnet_vm_jumpbox.0.id
+}
+
+resource "azurerm_private_dns_zone_virtual_network_link" "private_dns_zone_link_to_vnet_hub_kv" {
+  count                 = var.enable_vnet_peering && var.enable_private_keyvault ? 1 : 0
+  name                  = "link-p-dns-zone-kv-to-vnet-hub"
+  resource_group_name   = azurerm_resource_group.rg.name
+  private_dns_zone_name = azurerm_private_dns_zone.private_dns_zone_kv.name
+  virtual_network_id    = data.azurerm_virtual_network.vnet_vm_jumpbox.0.id
+}
+
 #---------------------------------------------------------------------------------------#
 #   PRIVATE DNS ZONE LINK (existing VNET)                                                    #
 #---------------------------------------------------------------------------------------#

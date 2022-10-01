@@ -1,3 +1,9 @@
+resource "azurerm_private_dns_zone" "key_vault_private_dns_zone" {
+  name                = "privatelink.vaultcore.azure.net"
+  resource_group_name = azurerm_resource_group.resource_group_shared.name
+  tags                = var.tags
+}
+
 # resource "azurerm_key_vault" "kv" {
 #   name                        = var.keyvault_name
 #   location                    = var.resources_location
@@ -30,4 +36,38 @@
 #   scope                = "${azurerm_key_vault.kv.id}/secrets/${azurerm_key_vault_secret.secret.name}" # azurerm_key_vault_secret.secret.id
 #   role_definition_name = "Key Vault Secrets User"
 #   principal_id         = azurerm_kubernetes_cluster.aks.key_vault_secrets_provider.0.secret_identity.0.object_id
+# }
+
+
+# https://github.com/Azure-Samples/aks-multi-cluster-service-mesh/blob/main/istio/key_vault.tf
+# resource "azurerm_monitor_diagnostic_setting" "key_vault__diagnostics_settings" {
+#   name                       = "diagnostics-settings"
+#   target_resource_id         = azurerm_key_vault.key_vault.id
+#   log_analytics_workspace_id = azurerm_log_analytics_workspace.log_analytics_workspace_one.id
+
+#   log {
+#     category = "AuditEvent"
+#     enabled  = true
+
+#     retention_policy {
+#       enabled = true
+#     }
+#   }
+
+#   log {
+#     category = "AzurePolicyEvaluationDetails"
+#     enabled  = true
+
+#     retention_policy {
+#       enabled = true
+#     }
+#   }
+
+#   metric {
+#     category = "AllMetrics"
+
+#     retention_policy {
+#       enabled = true
+#     }
+#   }
 # }

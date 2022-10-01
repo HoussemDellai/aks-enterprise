@@ -36,17 +36,17 @@ resource "azurerm_nat_gateway_public_ip_association" "pip_assoc" {
 resource "azurerm_subnet_nat_gateway_association" "subnetnodes_assoc" {
   count          = var.aks_outbound_type == "userAssignedNATGateway" ? 1 : 0
   nat_gateway_id = azurerm_nat_gateway.natgw.0.id
-  subnet_id      = azurerm_subnet.subnetnodes.id
+  subnet_id      = azurerm_subnet.subnet_nodes.id
 }
 
 resource "azurerm_subnet_nat_gateway_association" "subnetpods_assoc" {
   count          = var.aks_outbound_type == "userAssignedNATGateway" ? 1 : 0
   nat_gateway_id = azurerm_nat_gateway.natgw.0.id
-  subnet_id      = azurerm_subnet.subnetpods.id
+  subnet_id      = azurerm_subnet.subnet_pods.id
 }
 
 resource "azurerm_subnet_nat_gateway_association" "subnetappgw_assoc" {
   count          = var.aks_outbound_type == "userAssignedNATGateway" && var.enable_application_gateway ? 1 : 0
   nat_gateway_id = azurerm_nat_gateway.natgw.0.id
-  subnet_id      = azurerm_subnet.subnetappgw.0.id
+  subnet_id      = azurerm_subnet.subnet_appgw.0.id
 }

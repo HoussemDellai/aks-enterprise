@@ -33,7 +33,7 @@ resource "azurerm_application_gateway" "appgw" {
   }
   gateway_ip_configuration {
     name      = "appGatewayIpConfig"
-    subnet_id = azurerm_subnet.subnetappgw.0.id
+    subnet_id = azurerm_subnet.subnet_appgw.0.id
   }
   frontend_port {
     name = local.frontend_port_name
@@ -114,4 +114,3 @@ resource "azurerm_role_assignment" "role-contributor" {
   #   azurerm_application_gateway.appgw
   # ]
 }
-

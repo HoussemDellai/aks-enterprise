@@ -41,8 +41,8 @@ resource "azurerm_kubernetes_cluster" "aks" {
     only_critical_addons_enabled = true        # taint default node pool with CriticalAddonsOnly=true:NoSchedule
     zones                        = [1, 2, 3]
     tags                         = var.tags
-    vnet_subnet_id               = azurerm_subnet.subnetnodes.id
-    pod_subnet_id                = azurerm_subnet.subnetpods.id
+    vnet_subnet_id               = azurerm_subnet.subnet_nodes.id
+    pod_subnet_id                = azurerm_subnet.subnet_pods.id
   }
 
   identity {
@@ -172,10 +172,124 @@ resource "azapi_update_resource" "aks_api_vnet_integration" {
       apiServerAccessProfile = {
         enablePrivateCluster  = var.enable_private_cluster,
         enableVnetIntegration = var.enable_apiserver_vnet_integration,
-        subnetId              = azurerm_subnet.subnetapiserver.0.id
+        subnetId              = azurerm_subnet.subnet_apiserver.0.id
       },
     }
   })
 
   depends_on = []
 }
+
+# https://github.com/Azure-Samples/aks-multi-cluster-service-mesh/blob/main/istio/main.tf
+# resource "azurerm_monitor_diagnostic_setting" "aks_one_diagnostics_settings" {
+#   name                       = "diagnostics-settings"
+#   target_resource_id         = module.aks_one.aks_id
+#   log_analytics_workspace_id = azurerm_log_analytics_workspace.log_analytics_workspace_one.id
+
+#   log {
+#     category = "kube-apiserver"
+#     enabled  = true
+
+#     retention_policy {
+#       enabled = true
+#     }
+#   }
+
+#   log {
+#     category = "kube-audit"
+#     enabled  = true
+
+#     retention_policy {
+#       enabled = true
+#     }
+#   }
+
+#   log {
+#     category = "kube-audit-admin"
+#     enabled  = true
+
+#     retention_policy {
+#       enabled = true
+#     }
+#   }
+
+#   log {
+#     category = "kube-controller-manager"
+#     enabled  = true
+
+#     retention_policy {
+#       enabled = true
+#     }
+#   }
+
+#   log {
+#     category = "cloud-controller-manager"
+#     enabled  = true
+
+#     retention_policy {
+#       enabled = true
+#     }
+#   }
+
+#   log {
+#     category = "kube-scheduler"
+#     enabled  = true
+
+#     retention_policy {
+#       enabled = true
+#     }
+#   }
+
+#   log {
+#     category = "cluster-autoscaler"
+#     enabled  = true
+
+#     retention_policy {
+#       enabled = true
+#     }
+#   }
+
+#   log {
+#     category = "guard"
+#     enabled  = true
+
+#     retention_policy {
+#       enabled = true
+#     }
+#   }
+
+#   log {
+#     category = "csi-azuredisk-controller"
+#     enabled  = true
+
+#     retention_policy {
+#       enabled = true
+#     }
+#   }
+
+#   log {
+#     category = "csi-azurefile-controller"
+#     enabled  = true
+
+#     retention_policy {
+#       enabled = true
+#     }
+#   }
+
+#   log {
+#     category = "csi-snapshot-controller"
+#     enabled  = true
+
+#     retention_policy {
+#       enabled = true
+#     }
+#   }
+
+#   metric {
+#     category = "AllMetrics"
+
+#     retention_policy {
+#       enabled = true
+#     }
+#   }
+# }

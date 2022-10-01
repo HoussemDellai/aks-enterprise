@@ -3,18 +3,23 @@
 #   description = "A prefix used for all resources in this example"
 # }
 
+variable "resource_group_shared" {
+  default     = "rg-shared"
+  description = "Name of the shared resource group for ACR, KV, Log Analytics."
+}
+
 variable "resource_group_name" {
   default     = "rg-aks-cluster"
   description = "Name of the resource group."
 }
 
+variable "node_resource_group" {
+  default = "rg-aks-cluster-managed"
+}
+
 variable "resource_group_name_vnet" {
   default     = "rg-aks-network-spoke"
   description = "Name of the resource group for existing VNET."
-}
-
-variable "node_resource_group" {
-  default = "rg-aks-cluster-managed"
 }
 
 variable "resources_location" {
@@ -70,6 +75,11 @@ variable "app_gateway_subnet_address_prefix" {
 variable "apiserver_subnet_address_prefix" {
   description = "AKS API Server IP address."
   default     = ["10.2.0.0/28"]
+}
+
+variable "pe_subnet_address_prefix" {
+  description = "Private Endpoints IP addresses."
+  default     = ["10.3.0.0/28"]
 }
 
 variable "app_gateway_name" {
@@ -134,11 +144,6 @@ variable "aks_dns_service_ip" {
 variable "aks_docker_bridge_cidr" {
   description = "CIDR notation IP for Docker bridge."
   default     = "172.17.0.1/16"
-}
-
-variable "aks_enable_rbac" {
-  description = "Enable RBAC on the AKS cluster. Defaults to true."
-  default     = "true"
 }
 
 variable "vm_user_name" {
@@ -218,6 +223,21 @@ variable "enable_aks_admin_group" {
 variable "enable_aks_admin_rbac" {
   type        = bool
   description = "Adds admin role for AKS"
+}
+
+variable "aks_enable_rbac" {
+  description = "Enable RBAC on the AKS cluster. Defaults to true."
+  default     = "true"
+}
+
+variable "enable_private_acr" {
+  description = "Creates private ACR with Private DNS Zone and Private Endpoint."
+  default     = "true"
+}
+
+variable "enable_private_keyvault" {
+  description = "Creates private Keyvault with Private DNS Zone and Private Endpoint."
+  default     = "true"
 }
 
 variable "log_analytics_workspace_name" {
