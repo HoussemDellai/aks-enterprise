@@ -1,8 +1,8 @@
 resource "azurerm_container_registry" "acr" {
   name                = var.acr_name
-  resource_group_name = azurerm_resource_group.rg.name
+  resource_group_name = azurerm_resource_group.rg_shared.name
   location            = var.resources_location
-  sku                 = "Standard"
+  sku                 = var.enable_private_acr ? "Premium" : "Standard"
   admin_enabled       = false # true
   tags                = var.tags
 
@@ -38,34 +38,35 @@ resource "azurerm_role_assignment" "role_acrpull" {
 }
 
 # https://github.com/Azure-Samples/aks-multi-cluster-service-mesh/blob/main/istio/container_registry.tf
-# resource "azurerm_monitor_diagnostic_setting" "registry_diagnostics_settings" {
-#   name                       = "diagnostics-settings"
-#   target_resource_id         = azurerm_container_registry.container_registry.id
-#   log_analytics_workspace_id = azurerm_log_analytics_workspace.log_analytics_workspace_one.id
+resource "azurerm_monitor_diagnostic_setting" "diagnostic_settings_acr" {
+  count                      = var.enable_container_insights ? 1 : 0
+  name                       = "diagnostics-settings"
+  target_resource_id         = azurerm_container_registry.acr.id
+  log_analytics_workspace_id = azurerm_log_analytics_workspace.workspace.0.id
 
-#   log {
-#     category = "ContainerRegistryRepositoryEvents"
-#     enabled  = true
+  log {
+    category = "ContainerRegistryRepositoryEvents"
+    enabled  = true
 
-#     retention_policy {
-#       enabled = true
-#     }
-#   }
+    retention_policy {
+      enabled = true
+    }
+  }
 
-#   log {
-#     category = "ContainerRegistryLoginEvents"
-#     enabled  = true
+  log {
+    category = "ContainerRegistryLoginEvents"
+    enabled  = true
 
-#     retention_policy {
-#       enabled = true
-#     }
-#   }
+    retention_policy {
+      enabled = true
+    }
+  }
 
-#   metric {
-#     category = "AllMetrics"
+  metric {
+    category = "AllMetrics"
 
-#     retention_policy {
-#       enabled = true
-#     }
-#   }
-# }
+    retention_policy {
+      enabled = true
+    }
+  }
+}

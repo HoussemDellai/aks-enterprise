@@ -114,3 +114,44 @@ resource "azurerm_role_assignment" "role-contributor" {
   #   azurerm_application_gateway.appgw
   # ]
 }
+
+resource "azurerm_monitor_diagnostic_setting" "diagnostic_settings_appgw" {
+  name                       = "diagnostics-settings"
+  target_resource_id         = azurerm_application_gateway.appgw.0.id
+  log_analytics_workspace_id = azurerm_log_analytics_workspace.workspace.0.id
+
+  log {
+    category = "ApplicationGatewayAccessLog"
+    enabled  = true
+
+    retention_policy {
+      enabled = true
+    }
+  }
+
+  log {
+    category = "ApplicationGatewayPerformanceLog"
+    enabled  = true
+
+    retention_policy {
+      enabled = true
+    }
+  }
+
+  log {
+    category = "ApplicationGatewayFirewallLog"
+    enabled  = true
+
+    retention_policy {
+      enabled = true
+    }
+  }
+
+  metric {
+    category = "AllMetrics"
+
+    retention_policy {
+      enabled = true
+    }
+  }
+}

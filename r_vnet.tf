@@ -60,31 +60,31 @@ resource "azurerm_subnet" "subnet_apiserver" {
 
 resource "azurerm_subnet" "subnet_pe" {
   count                = var.enable_private_acr || var.enable_private_keyvault ? 1 : 0
-  name                 = var.app_gateway_subnet_name
+  name                 = var.pe_subnet_name
   virtual_network_name = azurerm_virtual_network.vnet.name
   resource_group_name  = azurerm_resource_group.rg.name
   address_prefixes     = var.pe_subnet_address_prefix
 }
 
-# resource "azurerm_monitor_diagnostic_setting" "vnet_one_diagnostics_settings" {
-#   name                       = "diagnostics-settings"
-#   target_resource_id         = module.network_one.vnet_id
-#   log_analytics_workspace_id = azurerm_log_analytics_workspace.log_analytics_workspace_one.id
+resource "azurerm_monitor_diagnostic_setting" "diagnostic_settings_vnet" {
+  name                       = "diagnostics-settings"
+  target_resource_id         = azurerm_virtual_network.vnet.id
+  log_analytics_workspace_id = azurerm_log_analytics_workspace.workspace.0.id
 
-#   log {
-#     category = "VMProtectionAlerts"
-#     enabled  = true
+  log {
+    category = "VMProtectionAlerts"
+    enabled  = true
 
-#     retention_policy {
-#       enabled = true
-#     }
-#   }
+    retention_policy {
+      enabled = true
+    }
+  }
 
-#   metric {
-#     category = "AllMetrics"
+  metric {
+    category = "AllMetrics"
 
-#     retention_policy {
-#       enabled = true
-#     }
-#   }
-# }
+    retention_policy {
+      enabled = true
+    }
+  }
+}

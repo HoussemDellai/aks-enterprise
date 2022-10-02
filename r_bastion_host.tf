@@ -41,7 +41,7 @@
 #   ]
 # }
 
-# resource "azurerm_monitor_diagnostic_setting" "bastion_host_one_diagnostics_settings" {
+# resource "azurerm_monitor_diagnostic_setting" "bastion_host_one_diagnostic_settings" {
 #   count = var.bastion_host_enabled ? 1 : 0
 
 #   name                       = "diagnostics-settings"
@@ -66,7 +66,7 @@
 #   }
 # }
 
-# resource "azurerm_monitor_diagnostic_setting" "public_ip_one_diagnostics_settings" {
+# resource "azurerm_monitor_diagnostic_setting" "public_ip_one_diagnostic_settings" {
 #   count = var.bastion_host_enabled ? 1 : 0
 
 #   name                       = "diagnostics-settings"

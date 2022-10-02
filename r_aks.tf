@@ -181,115 +181,116 @@ resource "azapi_update_resource" "aks_api_vnet_integration" {
 }
 
 # https://github.com/Azure-Samples/aks-multi-cluster-service-mesh/blob/main/istio/main.tf
-# resource "azurerm_monitor_diagnostic_setting" "aks_one_diagnostics_settings" {
-#   name                       = "diagnostics-settings"
-#   target_resource_id         = module.aks_one.aks_id
-#   log_analytics_workspace_id = azurerm_log_analytics_workspace.log_analytics_workspace_one.id
+resource "azurerm_monitor_diagnostic_setting" "diagnostic_settings_aks" {
+  count                      = var.enable_container_insights ? 1 : 0
+  name                       = "diagnostics-settings"
+  target_resource_id         = azurerm_kubernetes_cluster.aks.id
+  log_analytics_workspace_id = azurerm_log_analytics_workspace.workspace.0.id
 
-#   log {
-#     category = "kube-apiserver"
-#     enabled  = true
+  log {
+    category = "kube-apiserver"
+    enabled  = true
 
-#     retention_policy {
-#       enabled = true
-#     }
-#   }
+    retention_policy {
+      enabled = true
+    }
+  }
 
-#   log {
-#     category = "kube-audit"
-#     enabled  = true
+  log {
+    category = "kube-audit"
+    enabled  = true
 
-#     retention_policy {
-#       enabled = true
-#     }
-#   }
+    retention_policy {
+      enabled = true
+    }
+  }
 
-#   log {
-#     category = "kube-audit-admin"
-#     enabled  = true
+  log {
+    category = "kube-audit-admin"
+    enabled  = true
 
-#     retention_policy {
-#       enabled = true
-#     }
-#   }
+    retention_policy {
+      enabled = true
+    }
+  }
 
-#   log {
-#     category = "kube-controller-manager"
-#     enabled  = true
+  log {
+    category = "kube-controller-manager"
+    enabled  = true
 
-#     retention_policy {
-#       enabled = true
-#     }
-#   }
+    retention_policy {
+      enabled = true
+    }
+  }
 
-#   log {
-#     category = "cloud-controller-manager"
-#     enabled  = true
+  log {
+    category = "cloud-controller-manager"
+    enabled  = true
 
-#     retention_policy {
-#       enabled = true
-#     }
-#   }
+    retention_policy {
+      enabled = true
+    }
+  }
 
-#   log {
-#     category = "kube-scheduler"
-#     enabled  = true
+  log {
+    category = "kube-scheduler"
+    enabled  = true
 
-#     retention_policy {
-#       enabled = true
-#     }
-#   }
+    retention_policy {
+      enabled = true
+    }
+  }
 
-#   log {
-#     category = "cluster-autoscaler"
-#     enabled  = true
+  log {
+    category = "cluster-autoscaler"
+    enabled  = true
 
-#     retention_policy {
-#       enabled = true
-#     }
-#   }
+    retention_policy {
+      enabled = true
+    }
+  }
 
-#   log {
-#     category = "guard"
-#     enabled  = true
+  log {
+    category = "guard"
+    enabled  = true
 
-#     retention_policy {
-#       enabled = true
-#     }
-#   }
+    retention_policy {
+      enabled = true
+    }
+  }
 
-#   log {
-#     category = "csi-azuredisk-controller"
-#     enabled  = true
+  log {
+    category = "csi-azuredisk-controller"
+    enabled  = true
 
-#     retention_policy {
-#       enabled = true
-#     }
-#   }
+    retention_policy {
+      enabled = true
+    }
+  }
 
-#   log {
-#     category = "csi-azurefile-controller"
-#     enabled  = true
+  log {
+    category = "csi-azurefile-controller"
+    enabled  = true
 
-#     retention_policy {
-#       enabled = true
-#     }
-#   }
+    retention_policy {
+      enabled = true
+    }
+  }
 
-#   log {
-#     category = "csi-snapshot-controller"
-#     enabled  = true
+  log {
+    category = "csi-snapshot-controller"
+    enabled  = true
 
-#     retention_policy {
-#       enabled = true
-#     }
-#   }
+    retention_policy {
+      enabled = true
+    }
+  }
 
-#   metric {
-#     category = "AllMetrics"
+  metric {
+    category = "AllMetrics"
 
-#     retention_policy {
-#       enabled = true
-#     }
-#   }
-# }
+    retention_policy {
+      enabled = true
+    }
+  }
+}

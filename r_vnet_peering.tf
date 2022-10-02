@@ -46,7 +46,7 @@ resource "azurerm_private_dns_zone_virtual_network_link" "private_dns_zone_link_
   count                 = var.enable_vnet_peering && var.enable_private_acr ? 1 : 0
   name                  = "link-p-dns-zone-acr-to-vnet-hub"
   resource_group_name   = azurerm_resource_group.rg.name
-  private_dns_zone_name = azurerm_private_dns_zone.private_dns_zone_acr.name
+  private_dns_zone_name = azurerm_private_dns_zone.private_dns_zone_acr.0.name
   virtual_network_id    = data.azurerm_virtual_network.vnet_vm_jumpbox.0.id
 }
 
@@ -54,7 +54,7 @@ resource "azurerm_private_dns_zone_virtual_network_link" "private_dns_zone_link_
   count                 = var.enable_vnet_peering && var.enable_private_keyvault ? 1 : 0
   name                  = "link-p-dns-zone-kv-to-vnet-hub"
   resource_group_name   = azurerm_resource_group.rg.name
-  private_dns_zone_name = azurerm_private_dns_zone.private_dns_zone_kv.name
+  private_dns_zone_name = azurerm_private_dns_zone.private_dns_zone_keyvault.0.name
   virtual_network_id    = data.azurerm_virtual_network.vnet_vm_jumpbox.0.id
 }
 

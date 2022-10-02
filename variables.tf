@@ -57,6 +57,11 @@ variable "apiserver_subnet_name" {
   default     = "subnet-apiserver"
 }
 
+variable "pe_subnet_name" {
+  description = "Subnet for Private Endoints."
+  default     = "subnet-pe"
+}
+
 variable "subnet_nodes_address_prefix" {
   description = "Subnet address prefix."
   default     = ["10.240.0.0/16"]
