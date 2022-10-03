@@ -67,7 +67,8 @@ resource "azurerm_subnet" "subnet_pe" {
 }
 
 resource "azurerm_monitor_diagnostic_setting" "diagnostic_settings_vnet" {
-  name                       = "diagnostics-settings"
+  count                      = var.enable_container_insights ? 1 : 0
+  name                       = "diagnostic-settings"
   target_resource_id         = azurerm_virtual_network.vnet.id
   log_analytics_workspace_id = azurerm_log_analytics_workspace.workspace.0.id
 

@@ -29,10 +29,10 @@ resource "azurerm_kubernetes_cluster" "aks" {
 
   default_node_pool {
     name                         = "poolsystem"
-    node_count                   = var.aks_agent_count
+    node_count                   = 1
     enable_auto_scaling          = true
     min_count                    = 1
-    max_count                    = 5
+    max_count                    = 2
     max_pods                     = 110
     vm_size                      = var.aks_agent_vm_size # "Standard_D2ds_v5"
     os_disk_size_gb              = var.aks_agent_os_disk_size
@@ -183,7 +183,7 @@ resource "azapi_update_resource" "aks_api_vnet_integration" {
 # https://github.com/Azure-Samples/aks-multi-cluster-service-mesh/blob/main/istio/main.tf
 resource "azurerm_monitor_diagnostic_setting" "diagnostic_settings_aks" {
   count                      = var.enable_container_insights ? 1 : 0
-  name                       = "diagnostics-settings"
+  name                       = "diagnostic-settings"
   target_resource_id         = azurerm_kubernetes_cluster.aks.id
   log_analytics_workspace_id = azurerm_log_analytics_workspace.workspace.0.id
 

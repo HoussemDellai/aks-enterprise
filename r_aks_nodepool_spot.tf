@@ -13,8 +13,8 @@ resource "azurerm_kubernetes_cluster_node_pool" "poolspot" {
   os_sku                 = "Ubuntu"           # "CBLMariner" # 
   node_count             = 0
   enable_auto_scaling    = true
-  max_count              = 3
-  min_count              = 1
+  max_count              = 1 # 3
+  min_count              = 0 # 1
   fips_enabled           = false
   vnet_subnet_id         = azurerm_subnet.subnet_nodes.id
   pod_subnet_id          = azurerm_subnet.subnet_pods.id

@@ -44,7 +44,7 @@
 # resource "azurerm_monitor_diagnostic_setting" "bastion_host_one_diagnostic_settings" {
 #   count = var.bastion_host_enabled ? 1 : 0
 
-#   name                       = "diagnostics-settings"
+#   name                       = "diagnostic-settings"
 #   target_resource_id         = azurerm_bastion_host.bastion_host_one[0].id
 #   log_analytics_workspace_id = azurerm_log_analytics_workspace.log_analytics_workspace_one.id
 
@@ -69,7 +69,7 @@
 # resource "azurerm_monitor_diagnostic_setting" "public_ip_one_diagnostic_settings" {
 #   count = var.bastion_host_enabled ? 1 : 0
 
-#   name                       = "diagnostics-settings"
+#   name                       = "diagnostic-settings"
 #   target_resource_id         = azurerm_public_ip.public_ip_one[0].id
 #   log_analytics_workspace_id = azurerm_log_analytics_workspace.log_analytics_workspace_one.id
 

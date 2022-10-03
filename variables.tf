@@ -32,6 +32,11 @@ variable "virtual_network_name" {
   default     = "vnet-spoke-aks"
 }
 
+variable "cidr_vnet_hub" {
+  description = "HUB VNET address prefix"
+  default     = "172.16.0.0/16"
+}
+
 variable "virtual_network_address_prefix" {
   description = "VNET address prefix"
   default     = "10.0.0.0/8"
@@ -87,6 +92,11 @@ variable "pe_subnet_address_prefix" {
   default     = ["10.3.0.0/28"]
 }
 
+variable "cidr_subnet_firewall" {
+  description = "CIDR for Firewall Subnet."
+  default = ["172.16.1.0/26"]
+}
+
 variable "app_gateway_name" {
   description = "Name of the Application Gateway"
   default     = "appgw-aks"
@@ -119,11 +129,6 @@ variable "aks_dns_prefix" {
 variable "aks_agent_os_disk_size" {
   description = "Disk size (in GB) to provision for each of the agent pool nodes. This value ranges from 0 to 1023. Specifying 0 applies the default disk size for that agentVMSize."
   default     = 40
-}
-
-variable "aks_agent_count" {
-  description = "The number of agent nodes for the cluster."
-  default     = 1
 }
 
 variable "aks_agent_vm_size" {
@@ -253,6 +258,11 @@ variable "log_analytics_workspace_name" {
 variable "aks_outbound_type" {
   type        = string
   description = "userAssignedNATGateway, loadBalancer, userDefinedRouting, managedNATGateway"
+}
+
+variable "enable_keyvault" {
+  type        = bool
+  description = "Creates a Keyvault."
 }
 
 # variable "enable_velero_backups" {

@@ -55,7 +55,7 @@ provider "azurerm" {
 }
 
 provider "azurerm" {
-  alias           = "ms-internal"
+  alias           = "subscription_hub" # "ms-internal" # 
   subscription_id = "4b72ed90-7ca3-4e76-8d0f-31a2c0bee7a3"
   tenant_id       = "72f988bf-86f1-41af-91ab-2d7cd011db47"
   # client_id       = "a0d7fbe0-dca2-4848-b6ac-ad15e2c31840"
