@@ -8,11 +8,6 @@ variable "resource_group_name" {
   description = "Name of the resource group."
 }
 
-# variable "resource_group_name_vnet" {
-#   default     = "rg-aks-network-spoke"
-#   description = "Name of the resource group for existing VNET."
-# }
-
 # variable "node_resource_group" {
 #   default = "rg-aks-cluster-managed"
 # }
@@ -47,17 +42,17 @@ variable "resource_group_name" {
 #   default     = "subnet-appgw"
 # }
 
-# variable "subnet_nodes_address_prefix" {
+# variable "cidr_subnet_nodes" {
 #   description = "Subnet address prefix."
 #   default     = ["10.240.0.0/16"]
 # }
 
-# variable "subnet_pods_address_prefix" {
+# variable "cidr_subnet_pods" {
 #   description = "Subnet address prefix."
 #   default     = ["10.241.0.0/16"]
 # }
 
-# variable "app_gateway_subnet_address_prefix" {
+# variable "cidr_subnet_appgateway" {
 #   description = "Subnet server IP address."
 #   default     = ["10.1.0.0/16"]
 # }
@@ -111,7 +106,7 @@ variable "aks_name" {
 #   default     = "1.23.5"
 # }
 
-# variable "aks_service_cidr" {
+# variable "cidr_aks_service" {
 #   description = "CIDR notation IP range from which to assign service cluster IPs"
 #   default     = "10.0.0.0/16"
 # }
@@ -121,7 +116,7 @@ variable "aks_name" {
 #   default     = "10.0.0.10"
 # }
 
-# variable "aks_docker_bridge_cidr" {
+# variable "cidr_aks_docker_bridge" {
 #   description = "CIDR notation IP for Docker bridge."
 #   default     = "172.17.0.1/16"
 # }

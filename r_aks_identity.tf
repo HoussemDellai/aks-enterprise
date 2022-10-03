@@ -6,7 +6,7 @@ resource "azurerm_user_assigned_identity" "identity-aks" {
 }
 
 resource "azurerm_role_assignment" "aks_mi_network_contributor" {
-  scope                            = azurerm_virtual_network.vnet.id
+  scope                            = azurerm_virtual_network.vnet_spoke.id
   role_definition_name             = "Network Contributor"
   principal_id                     = azurerm_user_assigned_identity.identity-aks.principal_id
   skip_service_principal_aad_check = true

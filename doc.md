@@ -59,3 +59,15 @@ Yes, as long as the virtual networks are peered and they don't have overlapping 
 
 ## Multi-cluster / Shared Application Gateway
 By default AGIC assumes full ownership of the Application Gateway it is linked to. AGIC version 0.8.0 and later can share a single Application Gateway with other Azure components. For instance, we could use the same Application Gateway for an app hosted on Virtual Machine Scale Set as well as an AKS cluster.
+
+## Private Address Ranges
+The Internet Assigned Numbers Authority (IANA) has assigned several address ranges to be used by private networks.
+
+Address ranges to be use by private networks are:  
+
+Class A: 10.0.0.0 to 10.255.255.255  
+Class B: 172.16.0.0 to 172.31.255.255  
+Class C: 192.168.0.0 to 192.168.255.255  
+An IP address within these ranges is therefore considered non-routable, as it is not unique. Any private network that needs to use IP addresses internally can use any address within these ranges without any coordination with IANA or an Internet registry. Addresses within this private address space are only unique within a given private network.
+
+All addresses outside these ranges are considered public.

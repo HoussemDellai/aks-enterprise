@@ -7,7 +7,7 @@ resource "azurerm_virtual_network_peering" "peering_vnet_aks_vnet_vm_jumpbox" {
   count                        = var.enable_vnet_peering ? 1 : 0
   name                         = "peering_vnet_aks_vnet_vm_jumpbox"
   resource_group_name          = azurerm_resource_group.rg_aks.name
-  virtual_network_name         = azurerm_virtual_network.vnet.name
+  virtual_network_name         = azurerm_virtual_network.vnet_spoke.name
   remote_virtual_network_id    = azurerm_virtual_network.vnet_hub.0.id
   allow_virtual_network_access = true
   allow_forwarded_traffic      = true
@@ -20,7 +20,7 @@ resource "azurerm_virtual_network_peering" "peering_vnet_vm_jumpbox_vnet_aks" {
   name                         = "peering_vnet_vm_jumpbox_vnet_aks"
   virtual_network_name         = azurerm_virtual_network.vnet_hub.0.name
   resource_group_name          = azurerm_virtual_network.vnet_hub.0.resource_group_name
-  remote_virtual_network_id    = azurerm_virtual_network.vnet.id
+  remote_virtual_network_id    = azurerm_virtual_network.vnet_spoke.id
   allow_virtual_network_access = true
   allow_forwarded_traffic      = true
   allow_gateway_transit        = false # `allow_gateway_transit` must be set to false for vnet Global Peering

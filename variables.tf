@@ -22,18 +22,13 @@ variable "rg_aks_nodes" {
   default = "rg-aks-cluster-managed"
 }
 
-variable "resource_group_name_vnet" {
-  default     = "rg-aks-network-spoke"
-  description = "Name of the resource group for existing VNET."
-}
-
 variable "resources_location" {
   default     = "westeurope"
   description = "Location of the resource group."
 }
 
-variable "virtual_network_name" {
-  description = "Virtual network name"
+variable "vnet_spoke" {
+  description = "Virtual network Spoke name"
   default     = "vnet-spoke-aks"
 }
 
@@ -42,12 +37,12 @@ variable "cidr_vnet_hub" {
   default     = "172.16.0.0/16"
 }
 
-variable "virtual_network_address_prefix" {
-  description = "VNET address prefix"
+variable "cidr_vnet_spoke" {
+  description = "VNET Spoke address prefix"
   default     = "10.0.0.0/8"
 }
 
-variable "subnet_nodes_name" {
+variable "subnet_nodes" {
   description = "Subnet Name."
   default     = "subnet-aks-nodes"
 }
@@ -72,17 +67,17 @@ variable "pe_subnet_name" {
   default     = "subnet-pe"
 }
 
-variable "subnet_nodes_address_prefix" {
+variable "cidr_subnet_nodes" {
   description = "Subnet address prefix."
   default     = ["10.240.0.0/16"]
 }
 
-variable "subnet_pods_address_prefix" {
+variable "cidr_subnet_pods" {
   description = "Subnet address prefix."
   default     = ["10.241.0.0/16"]
 }
 
-variable "app_gateway_subnet_address_prefix" {
+variable "cidr_subnet_appgateway" {
   description = "Subnet server IP address."
   default     = ["10.1.0.0/16"]
 }
@@ -92,7 +87,7 @@ variable "apiserver_subnet_address_prefix" {
   default     = ["10.2.0.0/28"]
 }
 
-variable "pe_subnet_address_prefix" {
+variable "cidr_subnet_pe" {
   description = "Private Endpoints IP addresses."
   default     = ["10.3.0.0/28"]
 }
@@ -146,7 +141,7 @@ variable "kubernetes_version" {
   default     = "1.23.5"
 }
 
-variable "aks_service_cidr" {
+variable "cidr_aks_service" {
   description = "CIDR notation IP range from which to assign service cluster IPs"
   default     = "10.0.0.0/16"
 }
@@ -156,7 +151,7 @@ variable "aks_dns_service_ip" {
   default     = "10.0.0.10"
 }
 
-variable "aks_docker_bridge_cidr" {
+variable "cidr_aks_docker_bridge" {
   description = "CIDR notation IP for Docker bridge."
   default     = "172.17.0.1/16"
 }
@@ -185,11 +180,6 @@ variable "aks_network_plugin" {
   description = "AKS network Plugin (Azure CNI or Kubenet)"
 }
 
-variable "spn_name" {
-  type        = string
-  description = "Name of Service Principal"
-}
-
 variable "aad_group_aks_admins" {
   type        = string
   description = "Name of AAD group for AKS admins"
@@ -200,7 +190,7 @@ variable "enable_apiserver_vnet_integration" {
   description = "Enable AKS API Server VNET Integration"
 }
 
-variable "enable_application_gateway" {
+variable "enable_app_gateway" {
   type        = bool
   description = "Enable AGIC addon for AKS"
 }
@@ -255,7 +245,7 @@ variable "enable_private_keyvault" {
   default     = "true"
 }
 
-variable "log_analytics_workspace_name" {
+variable "log_analytics_workspace" {
   type        = string
   description = "Name of Log Analytics Workspace"
 }

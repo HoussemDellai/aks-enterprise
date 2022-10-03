@@ -42,7 +42,7 @@ output "host" {
 }
 
 output "app_gateway_ip_address" {
-  value = var.enable_application_gateway ? azurerm_public_ip.appgw_pip.0.ip_address : "Application Gateway is disabled"
+  value = var.enable_app_gateway ? azurerm_public_ip.appgw_pip.0.ip_address : "Application Gateway is disabled"
 }
 
 output "nat_gateway_ip_address" {

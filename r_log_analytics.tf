@@ -1,6 +1,6 @@
 resource "azurerm_log_analytics_workspace" "workspace" {
   count               = var.enable_container_insights ? 1 : 0
-  name                = var.log_analytics_workspace_name
+  name                = var.log_analytics_workspace
   location            = var.resources_location
   resource_group_name = azurerm_resource_group.rg_spoke.name
   sku                 = "PerGB2018" # PerGB2018, Free, PerNode, Premium, Standard, Standalone, Unlimited, CapacityReservation

@@ -60,11 +60,11 @@ resource "azurerm_kubernetes_cluster" "aks" {
     network_plugin     = var.aks_network_plugin # "kubenet", "azure", "transparent"
     network_policy     = "calico"               # "azure" 
     dns_service_ip     = var.aks_dns_service_ip
-    docker_bridge_cidr = var.aks_docker_bridge_cidr
-    service_cidr       = var.aks_service_cidr
+    docker_bridge_cidr = var.cidr_aks_docker_bridge
+    service_cidr       = var.cidr_aks_service
     outbound_type      = var.aks_outbound_type # "userAssignedNATGateway" "loadBalancer" # userDefinedRouting, managedNATGateway
     load_balancer_sku  = "standard"            # "basic"
-    # pod_cidr           = var.aks_network_plugin == "kubenet" ? var.subnet_pods_address_prefix : null # null # can only be set when network_plugin is set to kubenet
+    # pod_cidr           = var.aks_network_plugin == "kubenet" ? var.cidr_subnet_pods : null # null # can only be set when network_plugin is set to kubenet
 
     dynamic "load_balancer_profile" {
       for_each = var.aks_outbound_type == "loadBalancer" ? ["any_value"] : []
@@ -92,8 +92,8 @@ resource "azurerm_kubernetes_cluster" "aks" {
   }
 
   dynamic "ingress_application_gateway" {
-    for_each = var.enable_application_gateway ? ["any_value"] : []
-    # count = var.enable_application_gateway ? 1 : 0 # count couldn't be used inside nested block
+    for_each = var.enable_app_gateway ? ["any_value"] : []
+    # count = var.enable_app_gateway ? 1 : 0 # count couldn't be used inside nested block
     content {
       gateway_id = azurerm_application_gateway.appgw.0.id
       # other options if we want to allow the AGIC addon to create a new AppGW 
@@ -104,7 +104,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
     }
   }
   # ingress_application_gateway {
-  #   gateway_id = var.enable_application_gateway ? azurerm_application_gateway.appgw.0.id : null # doesn't work when resource disabled
+  #   gateway_id = var.enable_app_gateway ? azurerm_application_gateway.appgw.0.id : null # doesn't work when resource disabled
   # }
 
   dynamic "oms_agent" {
@@ -134,7 +134,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
   }
 
   depends_on = [
-    azurerm_virtual_network.vnet,
+    azurerm_virtual_network.vnet_spoke,
     azurerm_application_gateway.appgw
   ]
 

@@ -1,16 +1,16 @@
 # Locals block for hardcoded names
 locals {
-  backend_address_pool_name      = "${var.virtual_network_name}-beap"
-  frontend_port_name             = "${var.virtual_network_name}-feport"
-  frontend_ip_configuration_name = "${var.virtual_network_name}-feip"
-  http_setting_name              = "${var.virtual_network_name}-be-htst"
-  listener_name                  = "${var.virtual_network_name}-httplstn"
-  request_routing_rule_name      = "${var.virtual_network_name}-rqrt"
+  backend_address_pool_name      = "${var.vnet_spoke}-beap"
+  frontend_port_name             = "${var.vnet_spoke}-feport"
+  frontend_ip_configuration_name = "${var.vnet_spoke}-feip"
+  http_setting_name              = "${var.vnet_spoke}-be-htst"
+  listener_name                  = "${var.vnet_spoke}-httplstn"
+  request_routing_rule_name      = "${var.vnet_spoke}-rqrt"
 }
 
 # Public Ip 
 resource "azurerm_public_ip" "appgw_pip" {
-  count               = var.enable_application_gateway ? 1 : 0
+  count               = var.enable_app_gateway ? 1 : 0
   name                = "public-ip-appgw"
   location            = var.resources_location
   resource_group_name = azurerm_resource_group.rg_aks.name
@@ -20,9 +20,9 @@ resource "azurerm_public_ip" "appgw_pip" {
 }
 
 resource "azurerm_application_gateway" "appgw" {
-  # for_each            = var.enable_application_gateway ? ["any_value"] : []
-  # for_each            = var.enable_application_gateway ? toset(["any_value"]) : toset([])
-  count               = var.enable_application_gateway ? 1 : 0
+  # for_each            = var.enable_app_gateway ? ["any_value"] : []
+  # for_each            = var.enable_app_gateway ? toset(["any_value"]) : toset([])
+  count               = var.enable_app_gateway ? 1 : 0
   name                = var.app_gateway_name
   resource_group_name = azurerm_resource_group.rg_aks.name
   location            = var.resources_location
@@ -90,7 +90,7 @@ resource "azurerm_application_gateway" "appgw" {
     ]
   }
 
-  depends_on = [azurerm_virtual_network.vnet, azurerm_public_ip.appgw_pip]
+  depends_on = [azurerm_virtual_network.vnet_spoke, azurerm_public_ip.appgw_pip]
 }
 
 # # generated managed identity for app gateway
@@ -103,7 +103,7 @@ resource "azurerm_application_gateway" "appgw" {
 
 # AppGW (generated with addon) Identity needs also Contributor role over AKS/VNET RG
 resource "azurerm_role_assignment" "role-contributor" {
-  count                = var.enable_application_gateway ? 1 : 0
+  count                = var.enable_app_gateway ? 1 : 0
   scope                = azurerm_resource_group.rg_aks.id
   role_definition_name = "Contributor"
   principal_id         = azurerm_kubernetes_cluster.aks.ingress_application_gateway.0.ingress_application_gateway_identity.0.object_id
