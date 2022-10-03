@@ -1,9 +1,9 @@
-output "resource_group_name" {
-  value = var.resource_group_name
+output "rg_aks" {
+  value = var.rg_aks
 }
 
-output "node_resource_group" {
-  value = var.node_resource_group
+output "rg_aks_nodes" {
+  value = var.rg_aks_nodes
 }
 
 output "client_key" {

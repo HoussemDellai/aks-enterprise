@@ -1,6 +1,6 @@
 resource "azurerm_user_assigned_identity" "identity-aks" {
   name                = "identity-aks"
-  resource_group_name = azurerm_resource_group.rg.name
+  resource_group_name = azurerm_resource_group.rg_aks.name
   location            = var.resources_location
   tags                = var.tags
 }
@@ -20,7 +20,7 @@ resource "azurerm_role_assignment" "aks_mi_operator" {
 }
 
 resource "azurerm_role_assignment" "aks_mi_contributor_aks_rg" {
-  scope                            = azurerm_resource_group.rg.id
+  scope                            = azurerm_resource_group.rg_aks.id
   role_definition_name             = "Contributor"
   principal_id                     = azurerm_user_assigned_identity.identity-aks.principal_id
   skip_service_principal_aad_check = true

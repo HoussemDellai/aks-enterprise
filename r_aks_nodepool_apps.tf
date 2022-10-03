@@ -4,7 +4,7 @@ resource "azurerm_kubernetes_cluster_node_pool" "poolapps" {
   name                   = "poolapps"
   kubernetes_cluster_id  = azurerm_kubernetes_cluster.aks.id
   vm_size                = "Standard_D2ds_v5" # "Standard_D4pls_v5" # "Standard_D4s_v5" #  # "Standard_D2as_v5" doesn't support Ephemeral disk
-  node_count             = 0 # 1
+  node_count             = 0                  # 1
   enable_auto_scaling    = true
   min_count              = 0 # 1
   max_count              = 0 # 9

@@ -1,6 +1,6 @@
 resource "azurerm_container_registry" "acr" {
   name                = var.acr_name
-  resource_group_name = azurerm_resource_group.rg_shared.name
+  resource_group_name = azurerm_resource_group.rg_spoke.name
   location            = var.resources_location
   sku                 = var.enable_private_acr ? "Premium" : "Standard"
   admin_enabled       = false # true
@@ -25,7 +25,7 @@ resource "azurerm_container_registry" "acr" {
 
 resource "azurerm_user_assigned_identity" "identity-kubelet" {
   name                = "${var.aks_name}-agentpool"
-  resource_group_name = azurerm_resource_group.rg.name # azurerm_kubernetes_cluster.aks.node_resource_group
+  resource_group_name = azurerm_resource_group.rg_aks.name # azurerm_kubernetes_cluster.aks.node_resource_group
   location            = var.resources_location
   tags                = var.tags
 }

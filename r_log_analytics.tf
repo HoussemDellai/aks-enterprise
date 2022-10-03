@@ -2,7 +2,7 @@ resource "azurerm_log_analytics_workspace" "workspace" {
   count               = var.enable_container_insights ? 1 : 0
   name                = var.log_analytics_workspace_name
   location            = var.resources_location
-  resource_group_name = azurerm_resource_group.rg_shared.name
+  resource_group_name = azurerm_resource_group.rg_spoke.name
   sku                 = "PerGB2018" # PerGB2018, Free, PerNode, Premium, Standard, Standalone, Unlimited, CapacityReservation
   retention_in_days   = 30          # possible values are either 7 (Free Tier only) or range between 30 and 730
   tags                = var.tags

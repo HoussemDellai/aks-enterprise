@@ -1,7 +1,8 @@
 # prefix = "demo041"
-resource_group_name               = "rg-aks-cluster"
-resource_group_shared             = "rg-shared"
-node_resource_group               = "rg-aks-cluster-managed"
+rg_hub                            = "rg-hub"
+rg_spoke                          = "rg-spoke"
+rg_aks                            = "rg-aks-cluster"
+rg_aks_nodes                      = "rg-aks-cluster-managed"
 resources_location                = "westeurope" # "eastus2" # 
 aks_name                          = "aks-cluster"
 acr_name                          = "acrforakstf0111"

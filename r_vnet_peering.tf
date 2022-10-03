@@ -6,7 +6,7 @@
 resource "azurerm_virtual_network_peering" "peering_vnet_aks_vnet_vm_jumpbox" {
   count                        = var.enable_vnet_peering ? 1 : 0
   name                         = "peering_vnet_aks_vnet_vm_jumpbox"
-  resource_group_name          = azurerm_resource_group.rg.name
+  resource_group_name          = azurerm_resource_group.rg_aks.name
   virtual_network_name         = azurerm_virtual_network.vnet.name
   remote_virtual_network_id    = azurerm_virtual_network.vnet_hub.0.id
   allow_virtual_network_access = true
@@ -30,14 +30,14 @@ resource "azurerm_virtual_network_peering" "peering_vnet_vm_jumpbox_vnet_aks" {
 resource "azurerm_private_dns_zone_virtual_network_link" "link_private_dns_aks_vnet_vm_devbox" {
   count                 = var.enable_vnet_peering && var.enable_private_cluster ? 1 : 0
   name                  = "link_private_dns_aks_vnet_vm_devbox"
-  resource_group_name   = azurerm_resource_group.rg.name
+  resource_group_name   = azurerm_resource_group.rg_aks.name
   private_dns_zone_name = azurerm_private_dns_zone.private_dns_aks.0.name
   virtual_network_id    = azurerm_virtual_network.vnet_hub.0.id
 }
 
 resource "azurerm_private_dns_zone_virtual_network_link" "private_dns_zone_link_to_vnet_hub_acr" {
   count                 = var.enable_vnet_peering && var.enable_private_acr ? 1 : 0
-  provider              = azurerm.subscription_hub  
+  provider              = azurerm.subscription_hub
   name                  = "link-p-dns-zone-acr-to-vnet-hub"
   resource_group_name   = azurerm_private_dns_zone.private_dns_zone_acr.0.resource_group_name
   private_dns_zone_name = azurerm_private_dns_zone.private_dns_zone_acr.0.name
@@ -47,7 +47,7 @@ resource "azurerm_private_dns_zone_virtual_network_link" "private_dns_zone_link_
 resource "azurerm_private_dns_zone_virtual_network_link" "private_dns_zone_link_to_vnet_hub_kv" {
   count                 = var.enable_vnet_peering && var.enable_private_keyvault && var.enable_keyvault ? 1 : 0
   name                  = "link-p-dns-zone-kv-to-vnet-hub"
-  resource_group_name   = azurerm_resource_group.rg.name
+  resource_group_name   = azurerm_resource_group.rg_aks.name
   private_dns_zone_name = azurerm_private_dns_zone.private_dns_zone_keyvault.0.name
   virtual_network_id    = azurerm_virtual_network.vnet_hub.0.id
 }

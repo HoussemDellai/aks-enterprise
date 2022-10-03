@@ -3,17 +3,22 @@
 #   description = "A prefix used for all resources in this example"
 # }
 
-variable "resource_group_shared" {
-  default     = "rg-shared"
-  description = "Name of the shared resource group for ACR, KV, Log Analytics."
+variable "rg_hub" {
+  default     = "rg-hub"
+  description = "Name of the Hub resource group Firewall, Hub VNET, Log Analytics."
 }
 
-variable "resource_group_name" {
+variable "rg_spoke" {
+  default     = "rg-spoke"
+  description = "Name of the Spoke resource group for ACR, KV, Log Analytics."
+}
+
+variable "rg_aks" {
   default     = "rg-aks-cluster"
   description = "Name of the resource group."
 }
 
-variable "node_resource_group" {
+variable "rg_aks_nodes" {
   default = "rg-aks-cluster-managed"
 }
 
@@ -94,7 +99,7 @@ variable "pe_subnet_address_prefix" {
 
 variable "cidr_subnet_firewall" {
   description = "CIDR for Firewall Subnet."
-  default = ["172.16.1.0/26"]
+  default     = ["172.16.1.0/26"]
 }
 
 variable "app_gateway_name" {
