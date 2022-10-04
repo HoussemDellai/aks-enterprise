@@ -23,5 +23,4 @@ resource "azurerm_subnet" "subnet_firewall" {
   virtual_network_name                      = azurerm_virtual_network.vnet_hub.0.name
   address_prefixes                          = var.cidr_subnet_firewall
   private_endpoint_network_policies_enabled = false
-  # enforce_private_link_endpoint_network_policies = false
 }

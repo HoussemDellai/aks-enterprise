@@ -116,7 +116,7 @@ resource "azurerm_role_assignment" "role-contributor" {
 }
 
 resource "azurerm_monitor_diagnostic_setting" "diagnostic_settings_appgw" {
-  count                      = var.enable_container_insights ? 1 : 0
+  count                      = var.enable_monitoring ? 1 : 0
   name                       = "diagnostic-settings"
   target_resource_id         = azurerm_application_gateway.appgw.0.id
   log_analytics_workspace_id = azurerm_log_analytics_workspace.workspace.0.id

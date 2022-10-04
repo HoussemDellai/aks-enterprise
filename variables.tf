@@ -29,7 +29,7 @@ variable "resources_location" {
 
 variable "vnet_spoke" {
   description = "Virtual network Spoke name"
-  default     = "vnet-spoke-aks"
+  default     = "vnet-spoke"
 }
 
 variable "cidr_vnet_hub" {
@@ -131,11 +131,6 @@ variable "aks_agent_os_disk_size" {
   default     = 40
 }
 
-variable "aks_agent_vm_size" {
-  description = "VM size"
-  default     = "Standard_D2ds_v5"
-}
-
 variable "kubernetes_version" {
   description = "Kubernetes version"
   default     = "1.23.5"
@@ -200,7 +195,7 @@ variable "enable_private_cluster" {
   description = "Enable private AKS cluster"
 }
 
-variable "enable_container_insights" {
+variable "enable_monitoring" {
   type        = bool
   description = "Enable cluster monitoring using Azure Container Insights"
 }

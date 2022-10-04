@@ -1,28 +1,28 @@
-resource "azurerm_user_assigned_identity" "identity-aks" {
-  name                = "identity-aks"
+resource "azurerm_user_assigned_identity" "identity_aks" {
+  name                = "identity_aks"
   resource_group_name = azurerm_resource_group.rg_aks.name
   location            = var.resources_location
   tags                = var.tags
 }
 
-resource "azurerm_role_assignment" "aks_mi_network_contributor" {
+resource "azurerm_role_assignment" "role_identity_aks_network_contributor" {
   scope                            = azurerm_virtual_network.vnet_spoke.id
   role_definition_name             = "Network Contributor"
-  principal_id                     = azurerm_user_assigned_identity.identity-aks.principal_id
+  principal_id                     = azurerm_user_assigned_identity.identity_aks.principal_id
   skip_service_principal_aad_check = true
 }
 
-resource "azurerm_role_assignment" "aks_mi_operator" {
+resource "azurerm_role_assignment" "role_identity_aks_mi_operator" {
   scope                            = azurerm_user_assigned_identity.identity-kubelet.id
   role_definition_name             = "Managed Identity Operator"
-  principal_id                     = azurerm_user_assigned_identity.identity-aks.principal_id
+  principal_id                     = azurerm_user_assigned_identity.identity_aks.principal_id
   skip_service_principal_aad_check = true
 }
 
-resource "azurerm_role_assignment" "aks_mi_contributor_aks_rg" {
+resource "azurerm_role_assignment" "role_identity_aks_contributor" {
   scope                            = azurerm_resource_group.rg_aks.id
   role_definition_name             = "Contributor"
-  principal_id                     = azurerm_user_assigned_identity.identity-aks.principal_id
+  principal_id                     = azurerm_user_assigned_identity.identity_aks.principal_id
   skip_service_principal_aad_check = true
 }
 
@@ -30,10 +30,10 @@ resource "azurerm_role_assignment" "aks_mi_contributor_aks_rg" {
 # az role assignment create --scope <apiserver-subnet-resource-id> \
 #     --role "Network Contributor" \
 #     --assignee <managed-identity-client-id>
-resource "azurerm_role_assignment" "aks_mi_network_contributor_apiserver_subnet" {
+resource "azurerm_role_assignment" "role_identity_aks_network_contributor_subnet_apiserver" {
   count                            = var.enable_apiserver_vnet_integration ? 1 : 0
   scope                            = azurerm_subnet.subnet_apiserver.0.id
   role_definition_name             = "Network Contributor"
-  principal_id                     = azurerm_user_assigned_identity.identity-aks.principal_id
+  principal_id                     = azurerm_user_assigned_identity.identity_aks.principal_id
   skip_service_principal_aad_check = true
 }

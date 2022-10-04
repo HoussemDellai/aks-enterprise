@@ -71,3 +71,14 @@ Class C: 192.168.0.0 to 192.168.255.255
 An IP address within these ranges is therefore considered non-routable, as it is not unique. Any private network that needs to use IP addresses internally can use any address within these ranges without any coordination with IANA or an Internet registry. Addresses within this private address space are only unique within a given private network.
 
 All addresses outside these ranges are considered public.
+
+## Cross-tenant / Cross-subscription virtual network peering
+
+Our second scenario is a bit more complex, the configuration is still pretty much the same. This time we have two Azure subscriptions associated with two different Azure AD tenants and two different Service Principals with Multi-tenancy enabled.
+
+<image src="assets\peering_across_tenants.jpg">  
+
+More details: https://medium.com/microsoftazure/configure-azure-virtual-network-peerings-with-terraform-762b708a28d4
+
+## Can I use a managed identity to access a resource in a different directory/tenant? 
+No. Managed identities don't currently support cross-directory scenarios.

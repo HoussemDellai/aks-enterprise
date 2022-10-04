@@ -15,10 +15,10 @@ resource "azurerm_kubernetes_cluster" "aks" {
   local_account_disabled              = true
   oidc_issuer_enabled                 = true
   run_command_enabled                 = true
-  private_dns_zone_id                 = var.enable_private_cluster ? azurerm_private_dns_zone.private_dns_aks.0.id : null
+  private_dns_zone_id                 = var.enable_private_cluster ? azurerm_private_dns_zone.private_dns_zone_aks.0.id : null
   tags                                = var.tags
-  # api_server_authorized_ip_ranges     = ["0.0.0.0/0"] # when private cluster, this should not be enabled
-  # automatic_channel_upgrade           = # none, patch, rapid, node-image, stable
+  api_server_authorized_ip_ranges     = var.enable_private_cluster ? null : ["0.0.0.0/0"] # when private cluster, this should not be enabled
+  automatic_channel_upgrade           = "node-image"                                      # none, patch, rapid, node-image, stable
 
   # linux_profile {
   #   admin_username = var.vm_user_name
@@ -34,11 +34,12 @@ resource "azurerm_kubernetes_cluster" "aks" {
     min_count                    = 1
     max_count                    = 2
     max_pods                     = 110
-    vm_size                      = var.aks_agent_vm_size # "Standard_D2ds_v5"
+    vm_size                      = "Standard_D2ds_v5"
     os_disk_size_gb              = var.aks_agent_os_disk_size
     os_disk_type                 = "Ephemeral" # "Managed"
-    os_sku                       = "Ubuntu"    # "CBLMariner" #
-    only_critical_addons_enabled = true        # taint default node pool with CriticalAddonsOnly=true:NoSchedule
+    ultra_ssd_enabled            = false
+    os_sku                       = "Ubuntu" # "CBLMariner" #
+    only_critical_addons_enabled = true     # taint default node pool with CriticalAddonsOnly=true:NoSchedule
     zones                        = [1, 2, 3]
     tags                         = var.tags
     vnet_subnet_id               = azurerm_subnet.subnet_nodes.id
@@ -47,13 +48,20 @@ resource "azurerm_kubernetes_cluster" "aks" {
 
   identity {
     type         = "UserAssigned" # "SystemAssigned"
-    identity_ids = [azurerm_user_assigned_identity.identity-aks.id]
+    identity_ids = [azurerm_user_assigned_identity.identity_aks.id]
   }
 
   kubelet_identity {
     client_id                 = azurerm_user_assigned_identity.identity-kubelet.client_id
     object_id                 = azurerm_user_assigned_identity.identity-kubelet.principal_id # there is no object_id
     user_assigned_identity_id = azurerm_user_assigned_identity.identity-kubelet.id
+  }
+
+  azure_active_directory_role_based_access_control {
+    managed                = true
+    azure_rbac_enabled     = true
+    admin_group_object_ids = var.enable_aks_admin_group ? [azuread_group.aks_admins.0.object_id] : null
+    tenant_id              = var.enable_aks_admin_group ? data.azurerm_subscription.current.tenant_id : null
   }
 
   network_profile {
@@ -76,19 +84,12 @@ resource "azurerm_kubernetes_cluster" "aks" {
 
     dynamic "nat_gateway_profile" {
       for_each = var.aks_outbound_type == "userAssignedNATGateway" ? ["any_value"] : []
-      # count = var.enable_container_insights ? 1 : 0 # count couldn't be used inside nested block
+      # count = var.enable_monitoring ? 1 : 0 # count couldn't be used inside nested block
       content {
         idle_timeout_in_minutes   = 4 # Must be between 4 and 120 inclusive. Defaults to 4
         managed_outbound_ip_count = 2 # Must be between 1 and 100 inclusive
       }
     }
-  }
-
-  azure_active_directory_role_based_access_control {
-    managed                = true
-    azure_rbac_enabled     = true
-    admin_group_object_ids = var.enable_aks_admin_group ? [azuread_group.aks_admins.0.object_id] : null
-    tenant_id              = var.enable_aks_admin_group ? data.azurerm_subscription.current.tenant_id : null
   }
 
   dynamic "ingress_application_gateway" {
@@ -108,14 +109,14 @@ resource "azurerm_kubernetes_cluster" "aks" {
   # }
 
   dynamic "oms_agent" {
-    for_each = var.enable_container_insights ? ["any_value"] : []
-    # count = var.enable_container_insights ? 1 : 0 # count couldn't be used inside nested block
+    for_each = var.enable_monitoring ? ["any_value"] : []
+    # count = var.enable_monitoring ? 1 : 0 # count couldn't be used inside nested block
     content {
       log_analytics_workspace_id = azurerm_log_analytics_workspace.workspace.0.id
     }
   }
   # oms_agent {
-  #   log_analytics_workspace_id = var.enable_container_insights ? azurerm_log_analytics_workspace.workspace.0.id : null # doesn't work when resource disabled
+  #   log_analytics_workspace_id = var.enable_monitoring ? azurerm_log_analytics_workspace.workspace.0.id : null # doesn't work when resource disabled
   # }
   # microsoft_defender {
   #   log_analytics_workspace_id = ""
@@ -148,6 +149,19 @@ resource "azurerm_kubernetes_cluster" "aks" {
       # oms_agent
       network_profile.0.nat_gateway_profile
     ]
+    # precondition {
+    #   condition     = (var.client_id != "" && var.client_secret != "") || (var.identity_type != "")
+    #   error_message = "Either `client_id` and `client_secret` or `identity_type` must be set."
+    # }
+    # precondition {
+    #   # Why don't use var.identity_ids != null && length(var.identity_ids)>0 ? Because bool expression in Terraform is not short circuit so even var.identity_ids is null Terraform will still invoke length function with null and cause error. https://github.com/hashicorp/terraform/issues/24128
+    #   condition     = (var.client_id != "" && var.client_secret != "") || (var.identity_type == "SystemAssigned") || (var.identity_ids == null ? false : length(var.identity_ids) > 0)
+    #   error_message = "If use identity and `UserAssigned` or `SystemAssigned, UserAssigned` is set, an `identity_ids` must be set as well."
+    # }
+    # precondition {
+    #   condition     = !(var.microsoft_defender_enabled && !var.log_analytics_workspace_enabled)
+    #   error_message = "Enabling Microsoft Defender requires that `log_analytics_workspace_enabled` be set to true."
+    # }
   }
 }
 
@@ -182,7 +196,7 @@ resource "azapi_update_resource" "aks_api_vnet_integration" {
 
 # https://github.com/Azure-Samples/aks-multi-cluster-service-mesh/blob/main/istio/main.tf
 resource "azurerm_monitor_diagnostic_setting" "diagnostic_settings_aks" {
-  count                      = var.enable_container_insights ? 1 : 0
+  count                      = var.enable_monitoring ? 1 : 0
   name                       = "diagnostic-settings"
   target_resource_id         = azurerm_kubernetes_cluster.aks.id
   log_analytics_workspace_id = azurerm_log_analytics_workspace.workspace.0.id

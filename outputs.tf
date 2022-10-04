@@ -49,12 +49,12 @@ output "nat_gateway_ip_address" {
   value = var.aks_outbound_type == "userAssignedNATGateway" ? azurerm_public_ip.natgw_pip.0.ip_address : "NAT Gateway is disabled"
 }
 
-output "aks_private_zone_id" {
-  value = var.enable_private_cluster ? azurerm_private_dns_zone.private_dns_aks.0.id : "Private cluster is disabled"
+output "private_dns_zone_aks_id" {
+  value = var.enable_private_cluster ? azurerm_private_dns_zone.private_dns_zone_aks.0.id : "Private cluster is disabled"
 }
 
-output "aks_private_zone_name" {
-  value = var.enable_private_cluster ? azurerm_private_dns_zone.private_dns_aks.0.name : "Private cluster is disabled"
+output "private_dns_zone_aks_name" {
+  value = var.enable_private_cluster ? azurerm_private_dns_zone.private_dns_zone_aks.0.name : "Private cluster is disabled"
 }
 
 output "aks_public_fqdn" {

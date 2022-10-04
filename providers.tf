@@ -33,12 +33,12 @@ terraform {
 }
 
 provider "azurerm" {
-  # alias           = "subscription_spoke"
-  subscription_id = "4b72ed90-7ca3-4e76-8d0f-31a2c0bee7a3" # ms-int # "1ee6a30c-7308-4dc8-babf-6b6bd7839bf8" # -2 # "25a98a18-5e94-4b21-9d17-e8cf45bfd81f" # -1 # "17b12858-3960-4e6f-a663-a06fdae23428" # Microsoft-Azure-0
-  tenant_id       = "72f988bf-86f1-41af-91ab-2d7cd011db47" # ms ad # "558506eb-9459-4ef3-b920-ad55c555e729"
+  # alias           = "subscription_spoke" # default
+  subscription_id = "59d574d4-1c03-4092-ab22-312ed594eec9" #"4b72ed90-7ca3-4e76-8d0f-31a2c0bee7a3" # ms-int 
+  tenant_id       = "558506eb-9459-4ef3-b920-ad55c555e729" # "72f988bf-86f1-41af-91ab-2d7cd011db47" # ms ad 
   # client_id       = "a0d7fbe0-xxxxxxxxxxxxxxxxxxxxx"
   # client_secret   = "BAFHTxxxxxxxxxxxxxxxxxxxxxxxxx"
-  auxiliary_tenant_ids = ["72f988bf-86f1-41af-91ab-2d7cd011db47"]
+  auxiliary_tenant_ids = ["72f988bf-86f1-41af-91ab-2d7cd011db47"] # (Optional) List of auxiliary Tenant IDs required for multi-tenancy and cross-tenant scenarios. This can also be sourced from the ARM_AUXILIARY_TENANT_IDS Environment Variable.
 
   features {
     resource_group {
@@ -52,7 +52,7 @@ provider "azurerm" {
 }
 
 provider "azurerm" {
-  alias           = "subscription_hub" # "ms-internal" # 
+  alias           = "subscription_hub"
   subscription_id = "4b72ed90-7ca3-4e76-8d0f-31a2c0bee7a3"
   tenant_id       = "72f988bf-86f1-41af-91ab-2d7cd011db47"
   # client_id       = "a0d7fbe0-dca2-4848-b6ac-ad15e2c31840"

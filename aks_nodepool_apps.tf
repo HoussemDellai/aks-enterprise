@@ -21,7 +21,7 @@ resource "azurerm_kubernetes_cluster_node_pool" "poolapps" {
   fips_enabled           = false
   vnet_subnet_id         = azurerm_subnet.subnet_nodes.id
   pod_subnet_id          = azurerm_subnet.subnet_pods.id
-  # priority               = "Spot"
+  priority               = "Regular" # "Spot"
   # eviction_policy        = "Delete"
   # spot_max_price         = 0.5 # note: this is the "maximum" price
   # node_labels = {

@@ -96,11 +96,6 @@ variable "aks_name" {
 #   default     = 1
 # }
 
-# variable "aks_agent_vm_size" {
-#   description = "VM size"
-#   default     = "Standard_D2ds_v5"
-# }
-
 # variable "kubernetes_version" {
 #   description = "Kubernetes version"
 #   default     = "1.23.5"
