@@ -34,8 +34,8 @@ terraform {
 
 provider "azurerm" {
   # alias           = "subscription_spoke" # default
-  subscription_id = "59d574d4-1c03-4092-ab22-312ed594eec9" #"4b72ed90-7ca3-4e76-8d0f-31a2c0bee7a3" # ms-int 
-  tenant_id       = "558506eb-9459-4ef3-b920-ad55c555e729" # "72f988bf-86f1-41af-91ab-2d7cd011db47" # ms ad 
+  subscription_id = "59d574d4-1c03-4092-ab22-312ed594eec9"
+  tenant_id       = "558506eb-9459-4ef3-b920-ad55c555e729"
   # client_id       = "a0d7fbe0-xxxxxxxxxxxxxxxxxxxxx"
   # client_secret   = "BAFHTxxxxxxxxxxxxxxxxxxxxxxxxx"
   auxiliary_tenant_ids = ["72f988bf-86f1-41af-91ab-2d7cd011db47"] # (Optional) List of auxiliary Tenant IDs required for multi-tenancy and cross-tenant scenarios. This can also be sourced from the ARM_AUXILIARY_TENANT_IDS Environment Variable.
@@ -59,6 +59,12 @@ provider "azurerm" {
   # client_secret   = "BAFHTR3235FEHsdfb%#$W%weF#@a"
   auxiliary_tenant_ids = ["558506eb-9459-4ef3-b920-ad55c555e729"]
   features {}
+}
+
+# Configure the Azure Active Directory Provider
+provider "azuread" {
+  # tenant_id = "558506eb-9459-4ef3-b920-ad55c555e729"
+  # use_cli = true
 }
 
 provider "azapi" {
