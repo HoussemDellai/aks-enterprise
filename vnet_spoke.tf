@@ -1,7 +1,7 @@
 resource "azurerm_virtual_network" "vnet_spoke" {
   name                = var.vnet_spoke
   location            = var.resources_location
-  resource_group_name = azurerm_resource_group.rg_aks.name
+  resource_group_name = azurerm_resource_group.rg_aks.name #TODO : change to Spoke RG
   address_space       = var.cidr_vnet_spoke
 
   tags = var.tags
@@ -62,8 +62,16 @@ resource "azurerm_subnet" "subnet_pe" {
   count                = var.enable_private_acr || var.enable_private_keyvault ? 1 : 0
   name                 = var.pe_subnet_name
   virtual_network_name = azurerm_virtual_network.vnet_spoke.name
-  resource_group_name  = azurerm_resource_group.rg_aks.name
+  resource_group_name  = azurerm_virtual_network.vnet_spoke.resource_group_name
   address_prefixes     = var.cidr_subnet_pe
+}
+
+resource "azurerm_subnet" "subnet_bastion" {
+  count                = var.enable_bastion ? 1 : 0
+  name                 = var.subnet_bastion
+  virtual_network_name = azurerm_virtual_network.vnet_spoke.name
+  resource_group_name  = azurerm_virtual_network.vnet_spoke.resource_group_name
+  address_prefixes     = var.cidr_subnet_bastion
 }
 
 resource "azurerm_monitor_diagnostic_setting" "diagnostic_settings_vnet" {

@@ -52,19 +52,24 @@ variable "subnet_pods_name" {
   default     = "subnet-aks-pods"
 }
 
-variable "app_gateway_subnet_name" {
+variable "app_gateway_subnet_name" { #TODO
   description = "Subnet Name."
   default     = "subnet-appgw"
 }
 
-variable "apiserver_subnet_name" {
+variable "apiserver_subnet_name" { #TODO
   description = "AKS API Server subnet name."
   default     = "subnet-apiserver"
 }
 
-variable "pe_subnet_name" {
+variable "pe_subnet_name" { #TODO
   description = "Subnet for Private Endoints."
   default     = "subnet-pe"
+}
+
+variable "subnet_bastion" {
+  description = "Subnet for Bastion Host, should be AzureBastionSubnet."
+  default     = "AzureBastionSubnet"
 }
 
 variable "cidr_subnet_nodes" {
@@ -90,6 +95,11 @@ variable "apiserver_subnet_address_prefix" {
 variable "cidr_subnet_pe" {
   description = "Private Endpoints IP addresses."
   default     = ["10.3.0.0/28"]
+}
+
+variable "cidr_subnet_bastion" {
+  description = "CIDR range for Subnet Bastion"
+  default     = ["10.4.0.0/27"]
 }
 
 variable "cidr_subnet_firewall" {
@@ -225,6 +235,21 @@ variable "enable_aks_admin_rbac" {
   description = "Adds admin role for AKS"
 }
 
+variable "enable_keyvault" {
+  type        = bool
+  description = "Creates a Keyvault."
+}
+
+variable "enable_bastion" {
+  type        = bool
+  description = "Creates a Bastion Host."
+}
+
+variable "enable_firewall" {
+  type        = bool
+  description = "Creates an Azure Firewall."
+}
+
 variable "aks_enable_rbac" {
   description = "Enable RBAC on the AKS cluster. Defaults to true."
   default     = "true"
@@ -248,11 +273,6 @@ variable "log_analytics_workspace" {
 variable "aks_outbound_type" {
   type        = string
   description = "userAssignedNATGateway, loadBalancer, userDefinedRouting, managedNATGateway"
-}
-
-variable "enable_keyvault" {
-  type        = bool
-  description = "Creates a Keyvault."
 }
 
 # variable "enable_velero_backups" {

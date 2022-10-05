@@ -82,3 +82,12 @@ More details: https://medium.com/microsoftazure/configure-azure-virtual-network-
 
 ## Can I use a managed identity to access a resource in a different directory/tenant? 
 No. Managed identities don't currently support cross-directory scenarios.
+
+## If my peered VNets are deployed in different subscriptions, will connectivity via Bastion work?
+Yes, connectivity via Bastion will continue to work for peered VNets across different subscription for a single Tenant. Subscriptions across two different Tenants aren't supported. To see Bastion in the Connect drop down menu, the user must select the subs they have access to in Subscription > global subscription.
+
+## I have access to the peered VNet, but I can't see the VM deployed there.
+Make sure the user has read access to both the VM, and the peered VNet.
+
+## Can I still deploy multiple Bastion hosts across peered virtual networks?
+Yes. By default, a user sees the Bastion host that is deployed in the same virtual network in which VM resides. However, in the Connect menu, a user can see multiple Bastion hosts detected across peered networks. They can select the Bastion host that they prefer to use to connect to the VM deployed in the virtual network.

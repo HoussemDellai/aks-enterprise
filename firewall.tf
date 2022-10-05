@@ -1,4 +1,5 @@
 resource "azurerm_public_ip" "public_ip_firewall" {
+  count               = var.enable_firewall ? 1 : 0
   provider            = azurerm.subscription_hub # .ms-internal
   name                = "public-ip-firewall"
   location            = var.resources_location
@@ -8,6 +9,7 @@ resource "azurerm_public_ip" "public_ip_firewall" {
 }
 
 resource "azurerm_firewall" "firewall" {
+  count               = var.enable_firewall ? 1 : 0
   provider            = azurerm.subscription_hub # .ms-internal
   name                = "firewall-hub"
   location            = var.resources_location
@@ -18,8 +20,8 @@ resource "azurerm_firewall" "firewall" {
 
   ip_configuration {
     name                 = "configuration"
-    subnet_id            = azurerm_subnet.subnet_firewall.id
-    public_ip_address_id = azurerm_public_ip.public_ip_firewall.id
+    subnet_id            = azurerm_subnet.subnet_firewall.0.id
+    public_ip_address_id = azurerm_public_ip.public_ip_firewall.0.id
   }
 }
 
@@ -94,5 +96,53 @@ resource "azurerm_firewall" "firewall" {
 #       destination_ports     = ["9000"]
 #     }
 #   }
-
 # }
+
+resource "azurerm_monitor_diagnostic_setting" "diagnostic_settings_firewall" {
+  provider                   = azurerm.subscription_hub
+  count                      = var.enable_firewall && var.enable_monitoring ? 1 : 0
+  name                       = "diagnostic-settings"
+  target_resource_id         = azurerm_firewall.firewall.0.id
+  log_analytics_workspace_id = azurerm_log_analytics_workspace.workspace.0.id
+
+  log {
+    category = "AzureFirewallApplicationRule"
+    enabled  = true
+
+    retention_policy {
+      enabled = true
+    }
+  }
+
+  log {
+    category = "AzureFirewallNetworkRule"
+    enabled  = true
+
+    retention_policy {
+      enabled = true
+    }
+  }
+
+  log {
+    category = "AzureFirewallDnsProxy"
+    enabled  = true
+
+    retention_policy {
+      enabled = true
+    }
+  }
+  # other logs to include #TODO
+  # AZFWNetworkRule, AZFWNatRuleAggregation, AZFWNetworkRuleAggregation, 
+  # AZFWApplicationRuleAggregation, AZFWFatFlow, AZFWFqdnResolveFailure, 
+  # AZFWDnsQuery, AZFWIdpsSignature, AZFWThreatIntel, 
+  # AZFWApplicationRule, AZFWNatRule
+
+  metric {
+    category = "AllMetrics"
+    enabled  = true
+
+    retention_policy {
+      enabled = true
+    }
+  }
+}

@@ -62,8 +62,18 @@ provider "azurerm" {
 }
 
 # Configure the Azure Active Directory Provider
+provider "azuread" { # default takes current user/identity tenant
+}
+
 provider "azuread" {
-  # tenant_id = "558506eb-9459-4ef3-b920-ad55c555e729"
+  alias     = "tenant_hub"
+  tenant_id = "72f988bf-86f1-41af-91ab-2d7cd011db47"
+  # use_cli = true
+}
+
+provider "azuread" {
+  alias     = "tenant_spoke"
+  tenant_id = "558506eb-9459-4ef3-b920-ad55c555e729"
   # use_cli = true
 }
 

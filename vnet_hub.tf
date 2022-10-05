@@ -17,6 +17,7 @@ resource "azurerm_virtual_network" "vnet_hub" {
 # Firewall Subnet
 # (Additional subnet for Azure Firewall, without NSG as per Firewall requirements)
 resource "azurerm_subnet" "subnet_firewall" {
+  count                                     = var.enable_firewall ? 1 : 0
   provider                                  = azurerm.subscription_hub
   name                                      = "AzureFirewallSubnet"
   resource_group_name                       = azurerm_virtual_network.vnet_hub.0.resource_group_name

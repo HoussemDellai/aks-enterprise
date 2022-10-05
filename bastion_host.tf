@@ -1,76 +1,67 @@
 # https://github.com/Azure-Samples/aks-multi-cluster-service-mesh/blob/main/istio/bastion_host.tf
-# resource "azurerm_public_ip" "public_ip_one" {
-#   count = var.bastion_host_enabled ? 1 : 0
+resource "azurerm_public_ip" "public_ip_bastion" {
+  #   provider = azurerm.subscription_hub
+  count               = var.enable_bastion ? 1 : 0
+  name                = "public_ip_bastion"
+  location            = var.resources_location
+  resource_group_name = var.rg_spoke
+  allocation_method   = "Static"
+  sku                 = "Standard"
+  tags                = var.tags
+}
 
-#   name                = var.name_prefix == null ? "${random_string.random.result}-${var.location_one}-bastion-host-public-ip" : "${var.name_prefix}-${var.location_one}-bastion-host-public-ip"
-#   location            = var.location_one
-#   resource_group_name = var.location_one != var.location_two ? azurerm_resource_group.resource_group_one.name : azurerm_resource_group.resource_group_shared.name
-#   allocation_method   = "Static"
-#   sku                 = "Standard"
-#   tags                = var.tags
+resource "azurerm_bastion_host" "bastion_host" {
+  #   provider = azurerm.subscription_hub
+  count                  = var.enable_bastion ? 1 : 0
+  name                   = "bastion_host"
+  location               = var.resources_location
+  resource_group_name    = var.rg_spoke
+  sku                    = "Standard"
+  copy_paste_enabled     = true
+  file_copy_enabled      = true
+  scale_units            = 2 # between 2 and 50
+  shareable_link_enabled = true
+  tunneling_enabled      = false
+  ip_connect_enabled     = false
+  tags                   = var.tags
 
-#   lifecycle {
-#     ignore_changes = [
-#       tags
-#     ]
-#   }
-# }
+  ip_configuration {
+    name                 = "configuration"
+    subnet_id            = azurerm_subnet.subnet_bastion.0.id
+    public_ip_address_id = azurerm_public_ip.public_ip_bastion.0.id
+  }
+}
 
-# resource "azurerm_bastion_host" "bastion_host_one" {
-#   count = var.bastion_host_enabled ? 1 : 0
+resource "azurerm_monitor_diagnostic_setting" "diagnostic_settings_bastion" {
+  #   provider = azurerm.subscription_hub
+  count                      = var.enable_bastion && var.enable_monitoring ? 1 : 0
+  name                       = "diagnostic-settings"
+  target_resource_id         = azurerm_bastion_host.bastion_host.0.id
+  log_analytics_workspace_id = azurerm_log_analytics_workspace.workspace.0.id
 
-#   name                = var.name_prefix == null ? "${random_string.random.result}-${var.location_one}-bastion-host" : "${var.name_prefix}-${var.location_one}-bastion-host"
-#   location            = var.location_one
-#   resource_group_name = var.location_one != var.location_two ? azurerm_resource_group.resource_group_one.name : azurerm_resource_group.resource_group_shared.name
-#   tags                = var.tags
+  log {
+    category = "BastionAuditLogs"
+    enabled  = true
 
-#   ip_configuration {
-#     name                 = "configuration"
-#     subnet_id            = module.network_one.vnet_subnets[3]
-#     public_ip_address_id = azurerm_public_ip.public_ip_one[0].id
-#   }
+    retention_policy {
+      enabled = true
+    }
+  }
 
-#   lifecycle {
-#     ignore_changes = [
-#       tags
-#     ]
-#   }
+  metric {
+    category = "AllMetrics"
 
-#   depends_on = [
-#     azurerm_public_ip.public_ip_one[0]
-#   ]
-# }
+    retention_policy {
+      enabled = true
+    }
+  }
+}
 
-# resource "azurerm_monitor_diagnostic_setting" "bastion_host_one_diagnostic_settings" {
-#   count = var.bastion_host_enabled ? 1 : 0
-
-#   name                       = "diagnostic-settings"
-#   target_resource_id         = azurerm_bastion_host.bastion_host_one[0].id
-#   log_analytics_workspace_id = azurerm_log_analytics_workspace.log_analytics_workspace_one.id
-
-#   log {
-#     category = "BastionAuditLogs"
-#     enabled  = true
-
-#     retention_policy {
-#       enabled = true
-#     }
-#   }
-
-#   metric {
-#     category = "AllMetrics"
-
-#     retention_policy {
-#       enabled = true
-#     }
-#   }
-# }
-
-# resource "azurerm_monitor_diagnostic_setting" "public_ip_one_diagnostic_settings" {
+# resource "azurerm_monitor_diagnostic_setting" "public_ip_bastion_diagnostic_settings" {
 #   count = var.bastion_host_enabled ? 1 : 0
 
 #   name                       = "diagnostic-settings"
-#   target_resource_id         = azurerm_public_ip.public_ip_one[0].id
+#   target_resource_id         = azurerm_public_ip.public_ip_bastion[0].id
 #   log_analytics_workspace_id = azurerm_log_analytics_workspace.log_analytics_workspace_one.id
 
 #   log {
