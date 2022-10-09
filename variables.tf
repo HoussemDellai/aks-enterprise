@@ -13,6 +13,11 @@ variable "rg_spoke" {
   description = "Name of the Spoke resource group for ACR, KV, Log Analytics."
 }
 
+variable "rg_spoke_vm" {
+  default     = "rg-spoke-vm"
+  description = "Name of the Spoke resource group for Jumpbox VM."
+}
+
 variable "rg_aks" {
   default     = "rg-aks-cluster"
   description = "Name of the resource group."
@@ -47,22 +52,22 @@ variable "subnet_nodes" {
   default     = "subnet-aks-nodes"
 }
 
-variable "subnet_pods_name" {
+variable "subnet_pods" {
   description = "Subnet Name."
   default     = "subnet-aks-pods"
 }
 
-variable "app_gateway_subnet_name" { #TODO
+variable "app_gateway_subnet" { #TODO
   description = "Subnet Name."
   default     = "subnet-appgw"
 }
 
-variable "apiserver_subnet_name" { #TODO
+variable "apiserver_subnet" { #TODO
   description = "AKS API Server subnet name."
   default     = "subnet-apiserver"
 }
 
-variable "pe_subnet_name" { #TODO
+variable "pe_subnet" { #TODO
   description = "Subnet for Private Endoints."
   default     = "subnet-pe"
 }
@@ -70,6 +75,11 @@ variable "pe_subnet_name" { #TODO
 variable "subnet_bastion" {
   description = "Subnet for Bastion Host, should be AzureBastionSubnet."
   default     = "AzureBastionSubnet"
+}
+
+variable "subnet_jumpbox" {
+  description = "Subnet for Jumpbox VM."
+  default     = "subnet-jumpbox"
 }
 
 variable "cidr_subnet_nodes" {
@@ -105,6 +115,11 @@ variable "cidr_subnet_bastion" {
 variable "cidr_subnet_firewall" {
   description = "CIDR for Firewall Subnet."
   default     = ["172.16.1.0/26"]
+}
+
+variable "cidr_subnet_jumpbox" {
+  description = "CIDR for Jumpbox VM Subnet."
+  default     = ["10.5.0.0/24"]
 }
 
 variable "app_gateway_name" {
@@ -143,7 +158,7 @@ variable "aks_agent_os_disk_size" {
 
 variable "kubernetes_version" {
   description = "Kubernetes version"
-  default     = "1.23.5"
+  default     = "1.24.6"
 }
 
 variable "cidr_aks_service" {
@@ -262,6 +277,16 @@ variable "enable_private_acr" {
 
 variable "enable_private_keyvault" {
   description = "Creates private Keyvault with Private DNS Zone and Private Endpoint."
+  default     = "true"
+}
+
+variable "enable_vm_jumpbox_windows" {
+  description = "Creates Azure Windows VM."
+  default     = "true"
+}
+
+variable "enable_vm_jumpbox_linux" {
+  description = "Creates Azure Linux VM."
   default     = "true"
 }
 

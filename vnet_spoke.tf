@@ -15,7 +15,7 @@ resource "azurerm_subnet" "subnet_nodes" {
 }
 
 resource "azurerm_subnet" "subnet_pods" {
-  name                 = var.subnet_pods_name
+  name                 = var.subnet_pods
   virtual_network_name = azurerm_virtual_network.vnet_spoke.name
   resource_group_name  = azurerm_virtual_network.vnet_spoke.resource_group_name
   address_prefixes     = var.cidr_subnet_pods
@@ -34,7 +34,7 @@ resource "azurerm_subnet" "subnet_pods" {
 
 resource "azurerm_subnet" "subnet_appgw" {
   count                = var.enable_app_gateway ? 1 : 0
-  name                 = var.app_gateway_subnet_name
+  name                 = var.app_gateway_subnet
   virtual_network_name = azurerm_virtual_network.vnet_spoke.name
   resource_group_name  = azurerm_virtual_network.vnet_spoke.resource_group_name
   address_prefixes     = var.cidr_subnet_appgateway
@@ -42,7 +42,7 @@ resource "azurerm_subnet" "subnet_appgw" {
 
 resource "azurerm_subnet" "subnet_apiserver" {
   count                = var.enable_apiserver_vnet_integration ? 1 : 0
-  name                 = var.apiserver_subnet_name
+  name                 = var.apiserver_subnet
   virtual_network_name = azurerm_virtual_network.vnet_spoke.name
   resource_group_name  = azurerm_virtual_network.vnet_spoke.resource_group_name
   address_prefixes     = var.apiserver_subnet_address_prefix
@@ -60,7 +60,7 @@ resource "azurerm_subnet" "subnet_apiserver" {
 
 resource "azurerm_subnet" "subnet_pe" {
   count                = var.enable_private_acr || var.enable_private_keyvault ? 1 : 0
-  name                 = var.pe_subnet_name
+  name                 = var.pe_subnet
   virtual_network_name = azurerm_virtual_network.vnet_spoke.name
   resource_group_name  = azurerm_virtual_network.vnet_spoke.resource_group_name
   address_prefixes     = var.cidr_subnet_pe
@@ -72,6 +72,14 @@ resource "azurerm_subnet" "subnet_bastion" {
   virtual_network_name = azurerm_virtual_network.vnet_spoke.name
   resource_group_name  = azurerm_virtual_network.vnet_spoke.resource_group_name
   address_prefixes     = var.cidr_subnet_bastion
+}
+
+resource "azurerm_subnet" "subnet_jumpbox" {
+  count                = var.enable_vm_jumpbox_windows || var.enable_vm_jumpbox_linux ? 1 : 0
+  name                 = var.subnet_jumpbox
+  resource_group_name  = azurerm_virtual_network.vnet_spoke.resource_group_name
+  virtual_network_name = azurerm_virtual_network.vnet_spoke.name
+  address_prefixes     = var.cidr_subnet_jumpbox
 }
 
 resource "azurerm_monitor_diagnostic_setting" "diagnostic_settings_vnet" {

@@ -4,7 +4,7 @@ resource "azurerm_public_ip" "public_ip_bastion" {
   count               = var.enable_bastion ? 1 : 0
   name                = "public_ip_bastion"
   location            = var.resources_location
-  resource_group_name = var.rg_spoke
+  resource_group_name = azurerm_resource_group.rg_spoke.name #var.rg_spoke
   allocation_method   = "Static"
   sku                 = "Standard"
   tags                = var.tags
@@ -15,7 +15,7 @@ resource "azurerm_bastion_host" "bastion_host" {
   count                  = var.enable_bastion ? 1 : 0
   name                   = "bastion_host"
   location               = var.resources_location
-  resource_group_name    = var.rg_spoke
+  resource_group_name    = azurerm_resource_group.rg_spoke.name
   sku                    = "Standard"
   copy_paste_enabled     = true
   file_copy_enabled      = true

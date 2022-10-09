@@ -32,12 +32,12 @@ variable "resource_group_name" {
 #   default     = "subnet-aks-nodes"
 # }
 
-# variable "subnet_pods_name" {
+# variable "subnet_pods" {
 #   description = "Subnet Name."
 #   default     = "subnet-aks-pods"
 # }
 
-# variable "app_gateway_subnet_name" {
+# variable "app_gateway_subnet" {
 #   description = "Subnet Name."
 #   default     = "subnet-appgw"
 # }

@@ -14,7 +14,8 @@ resource "azurerm_resource_group" "rg_spoke" {
 }
 
 resource "azurerm_resource_group" "rg_spoke_vm" {
-  name     = "rg-spoke-vm" #var.rg_spoke
+  count    = var.enable_vm_jumpbox_windows || var.enable_vm_jumpbox_linux ? 1 : 0
+  name     = var.rg_spoke_vm
   location = var.resources_location
 
   tags = var.tags
