@@ -2,7 +2,7 @@ resource "azurerm_network_interface" "nic_vm_jumpbox_windows" {
   count               = var.enable_vm_jumpbox_windows ? 1 : 0
   name                = "nic-vm-jumpbox-windows"
   location            = var.resources_location
-  resource_group_name = azurerm_resource_group.rg_spoke_vm.0.name
+  resource_group_name = azurerm_resource_group.rg_spoke_mgt.0.name
 
   ip_configuration {
     name                          = "internal"
@@ -12,14 +12,14 @@ resource "azurerm_network_interface" "nic_vm_jumpbox_windows" {
 }
 
 resource "azurerm_windows_virtual_machine" "vm_jumpbox_windows" {
-  count                            = var.enable_vm_jumpbox_windows ? 1 : 0
-  name                             = "vm-jumpbox-win"
-  resource_group_name              = azurerm_resource_group.rg_spoke_vm.0.name
-  location                         = var.resources_location
-  size                             = "Standard_D2ads_v5"
-  admin_username                   = "houssem"
-  admin_password                   = "@Aa123456789"
-  network_interface_ids            = [azurerm_network_interface.nic_vm_jumpbox_windows.0.id]
+  count                 = var.enable_vm_jumpbox_windows ? 1 : 0
+  name                  = "vm-jumpbox-win"
+  resource_group_name   = azurerm_resource_group.rg_spoke_mgt.0.name
+  location              = var.resources_location
+  size                  = "Standard_D2ads_v5"
+  admin_username        = "houssem"
+  admin_password        = "@Aa123456789"
+  network_interface_ids = [azurerm_network_interface.nic_vm_jumpbox_windows.0.id]
 
 
   os_disk { #TODO: replace with vm-devbox OS Disk

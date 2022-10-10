@@ -7,7 +7,7 @@ resource "azurerm_kubernetes_cluster_node_pool" "poolapps" {
   node_count             = 0                  # 1
   enable_auto_scaling    = true
   min_count              = 0 # 1
-  max_count              = 0 # 9
+  max_count              = 1 # 9
   zones                  = [1, 2, 3]
   mode                   = "User"
   orchestrator_version   = var.kubernetes_version
@@ -21,6 +21,9 @@ resource "azurerm_kubernetes_cluster_node_pool" "poolapps" {
   fips_enabled           = false
   vnet_subnet_id         = azurerm_subnet.subnet_nodes.id
   pod_subnet_id          = azurerm_subnet.subnet_pods.id
+  scale_down_mode        = "Delete" # ScaleDownModeDeallocate
+  workload_runtime       = "OCIContainer"
+  message_of_the_day     = null      #TODO "Hello from Azure AKS cluster!"
   priority               = "Regular" # "Spot"
   # eviction_policy        = "Delete"
   # spot_max_price         = 0.5 # note: this is the "maximum" price

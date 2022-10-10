@@ -44,6 +44,9 @@ resource "azurerm_kubernetes_cluster" "aks" {
     tags                         = var.tags
     vnet_subnet_id               = azurerm_subnet.subnet_nodes.id
     pod_subnet_id                = azurerm_subnet.subnet_pods.id
+    scale_down_mode              = "Delete" # ScaleDownModeDeallocate
+    workload_runtime             = "OCIContainer"
+    message_of_the_day           = null # "Hello from Azure AKS cluster!" #TODO
   }
 
   identity {
@@ -73,6 +76,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
     outbound_type      = var.aks_outbound_type # "userAssignedNATGateway" "loadBalancer" # userDefinedRouting, managedNATGateway
     load_balancer_sku  = "standard"            # "basic"
     # pod_cidr           = var.aks_network_plugin == "kubenet" ? var.cidr_subnet_pods : null # null # can only be set when network_plugin is set to kubenet
+    ip_versions = ["IPv4"] # ["IPv4", "IPv6"]
 
     dynamic "load_balancer_profile" {
       for_each = var.aks_outbound_type == "loadBalancer" ? ["any_value"] : []

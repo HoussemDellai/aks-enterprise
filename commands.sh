@@ -75,8 +75,6 @@ velero backup describe manual-backup1 --details
 # AKS is private and peering is not yet set
 terraform plan -out tfplan -target="azurerm_virtual_network_peering.peering_vnet_aks_vnet_vm_jumpbox" -target="azurerm_virtual_network_peering.peering_vnet_vm_jumpbox_vnet_aks" -target="azurerm_private_dns_zone_virtual_network_link.link_private_dns_aks_vnet_vm_devbox"
 
-
-
 # push git changes
 git add . | git commit -m "configured aks aad app" | git push
 
@@ -100,3 +98,5 @@ ForEach($rg_name in $(az group list --query [*].name -o tsv))
     echo "Deleting $rg_name ..."
     az group delete -n $rg_name --yes --no-wait
 }
+
+az network bastion ssh --name "bastion_host" --resource-group "rg-spoke-vm" --target-resource-id "/subscriptions/59d574d4-1c03-4092-ab22-312ed594eec9/resourceGroups/rg-spoke-vm/providers/Microsoft.Compute/virtualMachines/vm-jumpbox-linux" --auth-type "password" --username "houssem"

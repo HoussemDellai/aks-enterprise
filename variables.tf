@@ -13,7 +13,7 @@ variable "rg_spoke" {
   description = "Name of the Spoke resource group for ACR, KV, Log Analytics."
 }
 
-variable "rg_spoke_vm" {
+variable "rg_spoke_mgt" {
   default     = "rg-spoke-vm"
   description = "Name of the Spoke resource group for Jumpbox VM."
 }
