@@ -32,11 +32,6 @@ variable "resources_location" {
   description = "Location of the resource group."
 }
 
-variable "vnet_spoke" {
-  description = "Virtual network Spoke name"
-  default     = "vnet-spoke"
-}
-
 variable "cidr_vnet_hub" {
   description = "HUB VNET address prefix"
   default     = "172.16.0.0/16"
@@ -77,9 +72,9 @@ variable "subnet_bastion" {
   default     = "AzureBastionSubnet"
 }
 
-variable "subnet_jumpbox" {
-  description = "Subnet for Jumpbox VM."
-  default     = "subnet-jumpbox"
+variable "subnet_mgt" {
+  description = "Subnet for Management, Jumpbox VM."
+  default     = "subnet-mgt"
 }
 
 variable "cidr_subnet_nodes" {
@@ -117,12 +112,17 @@ variable "cidr_subnet_firewall" {
   default     = ["172.16.1.0/26"]
 }
 
-variable "cidr_subnet_jumpbox" {
-  description = "CIDR for Jumpbox VM Subnet."
-  default     = ["10.5.0.0/24"]
+variable "cidr_vnet_spoke_mgt" {
+  description = "CIDR for Management/Jumpbox VM VNET."
+  default     = ["10.100.0.0/16"]
 }
 
-variable "app_gateway_name" {
+variable "cidr_subnet_mgt" {
+  description = "CIDR for Management/Jumpbox VM Subnet."
+  default     = ["10.100.0.0/24"]
+}
+
+variable "app_gateway" {
   description = "Name of the Application Gateway"
   default     = "appgw-aks"
 }

@@ -23,7 +23,7 @@ resource "azurerm_application_gateway" "appgw" {
   # for_each            = var.enable_app_gateway ? ["any_value"] : []
   # for_each            = var.enable_app_gateway ? toset(["any_value"]) : toset([])
   count               = var.enable_app_gateway ? 1 : 0
-  name                = var.app_gateway_name
+  name                = var.app_gateway
   resource_group_name = azurerm_resource_group.rg_aks.name
   location            = var.resources_location
   sku {

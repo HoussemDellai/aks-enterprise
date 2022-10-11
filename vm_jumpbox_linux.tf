@@ -6,7 +6,7 @@ resource "azurerm_network_interface" "nic_vm_jumpbox_linux" {
 
   ip_configuration {
     name                          = "internal"
-    subnet_id                     = azurerm_subnet.subnet_jumpbox.0.id
+    subnet_id                     = azurerm_subnet.subnet_mgt.0.id
     private_ip_address_allocation = "Dynamic"
   }
 }

@@ -57,7 +57,7 @@ variable "resource_group_name" {
 #   default     = ["10.1.0.0/16"]
 # }
 
-# variable "app_gateway_name" {
+# variable "app_gateway" {
 #   description = "Name of the Application Gateway"
 #   default     = "appgw-aks"
 # }

@@ -7,12 +7,6 @@ resource "azurerm_virtual_network" "vnet_hub" {
   location            = var.resources_location
   address_space       = var.cidr_vnet_hub
 }
-# data "azurerm_virtual_network" "vnet_hub" {
-#   count               = var.enable_vnet_peering ? 1 : 0
-#   provider            = azurerm.subscription_hub
-#   name                = "rg-vm-devbox-vnet"
-#   resource_group_name = "rg-vm-devbox"
-# }
 
 # Firewall Subnet
 # (Additional subnet for Azure Firewall, without NSG as per Firewall requirements)

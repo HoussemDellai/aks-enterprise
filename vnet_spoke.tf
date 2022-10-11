@@ -1,5 +1,5 @@
 resource "azurerm_virtual_network" "vnet_spoke" {
-  name                = var.vnet_spoke
+  name                = "vnet-spoke"
   location            = var.resources_location
   resource_group_name = azurerm_resource_group.rg_spoke.name
   address_space       = var.cidr_vnet_spoke
@@ -74,12 +74,12 @@ resource "azurerm_subnet" "subnet_bastion" {
   address_prefixes     = var.cidr_subnet_bastion
 }
 
-resource "azurerm_subnet" "subnet_jumpbox" {
+resource "azurerm_subnet" "subnet_mgt" {
   count                = var.enable_vm_jumpbox_windows || var.enable_vm_jumpbox_linux ? 1 : 0
-  name                 = var.subnet_jumpbox
+  name                 = var.subnet_mgt
   resource_group_name  = azurerm_virtual_network.vnet_spoke.resource_group_name
   virtual_network_name = azurerm_virtual_network.vnet_spoke.name
-  address_prefixes     = var.cidr_subnet_jumpbox
+  address_prefixes     = var.cidr_subnet_mgt
 }
 
 resource "azurerm_monitor_diagnostic_setting" "diagnostic_settings_vnet" {
