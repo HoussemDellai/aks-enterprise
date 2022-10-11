@@ -91,3 +91,6 @@ Make sure the user has read access to both the VM, and the peered VNet.
 
 ## Can I still deploy multiple Bastion hosts across peered virtual networks?
 Yes. By default, a user sees the Bastion host that is deployed in the same virtual network in which VM resides. However, in the Connect menu, a user can see multiple Bastion hosts detected across peered networks. They can select the Bastion host that they prefer to use to connect to the VM deployed in the virtual network.
+
+## Destination limitations for Diagnostic Settings
+Any destinations for the diagnostic setting must be created before you create the diagnostic settings. The destination doesn't have to be in the same subscription as the resource sending logs if the user who configures the setting has appropriate Azure role-based access control access to both subscriptions. By using Azure Lighthouse, it's also possible to have diagnostic settings sent to a workspace, storage account, or event hub in another Azure Active Directory tenant.

@@ -46,7 +46,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
     pod_subnet_id                = azurerm_subnet.subnet_pods.id
     scale_down_mode              = "Delete" # ScaleDownModeDeallocate
     workload_runtime             = "OCIContainer"
-    message_of_the_day           = null # "Hello from Azure AKS cluster!" #TODO
+    message_of_the_day           = "Hello from Azure AKS cluster!"
   }
 
   identity {

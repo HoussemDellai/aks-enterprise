@@ -57,17 +57,17 @@ variable "subnet_pods" {
   default     = "subnet-aks-pods"
 }
 
-variable "app_gateway_subnet" { #TODO
+variable "subnet_app_gateway" {
   description = "Subnet Name."
   default     = "subnet-appgw"
 }
 
-variable "apiserver_subnet" { #TODO
+variable "subnet_apiserver" {
   description = "AKS API Server subnet name."
   default     = "subnet-apiserver"
 }
 
-variable "pe_subnet" { #TODO
+variable "subnet_pe" {
   description = "Subnet for Private Endoints."
   default     = "subnet-pe"
 }
@@ -97,7 +97,7 @@ variable "cidr_subnet_appgateway" {
   default     = ["10.1.0.0/16"]
 }
 
-variable "apiserver_subnet_address_prefix" {
+variable "subnet_apiserver_address_prefix" {
   description = "AKS API Server IP address."
   default     = ["10.2.0.0/28"]
 }

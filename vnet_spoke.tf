@@ -1,7 +1,7 @@
 resource "azurerm_virtual_network" "vnet_spoke" {
   name                = var.vnet_spoke
   location            = var.resources_location
-  resource_group_name = azurerm_resource_group.rg_aks.name #TODO : change to Spoke RG
+  resource_group_name = azurerm_resource_group.rg_spoke.name
   address_space       = var.cidr_vnet_spoke
 
   tags = var.tags
@@ -34,7 +34,7 @@ resource "azurerm_subnet" "subnet_pods" {
 
 resource "azurerm_subnet" "subnet_appgw" {
   count                = var.enable_app_gateway ? 1 : 0
-  name                 = var.app_gateway_subnet
+  name                 = var.subnet_app_gateway
   virtual_network_name = azurerm_virtual_network.vnet_spoke.name
   resource_group_name  = azurerm_virtual_network.vnet_spoke.resource_group_name
   address_prefixes     = var.cidr_subnet_appgateway
@@ -42,10 +42,10 @@ resource "azurerm_subnet" "subnet_appgw" {
 
 resource "azurerm_subnet" "subnet_apiserver" {
   count                = var.enable_apiserver_vnet_integration ? 1 : 0
-  name                 = var.apiserver_subnet
+  name                 = var.subnet_apiserver
   virtual_network_name = azurerm_virtual_network.vnet_spoke.name
   resource_group_name  = azurerm_virtual_network.vnet_spoke.resource_group_name
-  address_prefixes     = var.apiserver_subnet_address_prefix
+  address_prefixes     = var.subnet_apiserver_address_prefix
 
   delegation {
     name = "aks-delegation"
@@ -60,7 +60,7 @@ resource "azurerm_subnet" "subnet_apiserver" {
 
 resource "azurerm_subnet" "subnet_pe" {
   count                = var.enable_private_acr || var.enable_private_keyvault ? 1 : 0
-  name                 = var.pe_subnet
+  name                 = var.subnet_pe
   virtual_network_name = azurerm_virtual_network.vnet_spoke.name
   resource_group_name  = azurerm_virtual_network.vnet_spoke.resource_group_name
   address_prefixes     = var.cidr_subnet_pe
