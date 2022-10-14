@@ -3,8 +3,7 @@ resource "azurerm_virtual_network" "vnet_spoke" {
   location            = var.resources_location
   resource_group_name = azurerm_resource_group.rg_spoke.name
   address_space       = var.cidr_vnet_spoke
-
-  tags = var.tags
+  tags                = var.tags
 }
 
 resource "azurerm_subnet" "subnet_nodes" {
@@ -66,21 +65,21 @@ resource "azurerm_subnet" "subnet_pe" {
   address_prefixes     = var.cidr_subnet_pe
 }
 
-resource "azurerm_subnet" "subnet_bastion" {
-  count                = var.enable_bastion ? 1 : 0
-  name                 = var.subnet_bastion
-  virtual_network_name = azurerm_virtual_network.vnet_spoke.name
-  resource_group_name  = azurerm_virtual_network.vnet_spoke.resource_group_name
-  address_prefixes     = var.cidr_subnet_bastion
-}
+# resource "azurerm_subnet" "subnet_bastion" {
+#   count                = var.enable_bastion ? 1 : 0
+#   name                 = var.subnet_bastion
+#   virtual_network_name = azurerm_virtual_network.vnet_spoke.name
+#   resource_group_name  = azurerm_virtual_network.vnet_spoke.resource_group_name
+#   address_prefixes     = var.cidr_subnet_bastion
+# }
 
-resource "azurerm_subnet" "subnet_mgt" {
-  count                = var.enable_vm_jumpbox_windows || var.enable_vm_jumpbox_linux ? 1 : 0
-  name                 = var.subnet_mgt
-  resource_group_name  = azurerm_virtual_network.vnet_spoke.resource_group_name
-  virtual_network_name = azurerm_virtual_network.vnet_spoke.name
-  address_prefixes     = var.cidr_subnet_mgt
-}
+# resource "azurerm_subnet" "subnet_mgt" {
+#   count                = var.enable_vm_jumpbox_windows || var.enable_vm_jumpbox_linux ? 1 : 0
+#   name                 = var.subnet_mgt
+#   resource_group_name  = azurerm_virtual_network.vnet_spoke.resource_group_name
+#   virtual_network_name = azurerm_virtual_network.vnet_spoke.name
+#   address_prefixes     = var.cidr_subnet_mgt
+# }
 
 resource "azurerm_monitor_diagnostic_setting" "diagnostic_settings_vnet" {
   count                      = var.enable_monitoring ? 1 : 0

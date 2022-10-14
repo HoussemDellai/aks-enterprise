@@ -17,9 +17,9 @@ resource "azurerm_bastion_host" "bastion_host" {
   location               = var.resources_location
   resource_group_name    = azurerm_resource_group.rg_spoke_mgt.0.name
   sku                    = "Standard"
+  scale_units            = 2 # between 2 and 50
   copy_paste_enabled     = true
   file_copy_enabled      = true
-  scale_units            = 2 # between 2 and 50
   shareable_link_enabled = true
   tunneling_enabled      = false
   ip_connect_enabled     = false

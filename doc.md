@@ -94,3 +94,30 @@ Yes. By default, a user sees the Bastion host that is deployed in the same virtu
 
 ## Destination limitations for Diagnostic Settings
 Any destinations for the diagnostic setting must be created before you create the diagnostic settings. The destination doesn't have to be in the same subscription as the resource sending logs if the user who configures the setting has appropriate Azure role-based access control access to both subscriptions. By using Azure Lighthouse, it's also possible to have diagnostic settings sent to a workspace, storage account, or event hub in another Azure Active Directory tenant.
+
+## Does Azure Firewall support inbound traffic filtering?
+Azure Firewall supports inbound and outbound filtering. Inbound protection is typically used for non-HTTP/S protocols. For example RDP, SSH, and FTP protocols. For best inbound HTTP/S protection, use a web application firewall such as Azure Web Application Firewall (WAF).
+
+## What is the difference between Application Gateway WAF and Azure Firewall?
+The Web Application Firewall (WAF) is a feature of Application Gateway that provides centralized inbound protection of your web applications from common exploits and vulnerabilities. Azure Firewall provides inbound protection for non-HTTP/S protocols (for example, RDP, SSH, FTP), outbound network-level protection for all ports and protocols, and application-level protection for outbound HTTP/S.
+
+## Can Azure Firewall in a hub virtual network forward and filter network traffic between two spoke virtual networks?
+Yes, you can use Azure Firewall in a hub virtual network to route and filter traffic between two spoke virtual network. Subnets in each of the spoke virtual networks must have a UDR pointing to the Azure Firewall as a default gateway for this scenario to work properly.
+
+## Can Azure Firewall forward and filter network traffic between subnets in the same virtual network or peered virtual networks?
+Yes. However, configuring the UDRs to redirect traffic between subnets in the same VNET requires additional attention. While using the VNET address range as a target prefix for the UDR is sufficient, this also routes all traffic from one machine to another machine in the same subnet through the Azure Firewall instance. To avoid this, include a route for the subnet in the UDR with a next hop type of VNET. Managing these routes might be cumbersome and prone to error. The recommended method for internal network segmentation is to use Network Security Groups, which don't require UDRs.
+
+## Does Azure Firewall outbound SNAT between private networks?
+Azure Firewall doesn't SNAT when the destination IP address is a private IP range per IANA RFC 1918. If your organization uses a public IP address range for private networks, Azure Firewall SNATs the traffic to one of the firewall private IP addresses in AzureFirewallSubnet. You can configure Azure Firewall to not SNAT your public IP address range. For more information, see Azure Firewall SNAT private IP address ranges.
+
+In addition, traffic processed by application rules are always SNAT-ed. If you want to see the original source IP address in your logs for FQDN traffic, you can use network rules with the destination FQDN.
+
+## Are there any firewall resource group restrictions?
+Yes. The firewall, VNet, and the public IP address all must be in the same resource group.
+
+## Why does Azure Firewall need a /26 subnet size?
+Azure Firewall must provision more virtual machine instances as it scales. A /26 address space ensures that the firewall has enough IP addresses available to accommodate the scaling.
+
+## Can I deploy Azure Firewall without a public IP address?
+No, currently you must deploy Azure Firewall with a public IP address.
+

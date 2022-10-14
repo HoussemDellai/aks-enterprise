@@ -62,3 +62,7 @@ eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 brew install Azure/kubelogin/kubelogin
 brew update
 brew upgrade Azure/kubelogin/kubelogin
+
+# install Docker
+curl -fsSL https://get.docker.com -o get-docker.sh
+sudo sh get-docker.sh

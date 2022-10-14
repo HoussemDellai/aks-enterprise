@@ -1,6 +1,6 @@
 resource "azurerm_public_ip" "natgw_pip" {
   count               = var.aks_outbound_type == "userAssignedNATGateway" ? 1 : 0
-  name                = "nat-gateway-public-ip"
+  name                = "public-ip-nat-gateway"
   location            = azurerm_resource_group.rg_aks.location
   resource_group_name = azurerm_resource_group.rg_aks.name
   allocation_method   = "Static"
@@ -10,7 +10,7 @@ resource "azurerm_public_ip" "natgw_pip" {
 
 resource "azurerm_public_ip_prefix" "natgw_ip_prefix" {
   count               = var.aks_outbound_type == "userAssignedNATGateway" ? 1 : 0
-  name                = "nat-gateway-public-ip-prefix"
+  name                = "public-ip-prefix-nat-gateway"
   location            = azurerm_resource_group.rg_aks.location
   resource_group_name = azurerm_resource_group.rg_aks.name
   prefix_length       = 30

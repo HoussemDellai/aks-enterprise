@@ -1,11 +1,11 @@
 # Locals block for hardcoded names
 locals {
-  backend_address_pool_name      = "${var.vnet_spoke}-beap"
-  frontend_port_name             = "${var.vnet_spoke}-feport"
-  frontend_ip_configuration_name = "${var.vnet_spoke}-feip"
-  http_setting_name              = "${var.vnet_spoke}-be-htst"
-  listener_name                  = "${var.vnet_spoke}-httplstn"
-  request_routing_rule_name      = "${var.vnet_spoke}-rqrt"
+  backend_address_pool_name      = "appgw-beap"
+  frontend_port_name             = "appgw-feport"
+  frontend_ip_configuration_name = "appgw-feip"
+  http_setting_name              = "appgw-be-htst"
+  listener_name                  = "appgw-httplstn"
+  request_routing_rule_name      = "appgw-rqrt"
 }
 
 # Public Ip 

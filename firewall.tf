@@ -16,6 +16,7 @@ resource "azurerm_firewall" "firewall" {
   resource_group_name = azurerm_resource_group.rg_hub.name
   sku_name            = "AZFW_VNet" # AZFW_Hub
   sku_tier            = "Standard"  # Premium 
+  dns_servers         = ["168.63.129.16"]
   # firewall_policy_id  
 
   ip_configuration {
@@ -24,6 +25,61 @@ resource "azurerm_firewall" "firewall" {
     public_ip_address_id = azurerm_public_ip.public_ip_firewall.0.id
   }
 }
+
+# Azure Firewall Application Rule
+# resource "azurerm_firewall_application_rule_collection" "azufwappr1" {
+#   name                = "appRc1"
+#   azure_firewall_name = azurerm_firewall.azufw.name
+#   resource_group_name = azurerm_resource_group.azurg.name
+#   priority            = 101
+#   action              = "Allow"
+
+#   rule {
+#     name = "appRule1"
+
+#     source_addresses = [
+#       "10.0.0.0/24",
+#     ]
+
+#     target_fqdns = [
+#       "www.microsoft.com",
+#     ]
+
+#     protocol {
+#       port = "80"
+#       type = "Http"
+#     }
+#   }
+# }
+
+# # Azure Firewall Network Rule
+# resource "azurerm_firewall_network_rule_collection" "azufwnetr1" {
+#   name                = "testcollection"
+#   azure_firewall_name = azurerm_firewall.azufw.name
+#   resource_group_name = azurerm_resource_group.azurg.name
+#   priority            = 200
+#   action              = "Allow"
+
+#   rule {
+#     name = "netRc1"
+
+#     source_addresses = [
+#       "10.0.0.0/24",
+#     ]
+
+#     destination_ports = [
+#       "8000-8999",
+#     ]
+
+#     destination_addresses = [
+#       "*",
+#     ]
+
+#     protocols = [
+#       "TCP",
+#     ]
+#   }
+# }
 
 # resource "azurerm_firewall_policy" "aks" {
 #   name                = "AKSpolicy"
