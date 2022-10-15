@@ -205,6 +205,11 @@ variable "aad_group_aks_admins" {
   description = "Name of AAD group for AKS admins"
 }
 
+variable "enable_aks_cluster" {
+  type        = bool
+  description = "Enable AKS"
+}
+
 variable "enable_apiserver_vnet_integration" {
   type        = bool
   description = "Enable AKS API Server VNET Integration"

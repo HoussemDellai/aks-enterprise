@@ -1,4 +1,5 @@
 resource "azurerm_kubernetes_cluster" "aks" {
+  count                               = var.enable_aks_cluster ? 1 : 0
   name                                = "aks-cluster"
   resource_group_name                 = azurerm_resource_group.rg_aks.name
   location                            = var.resources_location
@@ -13,8 +14,9 @@ resource "azurerm_kubernetes_cluster" "aks" {
   azure_policy_enabled                = true
   open_service_mesh_enabled           = true
   local_account_disabled              = true
-  oidc_issuer_enabled                 = true
   run_command_enabled                 = true
+  oidc_issuer_enabled                 = true
+  workload_identity_enabled           = true
   private_dns_zone_id                 = var.enable_private_cluster ? azurerm_private_dns_zone.private_dns_zone_aks.0.id : null
   tags                                = var.tags
   api_server_authorized_ip_ranges     = var.enable_private_cluster ? null : ["0.0.0.0/0"] # when private cluster, this should not be enabled
@@ -51,13 +53,13 @@ resource "azurerm_kubernetes_cluster" "aks" {
 
   identity {
     type         = "UserAssigned" # "SystemAssigned"
-    identity_ids = [azurerm_user_assigned_identity.identity_aks.id]
+    identity_ids = [azurerm_user_assigned_identity.identity_aks.0.id]
   }
 
   kubelet_identity {
-    client_id                 = azurerm_user_assigned_identity.identity-kubelet.client_id
-    object_id                 = azurerm_user_assigned_identity.identity-kubelet.principal_id # there is no object_id
-    user_assigned_identity_id = azurerm_user_assigned_identity.identity-kubelet.id
+    client_id                 = azurerm_user_assigned_identity.identity-kubelet.0.client_id
+    object_id                 = azurerm_user_assigned_identity.identity-kubelet.0.principal_id # there is no object_id
+    user_assigned_identity_id = azurerm_user_assigned_identity.identity-kubelet.0.id
   }
 
   azure_active_directory_role_based_access_control {
@@ -176,7 +178,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
 resource "azapi_update_resource" "aks_api_vnet_integration" {
   count       = var.enable_apiserver_vnet_integration ? 1 : 0
   type        = "Microsoft.ContainerService/managedClusters@2022-06-02-preview"
-  resource_id = azurerm_kubernetes_cluster.aks.id
+  resource_id = azurerm_kubernetes_cluster.aks.0.id
 
   # "properties": {
   #   "apiServerAccessProfile": {
@@ -200,9 +202,9 @@ resource "azapi_update_resource" "aks_api_vnet_integration" {
 
 # https://github.com/Azure-Samples/aks-multi-cluster-service-mesh/blob/main/istio/main.tf
 resource "azurerm_monitor_diagnostic_setting" "diagnostic_settings_aks" {
-  count                      = var.enable_monitoring ? 1 : 0
+  count                      = var.enable_monitoring && var.enable_aks_cluster ? 1 : 0
   name                       = "diagnostic-settings"
-  target_resource_id         = azurerm_kubernetes_cluster.aks.id
+  target_resource_id         = azurerm_kubernetes_cluster.aks.0.id
   log_analytics_workspace_id = azurerm_log_analytics_workspace.workspace.0.id
 
   log {

@@ -16,8 +16,8 @@ resource "azurerm_firewall" "firewall" {
   resource_group_name = azurerm_resource_group.rg_hub.name
   sku_name            = "AZFW_VNet" # AZFW_Hub
   sku_tier            = "Standard"  # Premium 
-  dns_servers         = ["168.63.129.16"]
-  firewall_policy_id  = azurerm_firewall_policy.policy_aks.0.id
+  # dns_servers         = ["168.63.129.16"]
+  firewall_policy_id  = azurerm_firewall_policy.firewall_policy.0.id
 
   ip_configuration {
     name                 = "configuration"
@@ -27,11 +27,11 @@ resource "azurerm_firewall" "firewall" {
 }
 
 resource "azurerm_monitor_diagnostic_setting" "diagnostic_settings_firewall" {
-  provider                   = azurerm.subscription_hub
-  count                      = var.enable_firewall && var.enable_monitoring ? 1 : 0
-  name                       = "diagnostic-settings"
-  target_resource_id         = azurerm_firewall.firewall.0.id
-  log_analytics_workspace_id = azurerm_log_analytics_workspace.workspace.0.id
+  provider                       = azurerm.subscription_hub
+  count                          = var.enable_firewall && var.enable_monitoring ? 1 : 0
+  name                           = "diagnostic-settings"
+  target_resource_id             = azurerm_firewall.firewall.0.id
+  log_analytics_workspace_id     = azurerm_log_analytics_workspace.workspace.0.id
   log_analytics_destination_type = "AzureDiagnostics"
 
   log {
@@ -84,11 +84,6 @@ resource "azurerm_monitor_diagnostic_setting" "diagnostic_settings_firewall" {
   #     }
   #   }
   # }
-  # other logs to include #TODO
-  # AZFWNetworkRule, AZFWNatRuleAggregation, AZFWNetworkRuleAggregation, 
-  # AZFWApplicationRuleAggregation, AZFWFatFlow, AZFWFqdnResolveFailure, 
-  # AZFWDnsQuery, AZFWIdpsSignature, AZFWThreatIntel, 
-  # AZFWApplicationRule, AZFWNatRule
 
   metric {
     category = "AllMetrics"

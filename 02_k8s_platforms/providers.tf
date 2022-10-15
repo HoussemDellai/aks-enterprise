@@ -39,8 +39,8 @@ provider "azurerm" {
 
 provider "kubernetes" {
   alias                  = "aks-module"
-  host                   = data.azurerm_kubernetes_cluster.aks.kube_config.0.host
-  cluster_ca_certificate = base64decode(data.azurerm_kubernetes_cluster.aks.kube_config.0.cluster_ca_certificate)
+  host                   = data.azurerm_kubernetes_cluster.aks.0.kube_config.0.host
+  cluster_ca_certificate = base64decode(data.azurerm_kubernetes_cluster.aks.0.kube_config.0.cluster_ca_certificate)
   # config_path = "~/.kube/config"
 
   # using kubelogin to get an AAD token for the cluster.
@@ -70,8 +70,8 @@ provider "helm" {
   kubernetes {
     # host                   = data.azurerm_kubernetes_cluster.aks_cluster.kube_config.0.host
     # cluster_ca_certificate = base64decode(data.azurerm_kubernetes_cluster.aks_cluster.kube_config.0.cluster_ca_certificate)
-    host                   = data.azurerm_kubernetes_cluster.aks.kube_config.0.host
-    cluster_ca_certificate = base64decode(data.azurerm_kubernetes_cluster.aks.kube_config.0.cluster_ca_certificate)
+    host                   = data.azurerm_kubernetes_cluster.aks.0.kube_config.0.host
+    cluster_ca_certificate = base64decode(data.azurerm_kubernetes_cluster.aks.0.kube_config.0.cluster_ca_certificate)
     # config_path = "~/.kube/config"
 
     # using kubelogin to get an AAD token for the cluster.

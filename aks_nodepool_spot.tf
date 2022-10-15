@@ -1,6 +1,6 @@
 resource "azurerm_kubernetes_cluster_node_pool" "poolspot" {
-  count                  = var.enable_nodepool_spot ? 1 : 0
-  kubernetes_cluster_id  = azurerm_kubernetes_cluster.aks.id
+  count                  = var.enable_nodepool_spot && var.enable_aks_cluster ? 1 : 0
+  kubernetes_cluster_id  = azurerm_kubernetes_cluster.aks.0.id
   name                   = "poolspot"
   mode                   = "User"
   priority               = "Spot"

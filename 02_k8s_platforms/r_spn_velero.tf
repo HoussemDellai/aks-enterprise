@@ -11,7 +11,7 @@ resource "azuread_service_principal_password" "password_spn_velero" {
 }
 
 resource "azurerm_role_assignment" "spn_velero_aks_node_rg" {
-  scope                = format("/subscriptions/%s/resourceGroups/%s", data.azurerm_subscription.current.subscription_id, data.azurerm_kubernetes_cluster.aks.node_resource_group)
+  scope                = format("/subscriptions/%s/resourceGroups/%s", data.azurerm_subscription.current.subscription_id, data.azurerm_kubernetes_cluster.aks.0.node_resource_group)
   principal_id         = azuread_service_principal.spn_velero.object_id
   role_definition_name = "Contributor"
 }
