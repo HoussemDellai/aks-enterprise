@@ -1,6 +1,6 @@
 resource "azurerm_virtual_network" "vnet_spoke_mgt" {
   count               = var.enable_vm_jumpbox_windows || var.enable_vm_jumpbox_linux ? 1 : 0
-  name                = "vnet-spoke-mgt1"
+  name                = "vnet-spoke-mgt1" #TODO
   location            = var.resources_location
   resource_group_name = azurerm_resource_group.rg_spoke_mgt.0.name
   address_space       = var.cidr_vnet_spoke_mgt
