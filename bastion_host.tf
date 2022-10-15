@@ -21,7 +21,7 @@ resource "azurerm_bastion_host" "bastion_host" {
   copy_paste_enabled     = true
   file_copy_enabled      = true
   shareable_link_enabled = true
-  tunneling_enabled      = false
+  tunneling_enabled      = true
   ip_connect_enabled     = false
   tags                   = var.tags
 

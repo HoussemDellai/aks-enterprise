@@ -1,6 +1,6 @@
 resource "azurerm_public_ip" "public_ip_firewall" {
   count               = var.enable_firewall ? 1 : 0
-  provider            = azurerm.subscription_hub # .ms-internal
+  provider            = azurerm.subscription_hub
   name                = "public-ip-firewall"
   location            = var.resources_location
   resource_group_name = azurerm_resource_group.rg_hub.name
@@ -10,7 +10,7 @@ resource "azurerm_public_ip" "public_ip_firewall" {
 
 resource "azurerm_firewall" "firewall" {
   count               = var.enable_firewall ? 1 : 0
-  provider            = azurerm.subscription_hub # .ms-internal
+  provider            = azurerm.subscription_hub
   name                = "firewall-hub"
   location            = var.resources_location
   resource_group_name = azurerm_resource_group.rg_hub.name
@@ -27,30 +27,28 @@ resource "azurerm_firewall" "firewall" {
 }
 
 # Azure Firewall Application Rule
-# resource "azurerm_firewall_application_rule_collection" "azufwappr1" {
-#   name                = "appRc1"
-#   azure_firewall_name = azurerm_firewall.azufw.name
-#   resource_group_name = azurerm_resource_group.azurg.name
-#   priority            = 101
-#   action              = "Allow"
+resource "azurerm_firewall_application_rule_collection" "fw_app_rule_allow_fqdns" {
+  name                = "appRc1"
+  azure_firewall_name = azurerm_firewall.firewall.0.name
+  resource_group_name = azurerm_firewall.firewall.0.resource_group_name
+  priority            = 101
+  action              = "Allow"
 
-#   rule {
-#     name = "appRule1"
+  rule {
+    name = "appRule1"
 
-#     source_addresses = [
-#       "10.0.0.0/24",
-#     ]
+    source_addresses = azurerm_subnet.subnet_mgt.0.address_prefixes # ["10.0.0.0/24"]
 
-#     target_fqdns = [
-#       "www.microsoft.com",
-#     ]
+    target_fqdns = [
+      "www.microsoft.com",
+    ]
 
-#     protocol {
-#       port = "80"
-#       type = "Http"
-#     }
-#   }
-# }
+    protocol {
+      port = "80"
+      type = "Http"
+    }
+  }
+}
 
 # # Azure Firewall Network Rule
 # resource "azurerm_firewall_network_rule_collection" "azufwnetr1" {
@@ -160,33 +158,58 @@ resource "azurerm_monitor_diagnostic_setting" "diagnostic_settings_firewall" {
   name                       = "diagnostic-settings"
   target_resource_id         = azurerm_firewall.firewall.0.id
   log_analytics_workspace_id = azurerm_log_analytics_workspace.workspace.0.id
+  log_analytics_destination_type = "AzureDiagnostics"
 
   log {
-    category = "AzureFirewallApplicationRule"
-    enabled  = true
+    category_group = "allLogs"
+    enabled        = true
 
     retention_policy {
       enabled = true
     }
   }
 
-  log {
-    category = "AzureFirewallNetworkRule"
-    enabled  = true
+  # log {
+  #   category = "AzureFirewallApplicationRule"
+  #   enabled  = true
 
-    retention_policy {
-      enabled = true
-    }
-  }
+  #   retention_policy {
+  #     enabled = true
+  #   }
+  # }
 
-  log {
-    category = "AzureFirewallDnsProxy"
-    enabled  = true
+  # log {
+  #   category = "AzureFirewallNetworkRule"
+  #   enabled  = true
 
-    retention_policy {
-      enabled = true
-    }
-  }
+  #   retention_policy {
+  #     enabled = true
+  #   }
+  # }
+
+  # log {
+  #   category = "AzureFirewallDnsProxy"
+  #   enabled  = true
+
+  #   retention_policy {
+  #     enabled = true
+  #   }
+  # }
+
+  # dynamic "log" {
+  #   for_each = toset(["AZFWNetworkRule", "AZFWNatRuleAggregation", "AZFWNetworkRuleAggregation",
+  #                     "AZFWApplicationRuleAggregation", "AZFWFatFlow", "AZFWFqdnResolveFailure",
+  #                     "AZFWDnsQuery", "AZFWIdpsSignature", "AZFWThreatIntel",
+  #                     "AZFWApplicationRule", "AZFWNatRule"])
+  #   content {
+  #     category = log.key #each.key
+  #     enabled  = true
+
+  #     retention_policy {
+  #       enabled = true
+  #     }
+  #   }
+  # }
   # other logs to include #TODO
   # AZFWNetworkRule, AZFWNatRuleAggregation, AZFWNetworkRuleAggregation, 
   # AZFWApplicationRuleAggregation, AZFWFatFlow, AZFWFqdnResolveFailure, 

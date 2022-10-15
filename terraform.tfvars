@@ -5,7 +5,6 @@ rg_spoke_mgt                      = "rg-spoke-mgt"
 rg_aks                            = "rg-spoke-aks" #TODO
 rg_aks_nodes                      = "rg-spoke-aks-managed"
 resources_location                = "westeurope"
-aks_name                          = "aks-cluster"
 acr_name                          = "acrforakstf0111"
 keyvault_name                     = "kvforaks0115"
 log_analytics_workspace           = "loganalyticsakscluster"

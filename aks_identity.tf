@@ -1,5 +1,5 @@
 resource "azurerm_user_assigned_identity" "identity_aks" {
-  name                = "identity_aks"
+  name                = "identity-aks"
   resource_group_name = azurerm_resource_group.rg_aks.name
   location            = var.resources_location
   tags                = var.tags

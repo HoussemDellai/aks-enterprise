@@ -137,15 +137,6 @@ variable "app_gateway_tier" {
   default     = "Standard_v2"
 }
 
-variable "acr_name" {
-  description = "Name of ACR container registry"
-}
-
-variable "aks_name" {
-  description = "AKS cluster name"
-  default     = "aks-cluster"
-}
-
 variable "aks_dns_prefix" {
   description = "Optional DNS prefix to use with hosted Kubernetes API server FQDN."
   default     = "aks"
@@ -186,9 +177,18 @@ variable "public_ssh_key_path" {
   default     = "~/.ssh/id_rsa.pub"
 }
 
+variable "aks_name" {
+  description = "AKS instance name"
+  default     = "aks-cluster"
+}
+
 variable "keyvault_name" {
   description = "Key Vault instance name"
   default     = "kvforaks011"
+}
+
+variable "acr_name" {
+  description = "ACR instance name"
 }
 
 # variable "aks_admin_group_object_ids" {
