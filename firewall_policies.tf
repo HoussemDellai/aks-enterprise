@@ -11,6 +11,11 @@ resource "azurerm_firewall_policy" "firewall_policy" {
     proxy_enabled = true
     servers       = ["168.63.129.16"]
   }
+  insights {
+    enabled = true
+    default_log_analytics_workspace_id = azurerm_log_analytics_workspace.workspace.0.id
+    retention_in_days = 7
+  }
 }
 
 resource "azurerm_firewall_policy_rule_collection_group" "policy_group_aks" {
@@ -86,6 +91,23 @@ resource "azurerm_firewall_policy_rule_collection_group" "policy_group_subnet_mg
     name     = "app_rules_subnet_mgt"
     priority = 305
     action   = "Allow"
+    # rule {
+    #   name = "allow_subnet_mgt_to_subnet_pe"
+    #   protocols {
+    #     type = "Http"
+    #     port = 80
+    #   }
+    #   protocols {
+    #     type = "Https"
+    #     port = 443
+    #   }
+    #   source_addresses  = azurerm_subnet.subnet_mgt.0.address_prefixes
+    #   destination_fqdns = [
+    #     azurerm_private_dns_zone.private_dns_zone_storage.name,
+    #     azurerm_private_dns_zone.private_dns_zone_acr.name
+    #     # azurerm_private_dns_zone.aks.name
+    #   ]
+    # }
     rule {
       name = "allow_microsoft_com"
       protocols {
@@ -111,6 +133,19 @@ resource "azurerm_firewall_policy_rule_collection_group" "policy_group_subnet_mg
       }
       source_addresses  = azurerm_subnet.subnet_mgt.0.address_prefixes
       destination_fqdns = ["*"]
+    }
+  }
+
+  network_rule_collection {
+    name     = "allow_subnet_mgt_to_subnet_pe"
+    priority = 201
+    action   = "Allow"
+    rule {
+      name                  = "https"
+      protocols             = ["TCP"]
+      source_addresses      = azurerm_subnet.subnet_mgt.0.address_prefixes
+      destination_addresses = azurerm_subnet.subnet_pe.0.address_prefixes
+      destination_ports     = ["443"]
     }
   }
 }
