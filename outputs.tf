@@ -1,9 +1,9 @@
 output "rg_aks" {
-  value = var.enable_aks_cluster ? var.rg_aks : null
+  value = var.enable_aks_cluster ? var.rg_spoke_aks : null
 }
 
-output "rg_aks_nodes" {
-  value = var.enable_aks_cluster ? var.rg_aks_nodes : null
+output "rg_spoke_aks_nodes" {
+  value = var.enable_aks_cluster ? var.rg_spoke_aks_nodes : null
 }
 
 output "client_key" {

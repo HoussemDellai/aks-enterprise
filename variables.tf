@@ -8,8 +8,8 @@ variable "rg_hub" {
   description = "Name of the Hub resource group Firewall, Hub VNET, Log Analytics."
 }
 
-variable "rg_spoke" {
-  default     = "rg-spoke"
+variable "rg_spoke_app" {
+  default     = "rg-spoke-app"
   description = "Name of the Spoke resource group for ACR, KV, Log Analytics."
 }
 
@@ -18,13 +18,13 @@ variable "rg_spoke_mgt" {
   description = "Name of the Spoke resource group for Jumpbox VM."
 }
 
-variable "rg_aks" {
-  default     = "rg-aks-cluster"
+variable "rg_spoke_aks" {
+  default     = "rg-spoke-aks"
   description = "Name of the resource group."
 }
 
-variable "rg_aks_nodes" {
-  default = "rg-aks-cluster-managed"
+variable "rg_spoke_aks_nodes" {
+  default = "rg-spoke-aks-nodes"
 }
 
 variable "resources_location" {
@@ -305,83 +305,21 @@ variable "aks_outbound_type" {
   description = "userAssignedNATGateway, loadBalancer, userDefinedRouting, managedNATGateway"
 }
 
-# variable "enable_velero_backups" {
-#   type        = bool
-#   description = "Enable installing Velero and creating backups for AKS"
-# }
+variable "subscription_id_hub" {
+  description = "Subscription ID for Hub"
+}
 
-# variable "storage_account_name_backup" {
-#   type        = string
-#   description = "Name of Storage Account for Backup"
-# }
+variable "subscription_id_spoke" {
+  description = "Subscription ID for Spoke"
+}
 
-# variable "backups_rg_name" {
-#   type        = string
-#   description = "Name of Resource Group for AKS backups"
-# }
+variable "tenant_id_hub" {
+  description = "Azure AD tenant ID for Hub"
+}
 
-# variable "backups_region" {
-#   type        = string
-#   description = "Region for AKS backups"
-# }
-
-# variable "velero_values" {
-#   description = <<EOVV
-# Settings for Velero helm chart:
-# ```
-# map(object({
-#   configuration.backupStorageLocation.bucket                = string 
-#   configuration.backupStorageLocation.config.resourceGroup  = string 
-#   configuration.backupStorageLocation.config.storageAccount = string 
-#   configuration.backupStorageLocation.name                  = string 
-#   configuration.provider                                    = string 
-#   configuration.volumeSnapshotLocation.config.resourceGroup = string 
-#   configuration.volumeSnapshotLocation.name                 = string 
-#   credential.exstingSecret                                  = string 
-#   credentials.useSecret                                     = string 
-#   deployRestic                                              = string 
-#   env.AZURE_CREDENTIALS_FILE                                = string 
-#   metrics.enabled                                           = string 
-#   rbac.create                                               = string 
-#   schedules.daily.schedule                                  = string 
-#   schedules.daily.template.includedNamespaces               = string 
-#   schedules.daily.template.snapshotVolumes                  = string 
-#   schedules.daily.template.ttl                              = string 
-#   serviceAccount.server.create                              = string 
-#   snapshotsEnabled                                          = string 
-#   initContainers[0].name                                    = string 
-#   initContainers[0].image                                   = string 
-#   initContainers[0].volumeMounts[0].mountPath               = string 
-#   initContainers[0].volumeMounts[0].name                    = string 
-#   image.repository                                          = string 
-#   image.tag                                                 = string 
-#   image.pullPolicy                                          = string 
-#   podAnnotations.aadpodidbinding                            = string
-#   podLabels.aadpodidbinding                                 = string
-# }))
-# ```
-# EOVV
-#   type        = map(string)
-#   default     = {}
-# }
-
-# variable "harbor_admin_password" {
-#   type        = string
-#   description = "Password for Harbor"
-#   default     = "@Aa123456789"
-# }
-
-# variable "grafana_admin_user" {
-#   type        = string
-#   description = "Admin user for Grafana"
-#   default     = "grafana"
-# }
-
-# variable "grafana_admin_password" {
-#   type        = string
-#   description = "Password for Grafana"
-#   default     = "@Aa123456789"
-# }
+variable "tenant_id_spoke" {
+  description = "Azure AD tenant ID for Spoke"
+}
 
 variable "tags" {
   type = map(string)

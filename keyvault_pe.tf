@@ -3,7 +3,7 @@ resource "azurerm_private_endpoint" "pe_keyvault" {
   count               = var.enable_private_keyvault && var.enable_keyvault ? 1 : 0
   name                = "private-endpoint-keyvault"
   location            = var.resources_location
-  resource_group_name = azurerm_resource_group.rg_spoke.name
+  resource_group_name = azurerm_resource_group.rg_spoke_app.name
   subnet_id           = azurerm_subnet.subnet_pe.0.id
   tags                = var.tags
 
@@ -23,6 +23,6 @@ resource "azurerm_private_endpoint" "pe_keyvault" {
 resource "azurerm_private_dns_zone" "private_dns_zone_keyvault" {
   count               = var.enable_private_keyvault && var.enable_keyvault ? 1 : 0
   name                = "privatelink.vaultcore.azure.net"
-  resource_group_name = azurerm_resource_group.rg_spoke.name
+  resource_group_name = azurerm_resource_group.rg_spoke_app.name
   tags                = var.tags
 }

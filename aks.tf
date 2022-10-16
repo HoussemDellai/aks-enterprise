@@ -1,11 +1,11 @@
 resource "azurerm_kubernetes_cluster" "aks" {
   count                               = var.enable_aks_cluster ? 1 : 0
   name                                = "aks-cluster"
-  resource_group_name                 = azurerm_resource_group.rg_aks.name
+  resource_group_name                 = azurerm_resource_group.rg_spoke_aks.name
   location                            = var.resources_location
   kubernetes_version                  = var.kubernetes_version
   dns_prefix                          = var.aks_dns_prefix
-  node_resource_group                 = var.rg_aks_nodes
+  node_resource_group                 = var.rg_spoke_aks_nodes
   private_cluster_enabled             = var.enable_private_cluster
   private_cluster_public_fqdn_enabled = false # true # 
   public_network_access_enabled       = true  # false #

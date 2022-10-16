@@ -24,32 +24,6 @@ resource "azurerm_firewall_policy_rule_collection_group" "policy_group_aks" {
     priority = 205
     action   = "Allow"
     rule {
-      name = "allow_microsoft_com"
-      protocols {
-        type = "Http"
-        port = 80
-      }
-      protocols {
-        type = "Https"
-        port = 443
-      }
-      source_addresses  = azurerm_subnet.subnet_mgt.0.address_prefixes
-      destination_fqdns = ["www.microsoft.com"]
-    }
-    # rule {
-    #   name = "allow_internet"
-    #   protocols {
-    #     type = "Http"
-    #     port = 80
-    #   }
-    #   protocols {
-    #     type = "Https"
-    #     port = 443
-    #   }
-    #   source_addresses  = azurerm_subnet.subnet_mgt.0.address_prefixes
-    #   destination_fqdns = ["*"]
-    # }
-    rule {
       name = "aks_service"
       protocols {
         type = "Https"
@@ -102,41 +76,41 @@ resource "azurerm_firewall_policy_rule_collection_group" "policy_group_aks" {
   }
 }
 
-# resource "azurerm_firewall_policy_rule_collection_group" "policy_group_subnet_mgt" {
-#   count              = var.enable_firewall ? 1 : 0
-#   name               = "policy_group_subnet_mgt"
-#   firewall_policy_id = azurerm_firewall_policy.firewall_policy.0.id
-#   priority           = 300
+resource "azurerm_firewall_policy_rule_collection_group" "policy_group_subnet_mgt" {
+  count              = var.enable_firewall ? 1 : 0
+  name               = "policy_group_subnet_mgt"
+  firewall_policy_id = azurerm_firewall_policy.firewall_policy.0.id
+  priority           = 300
 
-#   application_rule_collection {
-#     name     = "app_rules_subnet_mgt"
-#     priority = 305
-#     action   = "Allow"
-#     rule {
-#       name = "allow_microsoft_com"
-#       protocols {
-#         type = "Http"
-#         port = 80
-#       }
-#       protocols {
-#         type = "Https"
-#         port = 443
-#       }
-#       source_addresses  = local.cidr_subnet_aks_nodes_pods
-#       destination_fqdns = ["*.microsoft.com"]
-#     }
-#     rule {
-#       name = "allow_internet"
-#       protocols {
-#         type = "Http"
-#         port = 80
-#       }
-#       protocols {
-#         type = "Https"
-#         port = 443
-#       }
-#       source_addresses  = local.cidr_subnet_aks_nodes_pods
-#       destination_fqdns = ["*"]
-#     }
-#   }
-# }
+  application_rule_collection {
+    name     = "app_rules_subnet_mgt"
+    priority = 305
+    action   = "Allow"
+    rule {
+      name = "allow_microsoft_com"
+      protocols {
+        type = "Http"
+        port = 80
+      }
+      protocols {
+        type = "Https"
+        port = 443
+      }
+      source_addresses  = azurerm_subnet.subnet_mgt.0.address_prefixes
+      destination_fqdns = ["*.microsoft.com"]
+    }
+    rule {
+      name = "allow_internet"
+      protocols {
+        type = "Http"
+        port = 80
+      }
+      protocols {
+        type = "Https"
+        port = 443
+      }
+      source_addresses  = azurerm_subnet.subnet_mgt.0.address_prefixes
+      destination_fqdns = ["*"]
+    }
+  }
+}

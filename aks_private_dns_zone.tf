@@ -2,7 +2,7 @@
 resource "azurerm_private_dns_zone" "private_dns_zone_aks" {
   count               = var.enable_private_cluster && var.enable_aks_cluster ? 1 : 0
   name                = "privatelink.westeurope.azmk8s.io"
-  resource_group_name = azurerm_resource_group.rg_aks.name
+  resource_group_name = azurerm_resource_group.rg_spoke_aks.name
 }
 
 resource "azurerm_role_assignment" "role_private_dns_zone_aks_contributor" {

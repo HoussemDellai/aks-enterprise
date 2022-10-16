@@ -1,7 +1,7 @@
 resource "azurerm_virtual_network" "vnet_spoke" {
   name                = "vnet-spoke"
   location            = var.resources_location
-  resource_group_name = azurerm_resource_group.rg_spoke.name
+  resource_group_name = azurerm_resource_group.rg_spoke_app.name
   address_space       = var.cidr_vnet_spoke
   tags                = var.tags
 }

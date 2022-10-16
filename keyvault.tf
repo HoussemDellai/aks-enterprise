@@ -2,7 +2,7 @@ resource "azurerm_key_vault" "kv" {
   count                       = var.enable_keyvault ? 1 : 0
   name                        = var.keyvault_name
   location                    = var.resources_location
-  resource_group_name         = azurerm_resource_group.rg_spoke.name
+  resource_group_name         = azurerm_resource_group.rg_spoke_app.name
   tenant_id                   = data.azurerm_client_config.current.tenant_id
   soft_delete_retention_days  = 7
   purge_protection_enabled    = false

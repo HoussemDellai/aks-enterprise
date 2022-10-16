@@ -1,8 +1,8 @@
 resource "azurerm_public_ip" "natgw_pip" {
   count               = var.enable_aks_cluster && var.aks_outbound_type == "userAssignedNATGateway" ? 1 : 0
   name                = "public-ip-nat-gateway"
-  location            = azurerm_resource_group.rg_aks.location
-  resource_group_name = azurerm_resource_group.rg_aks.name
+  location            = azurerm_resource_group.rg_spoke_aks.location
+  resource_group_name = azurerm_resource_group.rg_spoke_aks.name
   allocation_method   = "Static"
   sku                 = "Standard"
   zones               = ["1"]
@@ -11,8 +11,8 @@ resource "azurerm_public_ip" "natgw_pip" {
 resource "azurerm_public_ip_prefix" "natgw_ip_prefix" {
   count               = var.enable_aks_cluster && var.aks_outbound_type == "userAssignedNATGateway" ? 1 : 0
   name                = "public-ip-prefix-nat-gateway"
-  location            = azurerm_resource_group.rg_aks.location
-  resource_group_name = azurerm_resource_group.rg_aks.name
+  location            = azurerm_resource_group.rg_spoke_aks.location
+  resource_group_name = azurerm_resource_group.rg_spoke_aks.name
   prefix_length       = 30
   zones               = ["1"]
 }
@@ -20,8 +20,8 @@ resource "azurerm_public_ip_prefix" "natgw_ip_prefix" {
 resource "azurerm_nat_gateway" "natgw" {
   count                   = var.enable_aks_cluster && var.aks_outbound_type == "userAssignedNATGateway" ? 1 : 0
   name                    = "nat-gateway"
-  location                = azurerm_resource_group.rg_aks.location
-  resource_group_name     = azurerm_resource_group.rg_aks.name
+  location                = azurerm_resource_group.rg_spoke_aks.location
+  resource_group_name     = azurerm_resource_group.rg_spoke_aks.name
   sku_name                = "Standard"
   idle_timeout_in_minutes = 10
   zones                   = ["1"]

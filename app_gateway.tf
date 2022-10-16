@@ -13,7 +13,7 @@ resource "azurerm_public_ip" "appgw_pip" {
   count               = var.enable_app_gateway ? 1 : 0
   name                = "public-ip-appgw"
   location            = var.resources_location
-  resource_group_name = azurerm_resource_group.rg_aks.name
+  resource_group_name = azurerm_resource_group.rg_spoke_aks.name
   allocation_method   = "Static"
   sku                 = "Standard"
   tags                = var.tags
@@ -24,7 +24,7 @@ resource "azurerm_application_gateway" "appgw" {
   # for_each            = var.enable_app_gateway ? toset(["any_value"]) : toset([])
   count               = var.enable_app_gateway ? 1 : 0
   name                = var.app_gateway
-  resource_group_name = azurerm_resource_group.rg_aks.name
+  resource_group_name = azurerm_resource_group.rg_spoke_aks.name
   location            = var.resources_location
   sku {
     name     = var.app_gateway_sku
@@ -104,7 +104,7 @@ resource "azurerm_application_gateway" "appgw" {
 # AppGW (generated with addon) Identity needs also Contributor role over AKS/VNET RG
 resource "azurerm_role_assignment" "role-contributor" {
   count                = var.enable_app_gateway ? 1 : 0
-  scope                = azurerm_resource_group.rg_aks.id
+  scope                = azurerm_resource_group.rg_spoke_aks.id
   role_definition_name = "Contributor"
   principal_id         = azurerm_kubernetes_cluster.aks.0.ingress_application_gateway.0.ingress_application_gateway_identity.0.object_id
   # principal_id       = data.azurerm_user_assigned_identity.identity-appgw.principal_id

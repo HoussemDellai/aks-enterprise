@@ -6,8 +6,8 @@ resource "azurerm_resource_group" "rg_hub" {
   tags = var.tags
 }
 
-resource "azurerm_resource_group" "rg_spoke" {
-  name     = var.rg_spoke
+resource "azurerm_resource_group" "rg_spoke_app" {
+  name     = var.rg_spoke_app
   location = var.resources_location
 
   tags = var.tags
@@ -21,8 +21,8 @@ resource "azurerm_resource_group" "rg_spoke_mgt" {
   tags = var.tags
 }
 
-resource "azurerm_resource_group" "rg_aks" {
-  name     = var.rg_aks
+resource "azurerm_resource_group" "rg_spoke_aks" {
+  name     = var.rg_spoke_aks
   location = var.resources_location
 
   tags = var.tags

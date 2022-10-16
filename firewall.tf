@@ -17,7 +17,7 @@ resource "azurerm_firewall" "firewall" {
   sku_name            = "AZFW_VNet" # AZFW_Hub
   sku_tier            = "Standard"  # Premium 
   # dns_servers         = ["168.63.129.16"]
-  firewall_policy_id  = azurerm_firewall_policy.firewall_policy.0.id
+  firewall_policy_id = azurerm_firewall_policy.firewall_policy.0.id
 
   ip_configuration {
     name                 = "configuration"
