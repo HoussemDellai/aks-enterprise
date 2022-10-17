@@ -32,7 +32,7 @@ resource "azurerm_storage_account_network_rules" "rules_storage" {
   default_action             = "Deny"
   bypass                     = ["Metrics", "Logging", "AzureServices"]
   ip_rules                   = [data.http.machine_ip.response_body] # ["176.177.25.47"]
-  # virtual_network_subnet_ids = [azurerm_subnet.subnet_mgt.0.id]
+  virtual_network_subnet_ids = null                                 # [azurerm_subnet.subnet_mgt.0.id]
 }
 
 # resource "azurerm_private_dns_a_record" "dns_a" {
@@ -50,6 +50,7 @@ resource "azurerm_storage_account" "storage" {
   account_kind             = "StorageV2"
   account_tier             = "Standard"
   account_replication_type = "LRS"
+  public_network_access_enabled = true
 
   # network_rules {
   #   default_action             = "Deny"
@@ -70,21 +71,6 @@ resource "azurerm_storage_blob" "blob" {
   storage_container_name = azurerm_storage_container.container.name
   type                   = "Block"
   source                 = "aks.tf"
-}
-
-data "http" "machine_ip" {
-  url = "http://ifconfig.me"
-
-  request_headers = {
-    Accept = "application/json"
-  }
-
-  # lifecycle {
-  #   postcondition {
-  #     condition     = contains([201, 204], self.status_code)
-  #     error_message = "Status code invalid"
-  #   }
-  # }
 }
 
 #TODO add diag set

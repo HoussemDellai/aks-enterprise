@@ -1,15 +1,23 @@
 resource "azurerm_key_vault" "kv" {
-  count                       = var.enable_keyvault ? 1 : 0
-  name                        = var.keyvault_name
-  location                    = var.resources_location
-  resource_group_name         = azurerm_resource_group.rg_spoke_app.name
-  tenant_id                   = data.azurerm_client_config.current.tenant_id
-  soft_delete_retention_days  = 7
-  purge_protection_enabled    = false
-  enabled_for_disk_encryption = false
-  sku_name                    = "standard"
-  enable_rbac_authorization   = true
-  tags                        = var.tags
+  count                         = var.enable_keyvault ? 1 : 0
+  name                          = var.keyvault_name
+  location                      = var.resources_location
+  resource_group_name           = azurerm_resource_group.rg_spoke_app.name
+  tenant_id                     = data.azurerm_client_config.current.tenant_id
+  soft_delete_retention_days    = 7
+  purge_protection_enabled      = false
+  enabled_for_disk_encryption   = false
+  public_network_access_enabled = true
+  sku_name                      = "standard"
+  enable_rbac_authorization     = true
+  tags                          = var.tags
+
+  network_acls {
+    default_action             = "Deny"
+    bypass                     = "AzureServices"
+    ip_rules                   = [data.http.machine_ip.response_body]
+    virtual_network_subnet_ids = null
+  }
 }
 
 resource "azurerm_key_vault_secret" "secret" {

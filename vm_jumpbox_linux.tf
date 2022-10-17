@@ -1,3 +1,19 @@
+resource "azurerm_user_assigned_identity" "identity_vm_linux" {
+  count               = var.enable_vm_jumpbox_linux ? 1 : 0
+  name                = "identity_vm_linux"
+  resource_group_name = azurerm_resource_group.rg_spoke_mgt.0.name
+  location            = var.resources_location
+  tags                = var.tags
+}
+
+resource "azurerm_role_assignment" "role_identity_vm_linux_contributor" {
+  count                            = var.enable_vm_jumpbox_linux ? 1 : 0
+  scope                            = data.azurerm_subscription.subscription_spoke.id
+  role_definition_name             = "Contributor"
+  principal_id                     = azurerm_user_assigned_identity.identity_vm_linux.0.principal_id
+  skip_service_principal_aad_check = true
+}
+
 resource "azurerm_network_interface" "nic_vm_jumpbox_linux" {
   count               = var.enable_vm_jumpbox_linux ? 1 : 0
   name                = "nic-vm-jumpbox-linux"
@@ -38,6 +54,11 @@ resource "azurerm_linux_virtual_machine" "vm_jumpbox_linux" {
     storage_account_uri = null
   }
 
+  identity {
+    type = "UserAssigned"
+    identity_ids = [ azurerm_user_assigned_identity.identity_vm_linux.0.id ]
+  }
+
   # az vm image list --publisher Canonical --offer 0001-com-ubuntu-pro-jammy -s pro-22_04-lts-gen2 --all
   # az vm image terms accept --urn "Canonical:0001-com-ubuntu-pro-jammy:pro-22_04-lts-gen2:22.04.202209211"
   # plan {
@@ -45,4 +66,25 @@ resource "azurerm_linux_virtual_machine" "vm_jumpbox_linux" {
   #   product = "0001-com-ubuntu-server-jammy" # "0001-com-ubuntu-minimal-jammy"
   #   publisher = "Canonical"
   # }
+}
+
+resource "azurerm_virtual_machine_extension" "vm_extension_linux" {
+  name                 = "hostname" #TODO
+  virtual_machine_id   = azurerm_linux_virtual_machine.vm_jumpbox_linux.0.id
+  publisher            = "Microsoft.Azure.Extensions"
+  type                 = "CustomScript"
+  type_handler_version = "2.1"
+  tags = var.tags
+  settings = <<SETTINGS
+    {
+      "fileUris": ["https://raw.githubusercontent.com/HoussemDellai/aks-appgateway/hub-spoke-single-tenant/install-cli-tools.sh"],
+      "commandToExecute": "./install-cli-tools.sh"
+    }
+SETTINGS
+  # settings = <<SETTINGS
+  # {
+  #   "fileUris": ["./install-cli-tools.sh"]
+  #   "commandToExecute": "./install-cli-tools.sh"
+  # }
+# SETTINGS
 }

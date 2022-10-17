@@ -90,7 +90,7 @@ resource "azurerm_application_gateway" "appgw" {
     ]
   }
 
-  depends_on = [azurerm_virtual_network.vnet_spoke, azurerm_public_ip.appgw_pip]
+  depends_on = [azurerm_virtual_network.vnet_spoke_app, azurerm_public_ip.appgw_pip]
 }
 
 # # generated managed identity for app gateway

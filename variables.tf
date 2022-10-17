@@ -37,7 +37,7 @@ variable "cidr_vnet_hub" {
   default     = "172.16.0.0/16"
 }
 
-variable "cidr_vnet_spoke" {
+variable "cidr_vnet_spoke_app" {
   description = "VNET Spoke address prefix"
   default     = "10.0.0.0/8"
 }

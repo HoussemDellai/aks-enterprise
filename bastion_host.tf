@@ -1,21 +1,21 @@
 # https://github.com/Azure-Samples/aks-multi-cluster-service-mesh/blob/main/istio/bastion_host.tf
 resource "azurerm_public_ip" "public_ip_bastion" {
-  #   provider = azurerm.subscription_hub
+  provider            = azurerm.subscription_hub
   count               = var.enable_bastion ? 1 : 0
   name                = "public_ip_bastion"
   location            = var.resources_location
-  resource_group_name = azurerm_resource_group.rg_spoke_mgt.0.name #var.rg_spoke
+  resource_group_name = azurerm_resource_group.rg_hub.name #var.rg_spoke
   allocation_method   = "Static"
   sku                 = "Standard"
   tags                = var.tags
 }
 
 resource "azurerm_bastion_host" "bastion_host" {
-  #   provider = azurerm.subscription_hub
+  provider               = azurerm.subscription_hub
   count                  = var.enable_bastion ? 1 : 0
   name                   = "bastion_host"
   location               = var.resources_location
-  resource_group_name    = azurerm_resource_group.rg_spoke_mgt.0.name
+  resource_group_name    = azurerm_resource_group.rg_hub.name
   sku                    = "Standard"
   scale_units            = 2 # between 2 and 50
   copy_paste_enabled     = true

@@ -99,4 +99,11 @@ ForEach($rg_name in $(az group list --query [*].name -o tsv))
     az group delete -n $rg_name --yes --no-wait
 }
 
+
 az network bastion ssh --name "bastion_host" --resource-group "rg-spoke-mgt" --target-resource-id "/subscriptions/59d574d4-1c03-4092-ab22-312ed594eec9/resourceGroups/rg-spoke-mgt/providers/Microsoft.Compute/virtualMachines/vm-jumpbox-linux" --auth-type "password" --username "houssem"
+
+
+az login
+az account set -s Microsoft-Azure-2
+az acr login -n acrforakstf0111
+docker pull acrforakstf0111.azurecr.io/hello-world:latest

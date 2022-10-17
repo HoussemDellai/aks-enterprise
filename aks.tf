@@ -66,7 +66,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
     managed                = true
     azure_rbac_enabled     = true
     admin_group_object_ids = var.enable_aks_admin_group ? [azuread_group.aks_admins.0.object_id] : null
-    tenant_id              = var.enable_aks_admin_group ? data.azurerm_subscription.current.tenant_id : null
+    tenant_id              = var.enable_aks_admin_group ? data.azurerm_subscription.subscription_spoke.tenant_id : null
   }
 
   network_profile {
@@ -141,7 +141,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
   }
 
   depends_on = [
-    azurerm_virtual_network.vnet_spoke,
+    azurerm_virtual_network.vnet_spoke_app,
     azurerm_application_gateway.appgw
   ]
 
