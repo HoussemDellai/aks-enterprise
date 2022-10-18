@@ -20,8 +20,6 @@ resource "azurerm_public_ip" "appgw_pip" {
 }
 
 resource "azurerm_application_gateway" "appgw" {
-  # for_each            = var.enable_app_gateway ? ["any_value"] : []
-  # for_each            = var.enable_app_gateway ? toset(["any_value"]) : toset([])
   count               = var.enable_app_gateway ? 1 : 0
   name                = var.app_gateway
   resource_group_name = azurerm_resource_group.rg_spoke_aks.name
@@ -93,26 +91,12 @@ resource "azurerm_application_gateway" "appgw" {
   depends_on = [azurerm_virtual_network.vnet_spoke_app, azurerm_public_ip.appgw_pip]
 }
 
-# # generated managed identity for app gateway
-# data "azurerm_user_assigned_identity" "identity-appgw" {
-#   name                = "ingressapplicationgateway-${var.aks_name}" # convention name for AGIC Identity
-#   resource_group_name = var.node_resource_group
-
-#   depends_on          = [azurerm_kubernetes_cluster.aks]
-# }
-
 # AppGW (generated with addon) Identity needs also Contributor role over AKS/VNET RG
 resource "azurerm_role_assignment" "role-contributor" {
   count                = var.enable_app_gateway ? 1 : 0
   scope                = azurerm_resource_group.rg_spoke_aks.id
   role_definition_name = "Contributor"
   principal_id         = azurerm_kubernetes_cluster.aks.0.ingress_application_gateway.0.ingress_application_gateway_identity.0.object_id
-  # principal_id       = data.azurerm_user_assigned_identity.identity-appgw.principal_id
-
-  # depends_on = [
-  #   azurerm_kubernetes_cluster.aks,
-  #   azurerm_application_gateway.appgw
-  # ]
 }
 
 resource "azurerm_monitor_diagnostic_setting" "diagnostic_settings_appgw" {

@@ -191,6 +191,10 @@ variable "acr_name" {
   description = "ACR instance name"
 }
 
+variable "storage_account_name" {
+  description = "Storage Account name"
+}
+
 # variable "aks_admin_group_object_ids" {
 #   description = "Azure AD admin group for AKS."
 # }

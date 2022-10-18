@@ -1,3 +1,7 @@
+# install Docker
+curl -fsSL https://get.docker.com -o get-docker.sh
+sudo sh get-docker.sh
+
 # install Azure CLI
 # https://learn.microsoft.com/en-us/cli/azure/install-azure-cli-linux
 curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
@@ -22,7 +26,7 @@ echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] \
 
 sudo apt update
 
-sudo apt-get install terraform
+sudo apt-get install -y terraform
 
 terraform version
 
@@ -50,7 +54,7 @@ helm version
 
 # install brew
 # https://brew.sh/
-sudo apt-get install build-essential
+sudo apt-get install -y build-essential
 sudo apt install git -y
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 echo '# Set PATH, MANPATH, etc., for Homebrew.' >> /home/houssem/.profile
@@ -63,6 +67,20 @@ brew install Azure/kubelogin/kubelogin
 brew update
 brew upgrade Azure/kubelogin/kubelogin
 
-# install Docker
-curl -fsSL https://get.docker.com -o get-docker.sh
-sudo sh get-docker.sh
+# install jq
+apt install jq -y
+
+az login --identity
+sudo -i
+PS1="\[\e]0;\u@\h: \w\a\]${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ "
+az acr login -n acrforakstf0111
+docker pull acrforakstf0111.azurecr.io/hello-world:latest
+
+curl -s -H Metadata:true --noproxy "*" "http://169.254.169.254/metadata/instance?api-version=2021-02-01" | jq
+
+# check installs
+az version
+terraform version
+kubectl version
+helm version
+kubelogin version

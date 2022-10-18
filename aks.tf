@@ -7,10 +7,10 @@ resource "azurerm_kubernetes_cluster" "aks" {
   dns_prefix                          = var.aks_dns_prefix
   node_resource_group                 = var.rg_spoke_aks_nodes
   private_cluster_enabled             = var.enable_private_cluster
+  sku_tier                            = "Free" # "Paid"
   private_cluster_public_fqdn_enabled = false # true # 
   public_network_access_enabled       = true  # false #
   role_based_access_control_enabled   = true
-  sku_tier                            = "Free" # "Paid"
   azure_policy_enabled                = true
   open_service_mesh_enabled           = true
   local_account_disabled              = true

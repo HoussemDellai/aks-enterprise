@@ -102,8 +102,12 @@ ForEach($rg_name in $(az group list --query [*].name -o tsv))
 
 az network bastion ssh --name "bastion_host" --resource-group "rg-spoke-mgt" --target-resource-id "/subscriptions/59d574d4-1c03-4092-ab22-312ed594eec9/resourceGroups/rg-spoke-mgt/providers/Microsoft.Compute/virtualMachines/vm-jumpbox-linux" --auth-type "password" --username "houssem"
 
+apt install jq -y
 
-az login
-az account set -s Microsoft-Azure-2
+az login --identity
+sudo -i
+PS1="\[\e]0;\u@\h: \w\a\]${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ "
 az acr login -n acrforakstf0111
 docker pull acrforakstf0111.azurecr.io/hello-world:latest
+
+curl -s -H Metadata:true --noproxy "*" "http://169.254.169.254/metadata/instance?api-version=2021-02-01" | jq

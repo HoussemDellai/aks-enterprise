@@ -22,7 +22,7 @@ resource "azurerm_windows_virtual_machine" "vm_jumpbox_windows" {
   network_interface_ids = [azurerm_network_interface.nic_vm_jumpbox_windows.0.id]
 
 
-  os_disk { #TODO: replace with vm-devbox OS Disk
+  os_disk {
     caching              = "ReadWrite"
     storage_account_type = "StandardSSD_LRS"
   }

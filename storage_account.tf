@@ -31,32 +31,18 @@ resource "azurerm_storage_account_network_rules" "rules_storage" {
   storage_account_id         = azurerm_storage_account.storage.id
   default_action             = "Deny"
   bypass                     = ["Metrics", "Logging", "AzureServices"]
-  ip_rules                   = [data.http.machine_ip.response_body] # ["176.177.25.47"]
+  ip_rules                   = [data.http.machine_ip.response_body]
   virtual_network_subnet_ids = null                                 # [azurerm_subnet.subnet_mgt.0.id]
 }
 
-# resource "azurerm_private_dns_a_record" "dns_a" {
-#   name                = "kopicloudnortheurope"
-#   zone_name           = azurerm_private_dns_zone.dns-zone.name
-#   resource_group_name = azurerm_resource_group.network-rg.name
-#   ttl                 = 300
-#   records             = [azurerm_private_endpoint.endpoint.private_service_connection.0.private_ip_address]
-# }
-
 resource "azurerm_storage_account" "storage" {
-  name                     = "storage01998" #TODO var.storage_account
+  name                     = var.storage_account_name
   resource_group_name      = azurerm_resource_group.rg_spoke_app.name
   location                 = var.resources_location
   account_kind             = "StorageV2"
   account_tier             = "Standard"
   account_replication_type = "LRS"
   public_network_access_enabled = true
-
-  # network_rules {
-  #   default_action             = "Deny"
-  #   ip_rules                   = ["100.0.0.1"]
-  #   virtual_network_subnet_ids = [azurerm_subnet.subnet_mgt.id]
-  # }
 }
 
 resource "azurerm_storage_container" "container" {

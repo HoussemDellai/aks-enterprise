@@ -69,7 +69,7 @@ resource "azurerm_linux_virtual_machine" "vm_jumpbox_linux" {
 }
 
 resource "azurerm_virtual_machine_extension" "vm_extension_linux" {
-  name                 = "hostname" #TODO
+  name                 = "vm_extension_linux"
   virtual_machine_id   = azurerm_linux_virtual_machine.vm_jumpbox_linux.0.id
   publisher            = "Microsoft.Azure.Extensions"
   type                 = "CustomScript"

@@ -2,7 +2,7 @@
 resource "azurerm_public_ip" "public_ip_bastion" {
   provider            = azurerm.subscription_hub
   count               = var.enable_bastion ? 1 : 0
-  name                = "public_ip_bastion"
+  name                = "public-ip-bastion"
   location            = var.resources_location
   resource_group_name = azurerm_resource_group.rg_hub.name #var.rg_spoke
   allocation_method   = "Static"
@@ -13,7 +13,7 @@ resource "azurerm_public_ip" "public_ip_bastion" {
 resource "azurerm_bastion_host" "bastion_host" {
   provider               = azurerm.subscription_hub
   count                  = var.enable_bastion ? 1 : 0
-  name                   = "bastion_host"
+  name                   = "bastion-host"
   location               = var.resources_location
   resource_group_name    = azurerm_resource_group.rg_hub.name
   sku                    = "Standard"
