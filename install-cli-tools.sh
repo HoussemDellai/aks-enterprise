@@ -54,12 +54,14 @@ helm version
 
 # install brew
 # https://brew.sh/
-sudo apt-get install -y build-essential
-sudo apt install git -y
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-echo '# Set PATH, MANPATH, etc., for Homebrew.' >> /home/houssem/.profile
-echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' >> /home/houssem/.profile
-eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+apt install linuxbrew-wrapper -y
+# sudo -i
+# sudo apt-get install -y build-essential
+# sudo apt install git -y
+# /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+# echo '# Set PATH, MANPATH, etc., for Homebrew.' >> /home/houssem/.profile
+# echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' >> /home/houssem/.profile
+# eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 
 # install (Azure) kubelogin
 # https://github.com/Azure/kubelogin
@@ -73,8 +75,8 @@ apt install jq -y
 az login --identity
 sudo -i
 PS1="\[\e]0;\u@\h: \w\a\]${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ "
-az acr login -n acrforakstf0111
-docker pull acrforakstf0111.azurecr.io/hello-world:latest
+az acr login -n acrforakstf011
+docker pull acrforakstf011.azurecr.io/hello-world:latest
 
 curl -s -H Metadata:true --noproxy "*" "http://169.254.169.254/metadata/instance?api-version=2021-02-01" | jq
 

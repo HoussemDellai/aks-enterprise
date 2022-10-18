@@ -41,7 +41,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
     os_disk_type                 = "Ephemeral" # "Managed"
     ultra_ssd_enabled            = false
     os_sku                       = "Ubuntu" # "CBLMariner" #
-    only_critical_addons_enabled = true     # taint default node pool with CriticalAddonsOnly=true:NoSchedule
+    only_critical_addons_enabled = var.enable_nodepool_apps # taint default node pool with CriticalAddonsOnly=true:NoSchedule
     zones                        = [1, 2, 3]
     tags                         = var.tags
     vnet_subnet_id               = azurerm_subnet.subnet_nodes.id

@@ -65,6 +65,54 @@ resource "azurerm_subnet" "subnet_pe" {
   address_prefixes     = var.cidr_subnet_pe
 }
 
+resource "azurerm_network_security_group" "nsg_subnet_nodes" {
+  name                = "nsg_subnet_nodes"
+  location            = var.resources_location
+  resource_group_name = azurerm_resource_group.rg_spoke_aks.name
+  tags                = var.tags
+
+  security_rule {
+    name                       = "rule_subnet_nodes"
+    priority                   = 100
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_range     = "*"
+    source_address_prefix      = "*"
+    destination_address_prefix = "*"
+  }
+}
+
+resource "azurerm_subnet_network_security_group_association" "association_nsg_subnet_nodes" {
+  subnet_id                 = azurerm_subnet.subnet_nodes.id
+  network_security_group_id = azurerm_network_security_group.nsg_subnet_nodes.id
+}
+
+resource "azurerm_network_security_group" "nsg_subnet_pods" {
+  name                = "nsg_subnet_pods"
+  location            = var.resources_location
+  resource_group_name = azurerm_resource_group.rg_spoke_aks.name
+  tags                = var.tags
+
+  security_rule {
+    name                       = "rule_subnet_pods"
+    priority                   = 100
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_range     = "*"
+    source_address_prefix      = "*"
+    destination_address_prefix = "*"
+  }
+}
+
+resource "azurerm_subnet_network_security_group_association" "association_nsg_subnet_pods" {
+  subnet_id                 = azurerm_subnet.subnet_pods.id
+  network_security_group_id = azurerm_network_security_group.nsg_subnet_pods.id
+}
+
 resource "azurerm_subnet_route_table_association" "association_route_table_subnet_nodes" {
   count          = var.enable_aks_cluster ? 1 : 0
   subnet_id      = azurerm_subnet.subnet_nodes.id
