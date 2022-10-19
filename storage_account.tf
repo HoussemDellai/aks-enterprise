@@ -32,16 +32,16 @@ resource "azurerm_storage_account_network_rules" "rules_storage" {
   default_action             = "Deny"
   bypass                     = ["Metrics", "Logging", "AzureServices"]
   ip_rules                   = [data.http.machine_ip.response_body]
-  virtual_network_subnet_ids = null                                 # [azurerm_subnet.subnet_mgt.0.id]
+  virtual_network_subnet_ids = null # [azurerm_subnet.subnet_mgt.0.id]
 }
 
 resource "azurerm_storage_account" "storage" {
-  name                     = var.storage_account_name
-  resource_group_name      = azurerm_resource_group.rg_spoke_app.name
-  location                 = var.resources_location
-  account_kind             = "StorageV2"
-  account_tier             = "Standard"
-  account_replication_type = "LRS"
+  name                          = var.storage_account_name
+  resource_group_name           = azurerm_resource_group.rg_spoke_app.name
+  location                      = var.resources_location
+  account_kind                  = "StorageV2"
+  account_tier                  = "Standard"
+  account_replication_type      = "LRS"
   public_network_access_enabled = true
 }
 

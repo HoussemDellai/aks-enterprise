@@ -46,7 +46,7 @@ resource "azurerm_container_registry" "acr" {
   provisioner "local-exec" {
     # interpreter = ["PowerShell", "-Command"]
     command = "az acr import --name ${azurerm_container_registry.acr.login_server} --source docker.io/library/hello-world:latest --image hello-world:latest"
-    when = create
+    when    = create
   }
 }
 

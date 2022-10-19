@@ -8,8 +8,8 @@ resource "azurerm_kubernetes_cluster" "aks" {
   node_resource_group                 = var.rg_spoke_aks_nodes
   private_cluster_enabled             = var.enable_private_cluster
   sku_tier                            = "Free" # "Paid"
-  private_cluster_public_fqdn_enabled = false # true # 
-  public_network_access_enabled       = true  # false #
+  private_cluster_public_fqdn_enabled = false  # true # 
+  public_network_access_enabled       = true   # false #
   role_based_access_control_enabled   = true
   azure_policy_enabled                = true
   open_service_mesh_enabled           = true
@@ -40,7 +40,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
     os_disk_size_gb              = var.aks_agent_os_disk_size
     os_disk_type                 = "Ephemeral" # "Managed"
     ultra_ssd_enabled            = false
-    os_sku                       = "Ubuntu" # "CBLMariner" #
+    os_sku                       = "Ubuntu"                 # "CBLMariner" #
     only_critical_addons_enabled = var.enable_nodepool_apps # taint default node pool with CriticalAddonsOnly=true:NoSchedule
     zones                        = [1, 2, 3]
     tags                         = var.tags

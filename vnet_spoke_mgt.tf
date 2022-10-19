@@ -43,7 +43,7 @@ resource "azurerm_network_security_group" "nsg_subnet_mgt" {
 }
 
 resource "azurerm_subnet_network_security_group_association" "association_nsg_subnet_mgt" {
-  count               = var.enable_vm_jumpbox_windows || var.enable_vm_jumpbox_linux ? 1 : 0
+  count                     = var.enable_vm_jumpbox_windows || var.enable_vm_jumpbox_linux ? 1 : 0
   subnet_id                 = azurerm_subnet.subnet_mgt.0.id
   network_security_group_id = azurerm_network_security_group.nsg_subnet_mgt.0.id
 }

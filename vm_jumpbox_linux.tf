@@ -55,8 +55,8 @@ resource "azurerm_linux_virtual_machine" "vm_jumpbox_linux" {
   }
 
   identity {
-    type = "UserAssigned"
-    identity_ids = [ azurerm_user_assigned_identity.identity_vm_linux.0.id ]
+    type         = "UserAssigned"
+    identity_ids = [azurerm_user_assigned_identity.identity_vm_linux.0.id]
   }
 
   # az vm image list --publisher Canonical --offer 0001-com-ubuntu-pro-jammy -s pro-22_04-lts-gen2 --all
@@ -74,8 +74,8 @@ resource "azurerm_virtual_machine_extension" "vm_extension_linux" {
   publisher            = "Microsoft.Azure.Extensions"
   type                 = "CustomScript"
   type_handler_version = "2.1"
-  tags = var.tags
-  settings = <<SETTINGS
+  tags                 = var.tags
+  settings             = <<SETTINGS
     {
       "fileUris": ["https://raw.githubusercontent.com/HoussemDellai/aks-appgateway/hub-spoke-single-tenant/install-cli-tools.sh"],
       "commandToExecute": "./install-cli-tools.sh"
@@ -86,5 +86,5 @@ SETTINGS
   #   "fileUris": ["./install-cli-tools.sh"]
   #   "commandToExecute": "./install-cli-tools.sh"
   # }
-# SETTINGS
+  # SETTINGS
 }

@@ -4,7 +4,7 @@ locals {
 
 resource "azurerm_firewall_policy" "firewall_policy" {
   count               = var.enable_firewall ? 1 : 0
-  name                = "firewall_policy" #TODO _
+  name                = "firewall-policy"
   resource_group_name = azurerm_resource_group.rg_hub.name
   location            = var.resources_location
   dns {
