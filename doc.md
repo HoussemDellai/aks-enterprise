@@ -121,3 +121,19 @@ Azure Firewall must provision more virtual machine instances as it scales. A /26
 ## Can I deploy Azure Firewall without a public IP address?
 No, currently you must deploy Azure Firewall with a public IP address.
 
+## Integrate your app with an Azure virtual network
+With Azure virtual networks, you can place many of your Azure resources in a non-internet-routable network. The App Service virtual network integration feature enables your apps to access resources in or through a virtual network. Virtual network integration doesn't enable your apps to be accessed privately.
+Virtual network integration gives your app access to resources in your virtual network, but it doesn't grant inbound private access to your app from the virtual network.
+
+## The virtual network integration feature has two variations
+Regional virtual network integration: When you connect to virtual networks in the same region, you must have a dedicated subnet in the virtual network you're integrating with.
+Gateway-required virtual network integration: When you connect directly to virtual networks in other regions or to a classic virtual network in the same region, you need an Azure Virtual Network gateway created in the target virtual network.
+
+## Private endpoint considerations
+Network connections can be initiated only by clients that are connecting to the private endpoint. Service providers don't have a routing configuration to create connections into service customers. Connections can be established in a single direction only.
+
+A read-only network interface is automatically created for the lifecycle of the private endpoint. The interface is assigned a dynamic private IP address from the subnet that maps to the private-link resource. The value of the private IP address remains unchanged for the entire lifecycle of the private endpoint.
+
+The private endpoint must be deployed in the same region and subscription as the virtual network.
+
+The private-link resource can be deployed in a different region than the one for the virtual network and private endpoint.
