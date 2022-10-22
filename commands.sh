@@ -75,8 +75,6 @@ velero backup describe manual-backup1 --details
 # AKS is private and peering is not yet set
 terraform plan -out tfplan -target="azurerm_virtual_network_peering.peering_vnet_aks_vnet_vm_jumpbox" -target="azurerm_virtual_network_peering.peering_vnet_vm_jumpbox_vnet_aks" -target="azurerm_private_dns_zone_virtual_network_link.link_private_dns_aks_vnet_vm_devbox"
 
-
-
 # push git changes
 git add . | git commit -m "configured aks aad app" | git push
 
@@ -100,3 +98,16 @@ ForEach($rg_name in $(az group list --query [*].name -o tsv))
     echo "Deleting $rg_name ..."
     az group delete -n $rg_name --yes --no-wait
 }
+
+
+az network bastion ssh --name "bastion_host" --resource-group "rg-spoke-mgt" --target-resource-id "/subscriptions/59d574d4-1c03-4092-ab22-312ed594eec9/resourceGroups/rg-spoke-mgt/providers/Microsoft.Compute/virtualMachines/vm-jumpbox-linux" --auth-type "password" --username "houssem"
+
+apt install jq -y
+
+az login --identity
+sudo -i
+PS1="\[\e]0;\u@\h: \w\a\]${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ "
+az acr login -n acrforakstf0111
+docker pull acrforakstf0111.azurecr.io/hello-world:latest
+
+curl -s -H Metadata:true --noproxy "*" "http://169.254.169.254/metadata/instance?api-version=2021-02-01" | jq

@@ -7,16 +7,12 @@ resource "kubernetes_namespace" "nginx_ingress" {
 
 # https://github.com/kubernetes/ingress-nginx/tree/main/charts/ingress-nginx
 resource "helm_release" "nginx_ingress" {
-  provider = helm.aks-module
-  # provider = google.europe
-  # kubernetes = kubernetes.aks-module
-  # helm       = helm.aks-module
-
+  provider   = helm.aks-module
   name       = "ingress-nginx"
   repository = "https://kubernetes.github.io/ingress-nginx"
   chart      = "ingress-nginx"
   version    = "4.1.3"
-  namespace  = kubernetes_namespace.nginx_ingress.metadata[0].name
+  namespace  = kubernetes_namespace.nginx_ingress.metadata.0.name
 
   set {
     name  = "controller.service.type"

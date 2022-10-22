@@ -15,7 +15,7 @@ resource "helm_release" "kubecost" {
   provider   = helm.aks-module
   name       = "kubecost"
   chart      = "cost-analyzer"
-  namespace  = kubernetes_namespace.kubecost.metadata[0].name
+  namespace  = kubernetes_namespace.kubecost.metadata.0.name
   version    = "1.96.0"
   repository = "https://kubecost.github.io/cost-analyzer/"
 
@@ -66,14 +66,14 @@ resource "helm_release" "kubecost" {
     name  = "kubecostProductConfigs.azureTenantID"
     value = data.azurerm_subscription.current.tenant_id
   }
-  
+
   set {
     name  = "global.prometheus.enabled"
     value = true
   }
 
   set { # not required
-    name = "kubecostToken"
+    name  = "kubecostToken"
     value = "aG91c3NlbS5kZWxsYWlAbGl2ZS5jb20=xm343yadf98"
   }
 }
@@ -81,14 +81,15 @@ resource "helm_release" "kubecost" {
 # kubectl port-forward --namespace kubecost deployment/kubecost-cost-analyzer 9090
 # Access dashboard: http://localhost:9090
 
-resource "null_resource" "portforward" {
-  provisioner "local-exec" {
-    command = "kubectl port-forward --namespace finops deployment/kubecost-cost-analyzer 9090"
-    interpreter = ["PowerShell", "-Command"]
-  }
+# resource "null_resource" "portforward" {
+#   provisioner "local-exec" {
+#     command = "kubectl port-forward --namespace finops deployment/kubecost-cost-analyzer 9090"
+#     interpreter = ["PowerShell", "-Command"]
+#   }
 
-  provisioner "local-exec" {
-    command = "kubectl --namespace kasten-io port-forward service/gateway 8000:8000"
-    interpreter = ["PowerShell", "-Command"]
-  }
-}
+# Access dashboard: http://127.0.0.1:8000/k10/#/
+#   provisioner "local-exec" {
+#     command = "kubectl --namespace kasten-io port-forward service/gateway 8000:8000"
+#     interpreter = ["PowerShell", "-Command"]
+#   }
+# }

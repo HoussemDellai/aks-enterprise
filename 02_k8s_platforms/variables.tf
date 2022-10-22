@@ -8,11 +8,6 @@ variable "resource_group_name" {
   description = "Name of the resource group."
 }
 
-# variable "resource_group_name_vnet" {
-#   default     = "rg-aks-network-spoke"
-#   description = "Name of the resource group for existing VNET."
-# }
-
 # variable "node_resource_group" {
 #   default = "rg-aks-cluster-managed"
 # }
@@ -37,32 +32,32 @@ variable "resource_group_name" {
 #   default     = "subnet-aks-nodes"
 # }
 
-# variable "subnet_pods_name" {
+# variable "subnet_pods" {
 #   description = "Subnet Name."
 #   default     = "subnet-aks-pods"
 # }
 
-# variable "app_gateway_subnet_name" {
+# variable "subnet_app_gateway" {
 #   description = "Subnet Name."
 #   default     = "subnet-appgw"
 # }
 
-# variable "subnet_nodes_address_prefix" {
+# variable "cidr_subnet_nodes" {
 #   description = "Subnet address prefix."
 #   default     = ["10.240.0.0/16"]
 # }
 
-# variable "subnet_pods_address_prefix" {
+# variable "cidr_subnet_pods" {
 #   description = "Subnet address prefix."
 #   default     = ["10.241.0.0/16"]
 # }
 
-# variable "app_gateway_subnet_address_prefix" {
+# variable "cidr_subnet_appgateway" {
 #   description = "Subnet server IP address."
 #   default     = ["10.1.0.0/16"]
 # }
 
-# variable "app_gateway_name" {
+# variable "app_gateway" {
 #   description = "Name of the Application Gateway"
 #   default     = "appgw-aks"
 # }
@@ -101,17 +96,12 @@ variable "aks_name" {
 #   default     = 1
 # }
 
-# variable "aks_agent_vm_size" {
-#   description = "VM size"
-#   default     = "Standard_D2ds_v5"
-# }
-
 # variable "kubernetes_version" {
 #   description = "Kubernetes version"
 #   default     = "1.23.5"
 # }
 
-# variable "aks_service_cidr" {
+# variable "cidr_aks_service" {
 #   description = "CIDR notation IP range from which to assign service cluster IPs"
 #   default     = "10.0.0.0/16"
 # }
@@ -121,7 +111,7 @@ variable "aks_name" {
 #   default     = "10.0.0.10"
 # }
 
-# variable "aks_docker_bridge_cidr" {
+# variable "cidr_aks_docker_bridge" {
 #   description = "CIDR notation IP for Docker bridge."
 #   default     = "172.17.0.1/16"
 # }
@@ -228,19 +218,21 @@ EOVV
 variable "harbor_admin_password" {
   type        = string
   description = "Password for Harbor"
-  default     = "@Aa123456789"
 }
 
 variable "grafana_admin_user" {
   type        = string
   description = "Admin user for Grafana"
-  default     = "grafana"
 }
 
 variable "grafana_admin_password" {
   type        = string
   description = "Password for Grafana"
-  default     = "@Aa123456789"
+}
+
+variable "argocd_admin_password" {
+  type        = string
+  description = "Password for Argo CD, should be bcrypt"
 }
 
 variable "tags" {
