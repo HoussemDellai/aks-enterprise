@@ -59,3 +59,18 @@ resource "azurerm_windows_virtual_machine" "vm_jumpbox_windows" {
 #         },
 #         "dataDisks": []
 #     },
+
+resource "azurerm_virtual_machine_extension" "vm_extension_windows" {
+  count                = var.enable_vm_jumpbox_windows ? 1 : 0
+  name                 = "vm-extension-windows"
+  virtual_machine_id   = azurerm_windows_virtual_machine.vm_jumpbox_windows.0.id
+  publisher            = "Microsoft.Compute"
+  type                 = "CustomScriptExtension"
+  type_handler_version = "1.10"
+
+  settings = <<SETTINGS
+    {
+        "commandToExecute": "powershell Add-WindowsFeature Web-Server; powershell Add-Content -Path \"C:\\inetpub\\wwwroot\\Default.htm\" -Value $($env:computername)"
+    }
+SETTINGS
+}

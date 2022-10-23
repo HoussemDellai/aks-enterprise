@@ -1,3 +1,10 @@
+# install preview features in azure subscription
+az feature register --namespace "Microsoft.ContainerService" --name "EnableWorkloadIdentityPreview"
+az feature register --namespace "Microsoft.ContainerService" --name "EnableOIDCIssuerPreview"
+az feature register --namespace "Microsoft.ContainerService" --name "EnableImageCleanerPreview"
+az feature register --namespace "Microsoft.ContainerService" --name "EnableAPIServerVnetIntegrationPreview"
+az provider register -n Microsoft.ContainerService
+
 # install Azure CLI in Ubuntu
 curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
 

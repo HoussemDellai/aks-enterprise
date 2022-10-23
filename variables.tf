@@ -274,11 +274,6 @@ variable "enable_firewall" {
   description = "Creates an Azure Firewall."
 }
 
-variable "aks_enable_rbac" {
-  description = "Enable RBAC on the AKS cluster. Defaults to true."
-  default     = "true"
-}
-
 variable "enable_private_acr" {
   description = "Creates private ACR with Private DNS Zone and Private Endpoint."
   default     = "true"
@@ -296,6 +291,11 @@ variable "enable_vm_jumpbox_windows" {
 
 variable "enable_vm_jumpbox_linux" {
   description = "Creates Azure Linux VM."
+  default     = "true"
+}
+
+variable "enable_nsg_flow_logs" {
+  description = "Enables NSG flow logs"
   default     = "true"
 }
 

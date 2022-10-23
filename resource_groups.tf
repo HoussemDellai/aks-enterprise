@@ -23,3 +23,10 @@ resource "azurerm_resource_group" "rg_spoke_aks" {
   location = var.resources_location
   tags     = var.tags
 }
+
+resource "azurerm_resource_group" "rg_log_flow" {
+  count    = var.enable_nsg_flow_logs ? 1 : 0
+  name     = "rg_log_flow"
+  location = var.resources_location
+  tags     = var.tags
+}

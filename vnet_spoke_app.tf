@@ -66,6 +66,7 @@ resource "azurerm_subnet" "subnet_pe" {
 }
 
 resource "azurerm_network_security_group" "nsg_subnet_nodes" {
+  count = var.enable_aks_cluster ? 1 : 0
   name                = "nsg_subnet_nodes"
   location            = var.resources_location
   resource_group_name = azurerm_resource_group.rg_spoke_aks.name
@@ -85,11 +86,13 @@ resource "azurerm_network_security_group" "nsg_subnet_nodes" {
 }
 
 resource "azurerm_subnet_network_security_group_association" "association_nsg_subnet_nodes" {
+  count = var.enable_aks_cluster ? 1 : 0
   subnet_id                 = azurerm_subnet.subnet_nodes.id
-  network_security_group_id = azurerm_network_security_group.nsg_subnet_nodes.id
+  network_security_group_id = azurerm_network_security_group.nsg_subnet_nodes.0.id
 }
 
 resource "azurerm_network_security_group" "nsg_subnet_pods" {
+  count = var.enable_aks_cluster ? 1 : 0
   name                = "nsg_subnet_pods"
   location            = var.resources_location
   resource_group_name = azurerm_resource_group.rg_spoke_aks.name
@@ -110,7 +113,33 @@ resource "azurerm_network_security_group" "nsg_subnet_pods" {
 
 resource "azurerm_subnet_network_security_group_association" "association_nsg_subnet_pods" {
   subnet_id                 = azurerm_subnet.subnet_pods.id
-  network_security_group_id = azurerm_network_security_group.nsg_subnet_pods.id
+  network_security_group_id = azurerm_network_security_group.nsg_subnet_pods.0.id
+}
+
+resource "azurerm_network_security_group" "nsg_subnet_appgw" {
+  count               = var.enable_app_gateway ? 1 : 0
+  name                = "nsg_subnet_appgw"
+  location            = var.resources_location
+  resource_group_name = azurerm_resource_group.rg_spoke_aks.name
+  tags                = var.tags
+
+  security_rule {
+    name                       = "rule_subnet_appgw"
+    priority                   = 100
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_range     = "*"
+    source_address_prefix      = "*"
+    destination_address_prefix = "*"
+  }
+}
+
+resource "azurerm_subnet_network_security_group_association" "association_nsg_subnet_appgw" {
+  count                     = var.enable_app_gateway ? 1 : 0
+  subnet_id                 = azurerm_subnet.subnet_appgw.0.id
+  network_security_group_id = azurerm_network_security_group.nsg_subnet_appgw.0.id
 }
 
 resource "azurerm_subnet_route_table_association" "association_route_table_subnet_nodes" {
