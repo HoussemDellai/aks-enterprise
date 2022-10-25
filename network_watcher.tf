@@ -18,7 +18,7 @@ resource "azurerm_storage_account" "network_log_data" {
 # }
 resource "azurerm_network_watcher" "network_watcher_westeurope" {
   count               = var.enable_nsg_flow_logs ? 1 : 0
-  name                = "NetworkWatcher_westeurope"
+  name                = "NetworkWatcher_${var.resources_location}"
   location            = var.resources_location
   resource_group_name = azurerm_resource_group.rg_log_flow.0.name
 }
@@ -31,6 +31,7 @@ resource "azurerm_network_watcher_flow_log" "network_flow_logs_nsg_subnet_mgt" {
   network_security_group_id = azurerm_network_security_group.nsg_subnet_mgt.0.id
   storage_account_id        = azurerm_storage_account.network_log_data.0.id
   enabled                   = true
+  version                   = 2
 
   retention_policy {
     enabled = true
@@ -54,6 +55,7 @@ resource "azurerm_network_watcher_flow_log" "network_flow_logs_nsg_subnet_appgw"
   network_security_group_id = azurerm_network_security_group.nsg_subnet_appgw.0.id
   storage_account_id        = azurerm_storage_account.network_log_data.0.id
   enabled                   = true
+  version                   = 2
 
   retention_policy {
     enabled = true
@@ -77,6 +79,7 @@ resource "azurerm_network_watcher_flow_log" "network_flow_logs_nsg_subnet_nodes"
   network_security_group_id = azurerm_network_security_group.nsg_subnet_nodes.0.id
   storage_account_id        = azurerm_storage_account.network_log_data.0.id
   enabled                   = true
+  version                   = 2
 
   retention_policy {
     enabled = true
@@ -100,6 +103,7 @@ resource "azurerm_network_watcher_flow_log" "network_flow_logs_nsg_subnet_pods" 
   network_security_group_id = azurerm_network_security_group.nsg_subnet_pods.0.id
   storage_account_id        = azurerm_storage_account.network_log_data.0.id
   enabled                   = true
+  version                   = 2
 
   retention_policy {
     enabled = true

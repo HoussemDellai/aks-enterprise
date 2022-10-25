@@ -331,5 +331,6 @@ variable "tags" {
   default = {
     source = "terraform"
     environment : "development"
+    architecture : "Hub&Spoke"
   }
 }

@@ -18,6 +18,30 @@ resource "azurerm_firewall_policy" "firewall_policy" {
   }
 }
 
+# - nat_rule_collection {
+#     - action   = "Dnat"
+#     - name     = "dnat-inbound-fwip-to-lbip"
+#     - priority = 100
+
+#     - rule {
+#         - destination_address = "20.103.249.142"
+#         - destination_ports   = [
+#             - "80",
+#           ]
+#         - name                = "inboundrule"
+#         - protocols           = [
+#             - "TCP",
+#             - "UDP",
+#           ]
+#         - source_addresses    = [
+#             - "*",
+#           ]
+#         - source_ip_groups    = []
+#         - translated_address  = "20.101.209.161"
+#         - translated_port     = 80
+#       }
+#   }
+
 resource "azurerm_firewall_policy_rule_collection_group" "policy_group_aks" {
   count              = var.enable_firewall ? 1 : 0
   name               = "policy_group_aks"
@@ -146,6 +170,23 @@ resource "azurerm_firewall_policy_rule_collection_group" "policy_group_subnet_mg
       source_addresses      = azurerm_subnet.subnet_mgt.0.address_prefixes
       destination_addresses = azurerm_subnet.subnet_pe.0.address_prefixes
       destination_ports     = ["443"]
+    }
+  }
+
+  nat_rule_collection {
+    action   = "Dnat"
+    name     = "dnat-inbound-fwip-to-lbip"
+    priority = 100
+
+    rule {
+      name                = "inboundrule"
+      protocols           = ["TCP", "UDP"]
+      source_addresses    = ["*"]
+      destination_address = azurerm_public_ip.public_ip_firewall.0.ip_address # "20.103.249.142"
+      destination_ports   = ["80"]
+      source_ip_groups    = []
+      translated_address  = "20.101.209.161" # LB service
+      translated_port     = 80
     }
   }
 }

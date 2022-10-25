@@ -66,7 +66,7 @@ resource "azurerm_subnet" "subnet_pe" {
 }
 
 resource "azurerm_network_security_group" "nsg_subnet_nodes" {
-  count = var.enable_aks_cluster ? 1 : 0
+  count               = var.enable_aks_cluster ? 1 : 0
   name                = "nsg_subnet_nodes"
   location            = var.resources_location
   resource_group_name = azurerm_resource_group.rg_spoke_aks.name
@@ -86,13 +86,13 @@ resource "azurerm_network_security_group" "nsg_subnet_nodes" {
 }
 
 resource "azurerm_subnet_network_security_group_association" "association_nsg_subnet_nodes" {
-  count = var.enable_aks_cluster ? 1 : 0
+  count                     = var.enable_aks_cluster ? 1 : 0
   subnet_id                 = azurerm_subnet.subnet_nodes.id
   network_security_group_id = azurerm_network_security_group.nsg_subnet_nodes.0.id
 }
 
 resource "azurerm_network_security_group" "nsg_subnet_pods" {
-  count = var.enable_aks_cluster ? 1 : 0
+  count               = var.enable_aks_cluster ? 1 : 0
   name                = "nsg_subnet_pods"
   location            = var.resources_location
   resource_group_name = azurerm_resource_group.rg_spoke_aks.name
