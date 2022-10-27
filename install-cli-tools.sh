@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # install Docker
 curl -fsSL https://get.docker.com -o get-docker.sh
 sudo sh get-docker.sh
@@ -86,3 +88,5 @@ terraform version
 kubectl version
 helm version
 kubelogin version
+
+exit 0

@@ -185,7 +185,7 @@ resource "azurerm_firewall_policy_rule_collection_group" "policy_group_subnet_mg
       destination_address = azurerm_public_ip.public_ip_firewall.0.ip_address # "20.103.249.142"
       destination_ports   = ["80"]
       source_ip_groups    = []
-      translated_address  = "20.101.209.161" # LB service
+      translated_address  = "20.101.209.161" # #TODO LB service
       translated_port     = 80
     }
   }
