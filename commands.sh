@@ -111,6 +111,13 @@ az network bastion ssh --name "bastion_host" --resource-group "rg-spoke-mgt" --t
 
 apt install jq -y
 
+# check installs
+az version
+terraform version
+kubectl version
+helm version
+kubelogin version
+
 az login --identity
 sudo -i
 PS1="\[\e]0;\u@\h: \w\a\]${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ "

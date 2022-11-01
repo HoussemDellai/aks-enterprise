@@ -21,11 +21,11 @@ resource "azurerm_public_ip" "appgw_pip" {
 
 resource "azurerm_application_gateway" "appgw" {
   count               = var.enable_app_gateway ? 1 : 0
-  name                = var.app_gateway
+  name                = "appgw-aks"
   resource_group_name = azurerm_resource_group.rg_spoke_aks.name
   location            = var.resources_location
   sku {
-    name     = var.app_gateway_sku
+    name     = "Standard_v2"
     tier     = "Standard_v2"
     capacity = 2
   }

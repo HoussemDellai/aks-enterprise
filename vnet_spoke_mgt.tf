@@ -10,7 +10,7 @@ resource "azurerm_virtual_network" "vnet_spoke_mgt" {
 
 resource "azurerm_subnet" "subnet_mgt" {
   count                = var.enable_vm_jumpbox_windows || var.enable_vm_jumpbox_linux ? 1 : 0
-  name                 = var.subnet_mgt
+  name                 = "subnet-mgt"
   virtual_network_name = azurerm_virtual_network.vnet_spoke_mgt.0.name
   resource_group_name  = azurerm_virtual_network.vnet_spoke_mgt.0.resource_group_name
   address_prefixes     = var.cidr_subnet_mgt

@@ -7,14 +7,14 @@ resource "azurerm_virtual_network" "vnet_spoke_app" {
 }
 
 resource "azurerm_subnet" "subnet_nodes" {
-  name                 = var.subnet_nodes
+  name                 = "subnet-nodes"
   virtual_network_name = azurerm_virtual_network.vnet_spoke_app.name
   resource_group_name  = azurerm_virtual_network.vnet_spoke_app.resource_group_name
   address_prefixes     = var.cidr_subnet_nodes
 }
 
 resource "azurerm_subnet" "subnet_pods" {
-  name                 = var.subnet_pods
+  name                 = "subnet-pods"
   virtual_network_name = azurerm_virtual_network.vnet_spoke_app.name
   resource_group_name  = azurerm_virtual_network.vnet_spoke_app.resource_group_name
   address_prefixes     = var.cidr_subnet_pods
@@ -33,7 +33,7 @@ resource "azurerm_subnet" "subnet_pods" {
 
 resource "azurerm_subnet" "subnet_appgw" {
   count                = var.enable_app_gateway ? 1 : 0
-  name                 = var.subnet_app_gateway
+  name                 = "subnet-appgw"
   virtual_network_name = azurerm_virtual_network.vnet_spoke_app.name
   resource_group_name  = azurerm_virtual_network.vnet_spoke_app.resource_group_name
   address_prefixes     = var.cidr_subnet_appgateway
@@ -41,10 +41,10 @@ resource "azurerm_subnet" "subnet_appgw" {
 
 resource "azurerm_subnet" "subnet_apiserver" {
   count                = var.enable_apiserver_vnet_integration ? 1 : 0
-  name                 = var.subnet_apiserver
+  name                 = "subnet-apiserver"
   virtual_network_name = azurerm_virtual_network.vnet_spoke_app.name
   resource_group_name  = azurerm_virtual_network.vnet_spoke_app.resource_group_name
-  address_prefixes     = var.subnet_apiserver_address_prefix
+  address_prefixes     = var.cidr_subnet_apiserver_vnetint
 
   delegation {
     name = "aks-delegation"
@@ -59,7 +59,7 @@ resource "azurerm_subnet" "subnet_apiserver" {
 
 resource "azurerm_subnet" "subnet_pe" {
   count                = var.enable_private_acr || var.enable_private_keyvault ? 1 : 0
-  name                 = var.subnet_pe
+  name                 = "subnet-pe"
   virtual_network_name = azurerm_virtual_network.vnet_spoke_app.name
   resource_group_name  = azurerm_virtual_network.vnet_spoke_app.resource_group_name
   address_prefixes     = var.cidr_subnet_pe

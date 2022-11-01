@@ -78,9 +78,6 @@ az login --identity
 sudo -i
 PS1="\[\e]0;\u@\h: \w\a\]${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ "
 az acr login -n acrforakstf011
-docker pull acrforakstf011.azurecr.io/hello-world:latest
-
-curl -s -H Metadata:true --noproxy "*" "http://169.254.169.254/metadata/instance?api-version=2021-02-01" | jq
 
 # check installs
 az version

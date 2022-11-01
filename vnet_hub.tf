@@ -21,7 +21,7 @@ resource "azurerm_subnet" "subnet_firewall" {
 
 resource "azurerm_subnet" "subnet_bastion" {
   count                = var.enable_bastion ? 1 : 0
-  name                 = var.subnet_bastion
+  name                 = "AzureBastionSubnet"
   virtual_network_name = azurerm_virtual_network.vnet_hub.0.name
   resource_group_name  = azurerm_virtual_network.vnet_hub.0.resource_group_name
   address_prefixes     = var.cidr_subnet_bastion

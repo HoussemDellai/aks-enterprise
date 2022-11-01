@@ -77,7 +77,7 @@ resource "azurerm_virtual_machine_extension" "vm_extension_linux" {
   tags                 = var.tags
   settings             = <<SETTINGS
     {
-      "fileUris": ["https://raw.githubusercontent.com/HoussemDellai/aks-appgateway/hub-spoke-single-tenant/install-cli-tools.sh"],
+      "fileUris": ["https://raw.githubusercontent.com/HoussemDellai/aks-appgateway/network-flow-logs/install-cli-tools.sh"],
       "commandToExecute": "./install-cli-tools.sh"
     }
 SETTINGS

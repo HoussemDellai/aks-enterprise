@@ -67,11 +67,6 @@ variable "resource_group_name" {
 #   default     = "Standard_v2"
 # }
 
-# variable "app_gateway_tier" {
-#   description = "Tier of the Application Gateway tier"
-#   default     = "Standard_v2"
-# }
-
 # variable "acr_name" {
 #   description = "Name of ACR container registry"
 # }

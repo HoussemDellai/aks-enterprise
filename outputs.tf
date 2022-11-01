@@ -62,7 +62,7 @@ output "aks_public_fqdn" {
 }
 
 output "aks_private_fqdn" {
-  value = var.enable_aks_cluster ? azurerm_kubernetes_cluster.aks.0.private_fqdn : null
+  value = var.enable_aks_cluster && var.enable_private_cluster ? azurerm_kubernetes_cluster.aks.0.private_fqdn : null
 }
 
 output "aks_portal_fqdn" {

@@ -24,77 +24,38 @@ variable "rg_spoke_aks" {
 }
 
 variable "rg_spoke_aks_nodes" {
-  default = "rg-spoke-aks-nodes"
 }
 
 variable "resources_location" {
-  default     = "westeurope"
   description = "Location of the resource group."
 }
 
 variable "cidr_vnet_hub" {
   description = "HUB VNET address prefix"
-  default     = "172.16.0.0/16"
 }
 
 variable "cidr_vnet_spoke_app" {
   description = "VNET Spoke address prefix"
-  default     = "10.0.0.0/8"
 }
 
-variable "subnet_nodes" {
-  description = "Subnet Name."
-  default     = "subnet-aks-nodes"
-}
-
-variable "subnet_pods" {
-  description = "Subnet Name."
-  default     = "subnet-aks-pods"
-}
-
-variable "subnet_app_gateway" {
-  description = "Subnet Name."
-  default     = "subnet-appgw"
-}
-
-variable "subnet_apiserver" {
-  description = "AKS API Server subnet name."
-  default     = "subnet-apiserver"
-}
-
-variable "subnet_pe" {
-  description = "Subnet for Private Endoints."
-  default     = "subnet-pe"
-}
-
-variable "subnet_bastion" {
-  description = "Subnet for Bastion Host, should be AzureBastionSubnet."
-  default     = "AzureBastionSubnet"
-}
-
-variable "subnet_mgt" {
-  description = "Subnet for Management, Jumpbox VM."
-  default     = "subnet-mgt"
+variable "cidr_vnet_spoke_3" {
+  description = "VNET Spoke 3 address prefix"
 }
 
 variable "cidr_subnet_nodes" {
   description = "Subnet address prefix."
-  default     = ["10.240.0.0/16"]
 }
 
 variable "cidr_subnet_pods" {
   description = "Subnet address prefix."
-  default     = ["10.241.0.0/16"]
 }
 
 variable "cidr_subnet_appgateway" {
   description = "Subnet server IP address."
-  default     = ["10.1.0.0/16"]
 }
 
-variable "subnet_apiserver_address_prefix" {
+variable "cidr_subnet_apiserver_vnetint" {
   description = "AKS API Server IP address."
-  default     = ["10.2.0.0/28"]
 }
 
 variable "cidr_subnet_pe" {
@@ -104,37 +65,18 @@ variable "cidr_subnet_pe" {
 
 variable "cidr_subnet_bastion" {
   description = "CIDR range for Subnet Bastion"
-  default     = ["10.4.0.0/27"]
 }
 
 variable "cidr_subnet_firewall" {
   description = "CIDR for Firewall Subnet."
-  default     = ["172.16.1.0/26"]
 }
 
 variable "cidr_vnet_spoke_mgt" {
   description = "CIDR for Management/Jumpbox VM VNET."
-  default     = ["10.100.0.0/16"]
 }
 
 variable "cidr_subnet_mgt" {
   description = "CIDR for Management/Jumpbox VM Subnet."
-  default     = ["10.100.0.0/24"]
-}
-
-variable "app_gateway" {
-  description = "Name of the Application Gateway"
-  default     = "appgw-aks"
-}
-
-variable "app_gateway_sku" {
-  description = "Name of the Application Gateway SKU"
-  default     = "Standard_v2"
-}
-
-variable "app_gateway_tier" {
-  description = "Tier of the Application Gateway tier"
-  default     = "Standard_v2"
 }
 
 variable "aks_dns_prefix" {
@@ -297,6 +239,11 @@ variable "enable_vm_jumpbox_linux" {
 variable "enable_nsg_flow_logs" {
   description = "Enables NSG flow logs"
   default     = "true"
+}
+
+variable "enable_spoke_3" {
+  type        = bool
+  description = "Creates Spoke 3"
 }
 
 variable "log_analytics_workspace" {

@@ -7,40 +7,18 @@ resource "azurerm_firewall_policy" "firewall_policy" {
   name                = "firewall-policy"
   resource_group_name = azurerm_resource_group.rg_hub.name
   location            = var.resources_location
+
   dns {
     proxy_enabled = true
     servers       = ["168.63.129.16"]
   }
+
   insights {
     enabled                            = true
     default_log_analytics_workspace_id = azurerm_log_analytics_workspace.workspace.0.id
     retention_in_days                  = 7
   }
 }
-
-# - nat_rule_collection {
-#     - action   = "Dnat"
-#     - name     = "dnat-inbound-fwip-to-lbip"
-#     - priority = 100
-
-#     - rule {
-#         - destination_address = "20.103.249.142"
-#         - destination_ports   = [
-#             - "80",
-#           ]
-#         - name                = "inboundrule"
-#         - protocols           = [
-#             - "TCP",
-#             - "UDP",
-#           ]
-#         - source_addresses    = [
-#             - "*",
-#           ]
-#         - source_ip_groups    = []
-#         - translated_address  = "20.101.209.161"
-#         - translated_port     = 80
-#       }
-#   }
 
 resource "azurerm_firewall_policy_rule_collection_group" "policy_group_aks" {
   count              = var.enable_firewall ? 1 : 0
@@ -52,6 +30,7 @@ resource "azurerm_firewall_policy_rule_collection_group" "policy_group_aks" {
     name     = "aks_app_rules"
     priority = 205
     action   = "Allow"
+
     rule {
       name = "aks_service"
       protocols {
@@ -102,6 +81,38 @@ resource "azurerm_firewall_policy_rule_collection_group" "policy_group_aks" {
       destination_addresses = ["*"]
       destination_ports     = ["9000"]
     }
+    rule {
+      name                  = "Time"
+      source_addresses      = ["*"]
+      destination_ports     = ["123"]
+      destination_addresses = ["*"]
+      protocols             = ["UDP"]
+    }
+    rule {
+      name                  = "DNS"
+      source_addresses      = ["*"]
+      destination_ports     = ["53"]
+      destination_addresses = ["*"]
+      protocols             = ["UDP"]
+    }
+    rule {
+      name              = "ServiceTags"
+      source_addresses  = ["*"]
+      destination_ports = ["*"]
+      destination_addresses = [
+        "AzureContainerRegistry",
+        "MicrosoftContainerRegistry",
+        "AzureActiveDirectory"
+      ]
+      protocols = ["Any"]
+    }
+    # rule {
+    #   name                  = "Internet"
+    #   source_addresses      = ["*"]
+    #   destination_ports     = ["*"]
+    #   destination_addresses = ["*"]
+    #   protocols             = ["TCP"]
+    # }
   }
 }
 
@@ -132,19 +143,19 @@ resource "azurerm_firewall_policy_rule_collection_group" "policy_group_subnet_mg
     #     # azurerm_private_dns_zone.aks.name
     #   ]
     # }
-    rule {
-      name = "allow_microsoft_com"
-      protocols {
-        type = "Http"
-        port = 80
-      }
-      protocols {
-        type = "Https"
-        port = 443
-      }
-      source_addresses  = azurerm_subnet.subnet_mgt.0.address_prefixes
-      destination_fqdns = ["*.microsoft.com"]
-    }
+    # rule {
+    #   name = "allow_microsoft_com"
+    #   protocols {
+    #     type = "Http"
+    #     port = 80
+    #   }
+    #   protocols {
+    #     type = "Https"
+    #     port = 443
+    #   }
+    #   source_addresses  = azurerm_subnet.subnet_mgt.0.address_prefixes
+    #   destination_fqdns = ["*.microsoft.com"]
+    # }
     rule {
       name = "allow_internet"
       protocols {
@@ -172,21 +183,31 @@ resource "azurerm_firewall_policy_rule_collection_group" "policy_group_subnet_mg
       destination_ports     = ["443"]
     }
   }
+}
 
-  nat_rule_collection {
-    action   = "Dnat"
-    name     = "dnat-inbound-fwip-to-lbip"
+resource "azurerm_firewall_policy_rule_collection_group" "policy_group_deny" {
+  count              = var.enable_firewall ? 1 : 0
+  name               = "policy_group_deny"
+  firewall_policy_id = azurerm_firewall_policy.firewall_policy.0.id
+  priority           = 100
+
+  application_rule_collection {
+    name     = "app_rules_deny_yahoo_com_any_source"
     priority = 100
-
+    action   = "Deny"
+    
     rule {
-      name                = "inboundrule"
-      protocols           = ["TCP", "UDP"]
-      source_addresses    = ["*"]
-      destination_address = azurerm_public_ip.public_ip_firewall.0.ip_address # "20.103.249.142"
-      destination_ports   = ["80"]
-      source_ip_groups    = []
-      translated_address  = "20.101.209.161" # #TODO LB service
-      translated_port     = 80
+      name = "deny_yahoo_com"
+      protocols {
+        type = "Http"
+        port = 80
+      }
+      protocols {
+        type = "Https"
+        port = 443
+      }
+      source_addresses  = ["*"] # local.cidr_subnet_aks_nodes_pods # azurerm_subnet.subnet_mgt.0.address_prefixes
+      destination_fqdns = ["*.yahoo.com"]
     }
   }
 }
