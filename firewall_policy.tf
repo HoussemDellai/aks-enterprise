@@ -195,7 +195,7 @@ resource "azurerm_firewall_policy_rule_collection_group" "policy_group_deny" {
     name     = "app_rules_deny_yahoo_com_any_source"
     priority = 100
     action   = "Deny"
-    
+
     rule {
       name = "deny_yahoo_com"
       protocols {

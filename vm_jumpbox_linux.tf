@@ -32,7 +32,7 @@ resource "azurerm_linux_virtual_machine" "vm_jumpbox_linux" {
   name                            = "vm-jumpbox-linux"
   resource_group_name             = azurerm_resource_group.rg_spoke_mgt.0.name
   location                        = var.resources_location
-  size                            = "Standard_D2ads_v5"
+  size                            = "Standard_B2s" # "Standard_D2s_v5" # "Standard_D2ads_v5"
   disable_password_authentication = false
   admin_username                  = "houssem"
   admin_password                  = "@Aa123456789"
@@ -69,6 +69,7 @@ resource "azurerm_linux_virtual_machine" "vm_jumpbox_linux" {
 }
 
 resource "azurerm_virtual_machine_extension" "vm_extension_linux" {
+  count                = var.enable_vm_jumpbox_linux ? 1 : 0
   name                 = "vm_extension_linux"
   virtual_machine_id   = azurerm_linux_virtual_machine.vm_jumpbox_linux.0.id
   publisher            = "Microsoft.Azure.Extensions"

@@ -3,12 +3,12 @@ resource "azurerm_kubernetes_cluster_node_pool" "poolapps" {
   count                  = var.enable_nodepool_apps && var.enable_aks_cluster ? 1 : 0
   name                   = "poolapps"
   kubernetes_cluster_id  = azurerm_kubernetes_cluster.aks.0.id
-  vm_size                = "Standard_D2ds_v5" # "Standard_D4pls_v5" # "Standard_D4s_v5" #  # "Standard_D2as_v5" doesn't support Ephemeral disk
+  vm_size                = "Standard_D2pds_v5" # "Standard_D2ds_v5" # "Standard_D4pls_v5" # "Standard_D4s_v5" #  # "Standard_D2as_v5" doesn't support Ephemeral disk
   node_count             = 0                  # 1
   enable_auto_scaling    = true
   min_count              = 0 # 1
   max_count              = 1 # 9
-  zones                  = [1, 2, 3]
+  zones                  = [] # [1, 2, 3]
   mode                   = "User"
   orchestrator_version   = var.kubernetes_version
   os_type                = "Linux"

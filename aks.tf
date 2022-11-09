@@ -36,13 +36,13 @@ resource "azurerm_kubernetes_cluster" "aks" {
     min_count                    = 1
     max_count                    = 3
     max_pods                     = 110
-    vm_size                      = "Standard_D2ds_v5"
+    vm_size                      = "Standard_D2pds_v5" # "Standard_D2ds_v5" # "standard_d2pds_v5"
     os_disk_size_gb              = var.aks_agent_os_disk_size
     os_disk_type                 = "Ephemeral" # "Managed"
     ultra_ssd_enabled            = false
-    os_sku                       = "Ubuntu" # Ubuntu, CBLMariner, Mariner, Windows2019, Windows2022
+    os_sku                       = "Ubuntu"                 # Ubuntu, CBLMariner, Mariner, Windows2019, Windows2022
     only_critical_addons_enabled = var.enable_nodepool_apps # taint default node pool with CriticalAddonsOnly=true:NoSchedule
-    zones                        = [1, 2, 3]
+    zones                        = [] # [1, 2, 3]                # []
     tags                         = var.tags
     vnet_subnet_id               = azurerm_subnet.subnet_nodes.id
     pod_subnet_id                = azurerm_subnet.subnet_pods.id
@@ -143,6 +143,10 @@ resource "azurerm_kubernetes_cluster" "aks" {
   workload_autoscaler_profile {
     keda_enabled = true
   }
+
+  # web_app_routing {
+  #   dns_zone_id = null #TODO
+  # }
 
   depends_on = [
     azurerm_virtual_network.vnet_spoke_app,

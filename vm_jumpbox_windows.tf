@@ -16,7 +16,7 @@ resource "azurerm_windows_virtual_machine" "vm_jumpbox_windows" {
   name                  = "vm-jumpbox-win"
   resource_group_name   = azurerm_resource_group.rg_spoke_mgt.0.name
   location              = var.resources_location
-  size                  = "Standard_D2ads_v5"
+  size                  = "Standard_B2s" # "Standard_D2s_v5" # "Standard_D2ads_v5"
   admin_username        = "houssem"
   admin_password        = "@Aa123456789"
   network_interface_ids = [azurerm_network_interface.nic_vm_jumpbox_windows.0.id]
@@ -60,17 +60,17 @@ resource "azurerm_windows_virtual_machine" "vm_jumpbox_windows" {
 #         "dataDisks": []
 #     },
 
-resource "azurerm_virtual_machine_extension" "vm_extension_windows" {
-  count                = var.enable_vm_jumpbox_windows ? 1 : 0
-  name                 = "vm-extension-windows"
-  virtual_machine_id   = azurerm_windows_virtual_machine.vm_jumpbox_windows.0.id
-  publisher            = "Microsoft.Compute"
-  type                 = "CustomScriptExtension"
-  type_handler_version = "1.10"
+# resource "azurerm_virtual_machine_extension" "vm_extension_windows" {
+#   count                = var.enable_vm_jumpbox_windows ? 1 : 0
+#   name                 = "vm-extension-windows"
+#   virtual_machine_id   = azurerm_windows_virtual_machine.vm_jumpbox_windows.0.id
+#   publisher            = "Microsoft.Compute"
+#   type                 = "CustomScriptExtension"
+#   type_handler_version = "1.10"
 
-  settings = <<SETTINGS
-    {
-        "commandToExecute": "powershell Add-WindowsFeature Web-Server; powershell Add-Content -Path \"C:\\inetpub\\wwwroot\\Default.htm\" -Value $($env:computername)"
-    }
-SETTINGS
-}
+#   settings = <<SETTINGS
+#     {
+#         "commandToExecute": "powershell Add-WindowsFeature Web-Server; powershell Add-Content -Path \"C:\\inetpub\\wwwroot\\Default.htm\" -Value $($env:computername)"
+#     }
+# SETTINGS
+# }

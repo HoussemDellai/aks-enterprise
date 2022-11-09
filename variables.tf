@@ -246,6 +246,11 @@ variable "enable_spoke_3" {
   description = "Creates Spoke 3"
 }
 
+variable "enable_storage_account" {
+  type        = bool
+  description = "Creates Storage Account"
+}
+
 variable "log_analytics_workspace" {
   type        = string
   description = "Name of Log Analytics Workspace"

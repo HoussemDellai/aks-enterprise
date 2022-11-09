@@ -48,20 +48,6 @@ resource "azurerm_subnet_network_security_group_association" "association_nsg_su
   network_security_group_id = azurerm_network_security_group.nsg_subnet_mgt.0.id
 }
 
-# resource "azurerm_network_security_rule" "nsg_rule_spoke_mgt" {
-#   name                        = "nsg_rule_spoke_mgt"
-#   priority                    = 100
-#   direction                   = "Outbound"
-#   access                      = "Allow"
-#   protocol                    = "Tcp"
-#   source_port_range           = "*"
-#   destination_port_range      = "*"
-#   source_address_prefix       = "*"
-#   destination_address_prefix  = "*"
-#   resource_group_name         = azurerm_resource_group.example.name
-#   network_security_group_name = azurerm_network_security_group.example.name
-# }
-
 resource "azurerm_monitor_diagnostic_setting" "diagnostic_settings_vnet_mgt" {
   count                      = var.enable_monitoring && (var.enable_vm_jumpbox_windows || var.enable_vm_jumpbox_linux) ? 1 : 0
   name                       = "diagnostic-settings"

@@ -143,13 +143,13 @@ resource "azurerm_subnet_network_security_group_association" "association_nsg_su
 }
 
 resource "azurerm_subnet_route_table_association" "association_route_table_subnet_nodes" {
-  count          = var.enable_aks_cluster ? 1 : 0
+  count          = var.enable_aks_cluster && var.enable_firewall ? 1 : 0
   subnet_id      = azurerm_subnet.subnet_nodes.id
   route_table_id = azurerm_route_table.route_table_to_firewall.0.id
 }
 
 resource "azurerm_subnet_route_table_association" "association_route_table_subnet_pods" {
-  count          = var.enable_aks_cluster ? 1 : 0
+  count          = var.enable_aks_cluster && var.enable_firewall ? 1 : 0
   subnet_id      = azurerm_subnet.subnet_pods.id
   route_table_id = azurerm_route_table.route_table_to_firewall.0.id
 }

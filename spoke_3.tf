@@ -10,6 +10,7 @@ resource "azurerm_virtual_network" "vnet_spoke3" {
   location            = azurerm_resource_group.rg_spoke3.0.location
   resource_group_name = azurerm_resource_group.rg_spoke3.0.name
   address_space       = var.cidr_vnet_spoke_3
+  dns_servers         = [azurerm_firewall.firewall.0.ip_configuration.0.private_ip_address]
 }
 
 resource "azurerm_subnet" "snet_vnet_integration" {
@@ -61,6 +62,12 @@ resource "azurerm_linux_web_app" "webapp_frontent" {
   }
 
   site_config {}
+
+  lifecycle {
+    ignore_changes = [
+      app_settings
+    ]
+  }
 }
 
 # The following resources support associating the vNet for Regional vNet Integration directly on the resource 
@@ -129,3 +136,35 @@ resource "azurerm_app_service_source_control" "sourcecontrol" {
 
 #TODO: add dignostic settings
 #TODO: add NSG flow logs
+
+resource "azurerm_network_security_group" "nsg_subnet_vnet_integration" {
+  count               = var.enable_spoke_3 ? 1 : 0
+  name                = "nsg_subnet_vnet_integration"
+  location            = var.resources_location
+  resource_group_name = azurerm_resource_group.rg_spoke3.0.name
+  tags                = var.tags
+
+  security_rule {
+    name                       = "rule_subnet_vnet_integration"
+    priority                   = 100
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_range     = "*"
+    source_address_prefix      = "*"
+    destination_address_prefix = "*"
+  }
+}
+
+resource "azurerm_subnet_network_security_group_association" "association_nsg_subnet_vnet_integration" {
+  count                     = var.enable_spoke_3 ? 1 : 0
+  subnet_id                 = azurerm_subnet.snet_vnet_integration.0.id
+  network_security_group_id = azurerm_network_security_group.nsg_subnet_vnet_integration.0.id
+}
+
+resource "azurerm_subnet_route_table_association" "association_route_table_subnet_vnet_integration" {
+  count          = var.enable_spoke_3 ? 1 : 0
+  subnet_id      = azurerm_subnet.snet_vnet_integration.0.id
+  route_table_id = azurerm_route_table.route_table_to_firewall.0.id
+}

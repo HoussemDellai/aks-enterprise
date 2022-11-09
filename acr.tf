@@ -11,19 +11,32 @@ resource "azurerm_container_registry" "acr" {
   network_rule_bypass_option    = "AzureServices"
   tags                          = var.tags
 
-  network_rule_set {
-    default_action = "Deny"
 
-    ip_rule {
-      action   = "Allow"
-      ip_range = "${data.http.machine_ip.response_body}/32"
+  dynamic "network_rule_set" {
+    for_each = var.enable_private_acr ? ["any_value"] : []
+    content {
+      default_action = "Deny"
+
+      ip_rule {
+        action   = "Allow"
+        ip_range = "${data.http.machine_ip.response_body}/32"
+      }
     }
-
-    # virtual_network {
-    #   action    = "Allow"
-    #   subnet_id = null
-    # }
   }
+
+  # network_rule_set {
+  #   default_action = "Deny"
+
+  #   ip_rule {
+  #     action   = "Allow"
+  #     ip_range = "${data.http.machine_ip.response_body}/32"
+  #   }
+
+  #   # virtual_network {
+  #   #   action    = "Allow"
+  #   #   subnet_id = null
+  #   # }
+  # }
   # identity {
   #   type = "UserAssigned"
   #   identity_ids = [

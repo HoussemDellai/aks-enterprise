@@ -7,7 +7,7 @@ resource "azurerm_kubernetes_cluster_node_pool" "poolspot" {
   eviction_policy        = "Delete"
   spot_max_price         = -1 # note: this is the "maximum" price
   os_type                = "Linux"
-  vm_size                = "Standard_D2ds_v5" # "Standard_DS2_v2" # 
+  vm_size                = "Standard_D2pds_v5" # "Standard_D2ds_v5" # "Standard_DS2_v2" # 
   os_disk_type           = "Ephemeral"        # https://docs.microsoft.com/en-us/azure/virtual-machines/ephemeral-os-disks#size-requirements
   os_sku                 = "Ubuntu"           # "CBLMariner" # 
   node_count             = 0
@@ -21,7 +21,7 @@ resource "azurerm_kubernetes_cluster_node_pool" "poolspot" {
   enable_node_public_ip  = false
   max_pods               = 110
   os_disk_size_gb        = 60
-  zones                  = [1, 2, 3]
+  zones                  = [] # [1, 2, 3]
   node_taints            = null # "kubernetes.azure.com/scalesetpriority=spot:NoSchedule"
 
   lifecycle {

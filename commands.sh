@@ -125,3 +125,12 @@ az acr login -n acrforakstf0111
 docker pull acrforakstf0111.azurecr.io/hello-world:latest
 
 curl -s -H Metadata:true --noproxy "*" "http://169.254.169.254/metadata/instance?api-version=2021-02-01" | jq
+
+
+
+
+msbuild.exe BuildBatchHisto.sln /p:DeployOnBuild=true 
+/p:WebPublishMethod=Package /p:PackageAsSingleFile=true 
+/p:SkipInvalidConfigurations=true /p:PackageLocation="Web_Archives" 
+/p:TransformWebConfigEnabled=False /p:platform="Any CPU" 
+/p:configuration="release"

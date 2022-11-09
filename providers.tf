@@ -7,22 +7,12 @@ terraform {
 
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = ">= 3.29.1"
+      version = ">= 3.30.0"
     }
 
     azuread = {
       source  = "hashicorp/azuread"
       version = ">= 2.29.0"
-    }
-
-    kubernetes = {
-      source  = "hashicorp/kubernetes"
-      version = ">= 2.13.1"
-    }
-
-    helm = {
-      source  = "hashicorp/helm"
-      version = ">= 2.7.0"
     }
 
     azapi = {
