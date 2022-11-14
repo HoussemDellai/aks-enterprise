@@ -251,6 +251,11 @@ variable "enable_storage_account" {
   description = "Creates Storage Account"
 }
 
+variable "enable_fleet_manager" {
+  type = bool
+  description = "Creates AKS Fleet Manager reosurce"
+}
+
 variable "log_analytics_workspace" {
   type        = string
   description = "Name of Log Analytics Workspace"

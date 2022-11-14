@@ -42,13 +42,16 @@ resource "azurerm_kubernetes_cluster" "aks" {
     ultra_ssd_enabled            = false
     os_sku                       = "Ubuntu"                 # Ubuntu, CBLMariner, Mariner, Windows2019, Windows2022
     only_critical_addons_enabled = var.enable_nodepool_apps # taint default node pool with CriticalAddonsOnly=true:NoSchedule
-    zones                        = [] # [1, 2, 3]                # []
-    tags                         = var.tags
+    zones                        = []                       # [1, 2, 3]                # []
     vnet_subnet_id               = azurerm_subnet.subnet_nodes.id
     pod_subnet_id                = azurerm_subnet.subnet_pods.id
     scale_down_mode              = "Delete" # ScaleDownModeDeallocate
     workload_runtime             = "OCIContainer"
+    kubelet_disk_type            = "OS" # "Temporary" # 
+    enable_node_public_ip        = false
+    fips_enabled                 = false
     message_of_the_day           = "Hello from Azure AKS cluster!"
+    tags                         = var.tags
   }
 
   identity {
@@ -96,6 +99,26 @@ resource "azurerm_kubernetes_cluster" "aks" {
         managed_outbound_ip_count = 2 # Must be between 1 and 100 inclusive
       }
     }
+  }
+
+  auto_scaler_profile {
+    balance_similar_node_groups      = false
+    expander                         = "random" # least-waste, priority, most-pods
+    max_graceful_termination_sec     = "600"
+    max_node_provisioning_time       = "15m"
+    max_unready_nodes                = 3
+    max_unready_percentage           = 45
+    new_pod_scale_up_delay           = "10s"
+    scale_down_delay_after_add       = "10m"
+    scale_down_delay_after_delete    = "10s"
+    scale_down_delay_after_failure   = "3m"
+    scan_interval                    = "10s"
+    scale_down_unneeded              = "10m"
+    scale_down_unready               = "20m"
+    scale_down_utilization_threshold = "0.5"
+    empty_bulk_delete_max            = "10"
+    skip_nodes_with_local_storage    = true
+    skip_nodes_with_system_pods      = true
   }
 
   dynamic "ingress_application_gateway" {
@@ -183,30 +206,30 @@ resource "azurerm_kubernetes_cluster" "aks" {
 #     -g <resource-group> \
 #     --enable-apiserver-vnet-integration \
 #     --apiserver-subnet-id <apiserver-subnet-resource-id>
-resource "azapi_update_resource" "aks_api_vnet_integration" {
-  count       = var.enable_apiserver_vnet_integration ? 1 : 0
-  type        = "Microsoft.ContainerService/managedClusters@2022-06-02-preview"
-  resource_id = azurerm_kubernetes_cluster.aks.0.id
+# resource "azapi_update_resource" "aks_api_vnet_integration" {
+#   count       = var.enable_apiserver_vnet_integration ? 1 : 0
+#   type        = "Microsoft.ContainerService/managedClusters@2022-06-02-preview"
+#   resource_id = azurerm_kubernetes_cluster.aks.0.id
 
-  # "properties": {
-  #   "apiServerAccessProfile": {
-  #       "enablePrivateCluster": false,
-  #       "enableVnetIntegration": true,
-  #       "subnetId": "[concat(parameters('virtualNetworks_vnet_spoke_aks_externalid'), '/subnets/subnet-apiserver')]"
-  #   },
-  # }
-  body = jsonencode({
-    properties = {
-      apiServerAccessProfile = {
-        enablePrivateCluster  = var.enable_private_cluster,
-        enableVnetIntegration = var.enable_apiserver_vnet_integration,
-        subnetId              = azurerm_subnet.subnet_apiserver.0.id
-      },
-    }
-  })
+#   # "properties": {
+#   #   "apiServerAccessProfile": {
+#   #       "enablePrivateCluster": false,
+#   #       "enableVnetIntegration": true,
+#   #       "subnetId": "[concat(parameters('virtualNetworks_vnet_spoke_aks_externalid'), '/subnets/subnet-apiserver')]"
+#   #   },
+#   # }
+#   body = jsonencode({
+#     properties = {
+#       apiServerAccessProfile = {
+#         enablePrivateCluster  = var.enable_private_cluster,
+#         enableVnetIntegration = var.enable_apiserver_vnet_integration,
+#         subnetId              = azurerm_subnet.subnet_apiserver.0.id
+#       },
+#     }
+#   })
 
-  depends_on = []
-}
+#   depends_on = []
+# }
 
 # https://github.com/Azure-Samples/aks-multi-cluster-service-mesh/blob/main/istio/main.tf
 resource "azurerm_monitor_diagnostic_setting" "diagnostic_settings_aks" {

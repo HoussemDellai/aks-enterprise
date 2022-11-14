@@ -4,10 +4,10 @@ resource "azurerm_kubernetes_cluster_node_pool" "poolapps" {
   name                   = "poolapps"
   kubernetes_cluster_id  = azurerm_kubernetes_cluster.aks.0.id
   vm_size                = "Standard_D2pds_v5" # "Standard_D2ds_v5" # "Standard_D4pls_v5" # "Standard_D4s_v5" #  # "Standard_D2as_v5" doesn't support Ephemeral disk
-  node_count             = 0                  # 1
+  node_count             = 0                   # 1
   enable_auto_scaling    = true
-  min_count              = 0 # 1
-  max_count              = 1 # 9
+  min_count              = 0  # 1
+  max_count              = 1  # 9
   zones                  = [] # [1, 2, 3]
   mode                   = "User"
   orchestrator_version   = var.kubernetes_version
@@ -22,7 +22,7 @@ resource "azurerm_kubernetes_cluster_node_pool" "poolapps" {
   vnet_subnet_id         = azurerm_subnet.subnet_nodes.id
   pod_subnet_id          = azurerm_subnet.subnet_pods.id
   scale_down_mode        = "Delete" # ScaleDownModeDeallocate
-  workload_runtime       = "OCIContainer"
+  workload_runtime       = "OCIContainer" # WasmWasi
   message_of_the_day     = "Hello from Azure AKS cluster!"
   priority               = "Regular" # "Spot"
   # eviction_policy        = "Delete"
