@@ -21,7 +21,6 @@ resource "azurerm_windows_virtual_machine" "vm_jumpbox_windows" {
   admin_password        = "@Aa123456789"
   network_interface_ids = [azurerm_network_interface.nic_vm_jumpbox_windows.0.id]
 
-
   os_disk {
     caching              = "ReadWrite"
     storage_account_type = "StandardSSD_LRS"

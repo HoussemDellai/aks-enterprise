@@ -17,6 +17,8 @@ resource "azurerm_kubernetes_cluster" "aks" {
   run_command_enabled                 = true
   oidc_issuer_enabled                 = true
   workload_identity_enabled           = true
+  image_cleaner_enabled               = true
+  image_cleaner_interval_hours        = 6
   private_dns_zone_id                 = var.enable_private_cluster ? azurerm_private_dns_zone.private_dns_zone_aks.0.id : null
   tags                                = var.tags
   api_server_authorized_ip_ranges     = var.enable_private_cluster ? null : ["0.0.0.0/0"] # when private cluster, this should not be enabled
@@ -50,6 +52,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
     kubelet_disk_type            = "OS" # "Temporary" # 
     enable_node_public_ip        = false
     fips_enabled                 = false
+    custom_ca_trust_enabled      = false
     message_of_the_day           = "Hello from Azure AKS cluster!"
     tags                         = var.tags
   }
@@ -73,7 +76,10 @@ resource "azurerm_kubernetes_cluster" "aks" {
   }
 
   network_profile {
-    network_plugin     = var.aks_network_plugin # "kubenet", "azure", "transparent"
+    # network_plugin_mode = "overlay"
+    # ebpf_data_plane = "cilium"
+    network_mode       = "bridge"               # "transparent"
+    network_plugin     = var.aks_network_plugin # "kubenet", "azure", "none"
     network_policy     = "calico"               # "azure" 
     dns_service_ip     = var.aks_dns_service_ip
     docker_bridge_cidr = var.cidr_aks_docker_bridge
@@ -165,6 +171,14 @@ resource "azurerm_kubernetes_cluster" "aks" {
 
   workload_autoscaler_profile {
     keda_enabled = true
+  }
+
+  storage_profile {
+    file_driver_enabled         = true
+    blob_driver_enabled         = true
+    disk_driver_enabled         = true
+    disk_driver_version         = "v2"
+    snapshot_controller_enabled = true
   }
 
   # web_app_routing {

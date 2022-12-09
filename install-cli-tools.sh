@@ -64,6 +64,7 @@ apt install linuxbrew-wrapper -y
 # echo '# Set PATH, MANPATH, etc., for Homebrew.' >> /home/houssem/.profile
 # echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' >> /home/houssem/.profile
 # eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+# brew install gcc
 
 # install (Azure) kubelogin
 # https://github.com/Azure/kubelogin
