@@ -39,9 +39,8 @@ resource "azurerm_monitor_diagnostic_setting" "diagnostic_settings_bastion" {
   target_resource_id         = azurerm_bastion_host.bastion_host.0.id
   log_analytics_workspace_id = azurerm_log_analytics_workspace.workspace.0.id
 
-  log {
+  enabled_log {
     category = "BastionAuditLogs"
-    enabled  = true
 
     retention_policy {
       enabled = true
@@ -50,6 +49,7 @@ resource "azurerm_monitor_diagnostic_setting" "diagnostic_settings_bastion" {
 
   metric {
     category = "AllMetrics"
+    enabled  = true
 
     retention_policy {
       enabled = true
@@ -64,7 +64,7 @@ resource "azurerm_monitor_diagnostic_setting" "diagnostic_settings_bastion" {
 #   target_resource_id         = azurerm_public_ip.public_ip_bastion[0].id
 #   log_analytics_workspace_id = azurerm_log_analytics_workspace.log_analytics_workspace_one.id
 
-#   log {
+#   enabled_log {
 #     category = "DDoSProtectionNotifications"
 #     enabled  = true
 
@@ -73,7 +73,7 @@ resource "azurerm_monitor_diagnostic_setting" "diagnostic_settings_bastion" {
 #     }
 #   }
 
-#   log {
+#   enabled_log {
 #     category = "DDoSMitigationFlowLogs"
 #     enabled  = true
 
@@ -82,7 +82,7 @@ resource "azurerm_monitor_diagnostic_setting" "diagnostic_settings_bastion" {
 #     }
 #   }
 
-#   log {
+#   enabled_log {
 #     category = "DDoSMitigationReports"
 #     enabled  = true
 

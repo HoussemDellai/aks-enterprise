@@ -54,9 +54,8 @@ resource "azurerm_monitor_diagnostic_setting" "diagnostic_settings_vnet_mgt" {
   target_resource_id         = azurerm_virtual_network.vnet_spoke_mgt.0.id
   log_analytics_workspace_id = azurerm_log_analytics_workspace.workspace.0.id
 
-  log {
+  enabled_log {
     category = "VMProtectionAlerts"
-    enabled  = true
 
     retention_policy {
       enabled = true
@@ -65,6 +64,7 @@ resource "azurerm_monitor_diagnostic_setting" "diagnostic_settings_vnet_mgt" {
 
   metric {
     category = "AllMetrics"
+    enabled  = true
 
     retention_policy {
       enabled = true

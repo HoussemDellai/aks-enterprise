@@ -18,12 +18,17 @@ resource "azurerm_kubernetes_cluster" "aks" {
   oidc_issuer_enabled                 = true
   workload_identity_enabled           = true
   image_cleaner_enabled               = true
-  image_cleaner_interval_hours        = 6
+  image_cleaner_interval_hours        = 24 # in the range (24 - 2160)
   private_dns_zone_id                 = var.enable_private_cluster ? azurerm_private_dns_zone.private_dns_zone_aks.0.id : null
   tags                                = var.tags
-  api_server_authorized_ip_ranges     = var.enable_private_cluster ? null : ["0.0.0.0/0"] # when private cluster, this should not be enabled
-  automatic_channel_upgrade           = "node-image"                                      # none, patch, rapid, node-image, stable
+  automatic_channel_upgrade           = "node-image" # none, patch, rapid, node-image, stable
 
+  api_server_access_profile {
+    authorized_ip_ranges     = var.enable_private_cluster ? null : ["0.0.0.0/0"] # when private cluster, this should not be enabled
+    subnet_id                = azurerm_subnet.subnet_apiserver.0.id
+    vnet_integration_enabled = var.enable_apiserver_vnet_integration
+
+  }
   # linux_profile {
   #   admin_username = var.vm_user_name
   #   ssh_key {
@@ -76,9 +81,9 @@ resource "azurerm_kubernetes_cluster" "aks" {
   }
 
   network_profile {
-    # network_plugin_mode = "overlay"
-    # ebpf_data_plane = "cilium"
-    network_mode       = "bridge"               # "transparent"
+    # network_plugin_mode = "Overlay"
+    # ebpf_data_plane     = "cilium"
+    # network_mode        = "bridge"               # "" "transparent"
     network_plugin     = var.aks_network_plugin # "kubenet", "azure", "none"
     network_policy     = "calico"               # "azure" 
     dns_service_ip     = var.aks_dns_service_ip
@@ -86,7 +91,8 @@ resource "azurerm_kubernetes_cluster" "aks" {
     service_cidr       = var.cidr_aks_service
     outbound_type      = var.aks_outbound_type # "userAssignedNATGateway" "loadBalancer" # userDefinedRouting, managedNATGateway
     load_balancer_sku  = "standard"            # "basic"
-    # pod_cidr           = var.aks_network_plugin == "kubenet" ? var.cidr_subnet_pods : null # null # can only be set when network_plugin is set to kubenet
+    pod_cidr           = null                  # can only be set when network_plugin is set to kubenet
+    # pod_cidr    = var.aks_network_plugin == "kubenet" ? var.cidr_subnet_pods : null # only set when network_plugin is set to kubenet
     ip_versions = ["IPv4"] # ["IPv4", "IPv6"]
 
     dynamic "load_balancer_profile" {
@@ -173,13 +179,18 @@ resource "azurerm_kubernetes_cluster" "aks" {
     keda_enabled = true
   }
 
-  storage_profile {
-    file_driver_enabled         = true
-    blob_driver_enabled         = true
-    disk_driver_enabled         = true
-    disk_driver_version         = "v2"
-    snapshot_controller_enabled = true
-  }
+  # monitor_metrics {
+  #   annotations_allowed = []
+  #   labels_allowed = []
+  # }
+
+  # storage_profile { #todo
+  #   file_driver_enabled         = true
+  #   blob_driver_enabled         = true
+  #   disk_driver_enabled         = true
+  #   disk_driver_version         = "v2"
+  #   snapshot_controller_enabled = true
+  # }
 
   # web_app_routing {
   #   dns_zone_id = null #TODO
@@ -252,99 +263,88 @@ resource "azurerm_monitor_diagnostic_setting" "diagnostic_settings_aks" {
   target_resource_id         = azurerm_kubernetes_cluster.aks.0.id
   log_analytics_workspace_id = azurerm_log_analytics_workspace.workspace.0.id
 
-  log {
+  enabled_log {
     category = "kube-apiserver"
-    enabled  = true
 
     retention_policy {
       enabled = true
     }
   }
 
-  log {
+  enabled_log {
     category = "kube-audit"
-    enabled  = true
 
     retention_policy {
       enabled = true
     }
   }
 
-  log {
+  enabled_log {
     category = "kube-audit-admin"
-    enabled  = true
 
     retention_policy {
       enabled = true
     }
   }
 
-  log {
+  enabled_log {
     category = "kube-controller-manager"
-    enabled  = true
 
     retention_policy {
       enabled = true
     }
   }
 
-  log {
+  enabled_log {
     category = "cloud-controller-manager"
-    enabled  = true
 
     retention_policy {
       enabled = true
     }
   }
 
-  log {
+  enabled_log {
     category = "kube-scheduler"
-    enabled  = true
 
     retention_policy {
       enabled = true
     }
   }
 
-  log {
+  enabled_log {
     category = "cluster-autoscaler"
-    enabled  = true
 
     retention_policy {
       enabled = true
     }
   }
 
-  log {
+  enabled_log {
     category = "guard"
-    enabled  = true
 
     retention_policy {
       enabled = true
     }
   }
 
-  log {
+  enabled_log {
     category = "csi-azuredisk-controller"
-    enabled  = true
 
     retention_policy {
       enabled = true
     }
   }
 
-  log {
+  enabled_log {
     category = "csi-azurefile-controller"
-    enabled  = true
 
     retention_policy {
       enabled = true
     }
   }
 
-  log {
+  enabled_log {
     category = "csi-snapshot-controller"
-    enabled  = true
 
     retention_policy {
       enabled = true
@@ -353,6 +353,7 @@ resource "azurerm_monitor_diagnostic_setting" "diagnostic_settings_aks" {
 
   metric {
     category = "AllMetrics"
+    enabled  = true
 
     retention_policy {
       enabled = true

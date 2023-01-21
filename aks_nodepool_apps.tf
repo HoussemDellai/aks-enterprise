@@ -21,7 +21,7 @@ resource "azurerm_kubernetes_cluster_node_pool" "poolapps" {
   fips_enabled           = false
   vnet_subnet_id         = azurerm_subnet.subnet_nodes.id
   pod_subnet_id          = azurerm_subnet.subnet_pods.id
-  scale_down_mode        = "Delete" # ScaleDownModeDeallocate
+  scale_down_mode        = "Delete"       # ScaleDownModeDeallocate
   workload_runtime       = "OCIContainer" # WasmWasi
   message_of_the_day     = "Hello from Azure AKS cluster!"
   priority               = "Regular" # "Spot"

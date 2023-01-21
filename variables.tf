@@ -252,7 +252,7 @@ variable "enable_storage_account" {
 }
 
 variable "enable_fleet_manager" {
-  type = bool
+  type        = bool
   description = "Creates AKS Fleet Manager reosurce"
 }
 

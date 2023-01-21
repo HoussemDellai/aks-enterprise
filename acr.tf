@@ -81,7 +81,7 @@ resource "azurerm_container_registry" "acr" {
 
 resource "azurerm_user_assigned_identity" "identity-kubelet" {
   count               = var.enable_aks_cluster ? 1 : 0
-  name                = "${var.aks_name}-agentpool"
+  name                = "identity-kubelet"
   resource_group_name = azurerm_resource_group.rg_spoke_aks.name # azurerm_kubernetes_cluster.aks.0.node_resource_group
   location            = var.resources_location
   tags                = var.tags
@@ -102,18 +102,16 @@ resource "azurerm_monitor_diagnostic_setting" "diagnostic_settings_acr" {
   target_resource_id         = azurerm_container_registry.acr.id
   log_analytics_workspace_id = azurerm_log_analytics_workspace.workspace.0.id
 
-  log {
+  enabled_log {
     category = "ContainerRegistryRepositoryEvents"
-    enabled  = true
 
     retention_policy {
       enabled = true
     }
   }
 
-  log {
+  enabled_log {
     category = "ContainerRegistryLoginEvents"
-    enabled  = true
 
     retention_policy {
       enabled = true
@@ -122,6 +120,7 @@ resource "azurerm_monitor_diagnostic_setting" "diagnostic_settings_acr" {
 
   metric {
     category = "AllMetrics"
+    enabled  = true
 
     retention_policy {
       enabled = true

@@ -43,18 +43,16 @@ resource "azurerm_monitor_diagnostic_setting" "diagnostic_settings_keyvault" {
   target_resource_id         = azurerm_key_vault.kv.0.id
   log_analytics_workspace_id = azurerm_log_analytics_workspace.workspace.0.id
 
-  log {
+  enabled_log {
     category = "AuditEvent"
-    enabled  = true
 
     retention_policy {
       enabled = true
     }
   }
 
-  log {
+  enabled_log {
     category = "AzurePolicyEvaluationDetails"
-    enabled  = true
 
     retention_policy {
       enabled = true
@@ -63,6 +61,7 @@ resource "azurerm_monitor_diagnostic_setting" "diagnostic_settings_keyvault" {
 
   metric {
     category = "AllMetrics"
+    enabled  = true
 
     retention_policy {
       enabled = true

@@ -92,7 +92,7 @@ resource "azurerm_subnet_network_security_group_association" "association_nsg_su
 }
 
 resource "azurerm_network_security_group" "nsg_subnet_pods" {
-  count               = var.enable_aks_cluster && var.enable_nsg_flow_logs  ? 1 : 0
+  count               = var.enable_aks_cluster && var.enable_nsg_flow_logs ? 1 : 0
   name                = "nsg_subnet_pods"
   location            = var.resources_location
   resource_group_name = azurerm_resource_group.rg_spoke_aks.name
@@ -112,7 +112,7 @@ resource "azurerm_network_security_group" "nsg_subnet_pods" {
 }
 
 resource "azurerm_subnet_network_security_group_association" "association_nsg_subnet_pods" {
-  count               = var.enable_aks_cluster && var.enable_nsg_flow_logs  ? 1 : 0
+  count                     = var.enable_aks_cluster && var.enable_nsg_flow_logs ? 1 : 0
   subnet_id                 = azurerm_subnet.subnet_pods.id
   network_security_group_id = azurerm_network_security_group.nsg_subnet_pods.0.id
 }
@@ -161,9 +161,8 @@ resource "azurerm_monitor_diagnostic_setting" "diagnostic_settings_vnet" {
   target_resource_id         = azurerm_virtual_network.vnet_spoke_app.id
   log_analytics_workspace_id = azurerm_log_analytics_workspace.workspace.0.id
 
-  log {
+  enabled_log {
     category = "VMProtectionAlerts"
-    enabled  = true
 
     retention_policy {
       enabled = true
@@ -172,6 +171,7 @@ resource "azurerm_monitor_diagnostic_setting" "diagnostic_settings_vnet" {
 
   metric {
     category = "AllMetrics"
+    enabled  = true
 
     retention_policy {
       enabled = true

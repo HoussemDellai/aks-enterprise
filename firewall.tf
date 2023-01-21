@@ -34,16 +34,15 @@ resource "azurerm_monitor_diagnostic_setting" "diagnostic_settings_firewall" {
   log_analytics_workspace_id     = azurerm_log_analytics_workspace.workspace.0.id
   log_analytics_destination_type = "AzureDiagnostics"
 
-  log {
+  enabled_log {
     category_group = "allLogs"
-    enabled        = true
 
     retention_policy {
       enabled = true
     }
   }
 
-  # log {
+  # enabled_log {
   #   category = "AzureFirewallApplicationRule"
   #   enabled  = true
 
@@ -52,7 +51,7 @@ resource "azurerm_monitor_diagnostic_setting" "diagnostic_settings_firewall" {
   #   }
   # }
 
-  # log {
+  # enabled_log {
   #   category = "AzureFirewallNetworkRule"
   #   enabled  = true
 
@@ -61,7 +60,7 @@ resource "azurerm_monitor_diagnostic_setting" "diagnostic_settings_firewall" {
   #   }
   # }
 
-  # log {
+  # enabled_log {
   #   category = "AzureFirewallDnsProxy"
   #   enabled  = true
 
