@@ -34,10 +34,11 @@ resource "azurerm_bastion_host" "bastion_host" {
 
 resource "azurerm_monitor_diagnostic_setting" "diagnostic_settings_bastion" {
   #   provider = azurerm.subscription_hub
-  count                      = var.enable_bastion && var.enable_monitoring ? 1 : 0
-  name                       = "diagnostic-settings"
-  target_resource_id         = azurerm_bastion_host.bastion_host.0.id
-  log_analytics_workspace_id = azurerm_log_analytics_workspace.workspace.0.id
+  count                          = var.enable_bastion && var.enable_monitoring ? 1 : 0
+  name                           = "diagnostic-settings"
+  target_resource_id             = azurerm_bastion_host.bastion_host.0.id
+  log_analytics_workspace_id     = azurerm_log_analytics_workspace.workspace.0.id
+  log_analytics_destination_type = "AzureDiagnostics" # "Dedicated"
 
   enabled_log {
     category = "BastionAuditLogs"

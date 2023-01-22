@@ -38,10 +38,11 @@ resource "azurerm_role_assignment" "role_secret_officer" {
 
 # https://github.com/Azure-Samples/aks-multi-cluster-service-mesh/blob/main/istio/key_vault.tf
 resource "azurerm_monitor_diagnostic_setting" "diagnostic_settings_keyvault" {
-  count                      = var.enable_monitoring && var.enable_keyvault ? 1 : 0
-  name                       = "diagnostic-settings"
-  target_resource_id         = azurerm_key_vault.kv.0.id
-  log_analytics_workspace_id = azurerm_log_analytics_workspace.workspace.0.id
+  count                          = var.enable_monitoring && var.enable_keyvault ? 1 : 0
+  name                           = "diagnostic-settings"
+  target_resource_id             = azurerm_key_vault.kv.0.id
+  log_analytics_workspace_id     = azurerm_log_analytics_workspace.workspace.0.id
+  log_analytics_destination_type = "AzureDiagnostics" # "Dedicated"
 
   enabled_log {
     category = "AuditEvent"

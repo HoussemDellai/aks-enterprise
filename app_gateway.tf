@@ -100,10 +100,11 @@ resource "azurerm_role_assignment" "role-contributor" {
 }
 
 resource "azurerm_monitor_diagnostic_setting" "diagnostic_settings_appgw" {
-  count                      = var.enable_monitoring && var.enable_app_gateway ? 1 : 0
-  name                       = "diagnostic-settings"
-  target_resource_id         = azurerm_application_gateway.appgw.0.id
-  log_analytics_workspace_id = azurerm_log_analytics_workspace.workspace.0.id
+  count                          = var.enable_monitoring && var.enable_app_gateway ? 1 : 0
+  name                           = "diagnostic-settings"
+  target_resource_id             = azurerm_application_gateway.appgw.0.id
+  log_analytics_workspace_id     = azurerm_log_analytics_workspace.workspace.0.id
+  log_analytics_destination_type = "AzureDiagnostics" # "Dedicated"
 
   enabled_log {
     category = "ApplicationGatewayAccessLog"

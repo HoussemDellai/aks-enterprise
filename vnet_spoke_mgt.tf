@@ -30,15 +30,22 @@ resource "azurerm_network_security_group" "nsg_subnet_mgt" {
   tags                = var.tags
 
   security_rule {
-    name                       = "rule_subnet_mgt"
-    priority                   = 100
-    direction                  = "Inbound"
-    access                     = "Allow"
-    protocol                   = "Tcp"
-    source_port_range          = "*"
-    destination_port_range     = "*"
-    source_address_prefix      = "*"
-    destination_address_prefix = "*"
+    name                                       = "rule_subnet_mgt"
+    priority                                   = 100
+    direction                                  = "Inbound"
+    access                                     = "Allow"
+    protocol                                   = "Tcp"
+    source_port_range                          = "*"
+    destination_port_range                     = "*"
+    source_address_prefix                      = "*"
+    destination_address_prefix                 = "*"
+    description                                = ""
+    destination_address_prefixes               = []
+    destination_application_security_group_ids = []
+    destination_port_ranges                    = []
+    source_address_prefixes                    = []
+    source_application_security_group_ids      = []
+    source_port_ranges                         = []
   }
 }
 
@@ -49,10 +56,11 @@ resource "azurerm_subnet_network_security_group_association" "association_nsg_su
 }
 
 resource "azurerm_monitor_diagnostic_setting" "diagnostic_settings_vnet_mgt" {
-  count                      = var.enable_monitoring && (var.enable_vm_jumpbox_windows || var.enable_vm_jumpbox_linux) ? 1 : 0
-  name                       = "diagnostic-settings"
-  target_resource_id         = azurerm_virtual_network.vnet_spoke_mgt.0.id
-  log_analytics_workspace_id = azurerm_log_analytics_workspace.workspace.0.id
+  count                          = var.enable_monitoring && (var.enable_vm_jumpbox_windows || var.enable_vm_jumpbox_linux) ? 1 : 0
+  name                           = "diagnostic-settings"
+  target_resource_id             = azurerm_virtual_network.vnet_spoke_mgt.0.id
+  log_analytics_workspace_id     = azurerm_log_analytics_workspace.workspace.0.id
+  log_analytics_destination_type = "AzureDiagnostics" # "Dedicated"
 
   enabled_log {
     category = "VMProtectionAlerts"

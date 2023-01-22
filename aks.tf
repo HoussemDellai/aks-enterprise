@@ -49,7 +49,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
     ultra_ssd_enabled            = false
     os_sku                       = "Ubuntu"                 # Ubuntu, CBLMariner, Mariner, Windows2019, Windows2022
     only_critical_addons_enabled = var.enable_nodepool_apps # taint default node pool with CriticalAddonsOnly=true:NoSchedule
-    zones                        = []                       # [1, 2, 3]                # []
+    zones                        = [1, 2, 3]                # []
     vnet_subnet_id               = azurerm_subnet.subnet_nodes.id
     pod_subnet_id                = azurerm_subnet.subnet_pods.id
     scale_down_mode              = "Delete" # ScaleDownModeDeallocate
@@ -258,10 +258,11 @@ resource "azurerm_kubernetes_cluster" "aks" {
 
 # https://github.com/Azure-Samples/aks-multi-cluster-service-mesh/blob/main/istio/main.tf
 resource "azurerm_monitor_diagnostic_setting" "diagnostic_settings_aks" {
-  count                      = var.enable_monitoring && var.enable_aks_cluster ? 1 : 0
-  name                       = "diagnostic-settings"
-  target_resource_id         = azurerm_kubernetes_cluster.aks.0.id
-  log_analytics_workspace_id = azurerm_log_analytics_workspace.workspace.0.id
+  count                          = var.enable_monitoring && var.enable_aks_cluster ? 1 : 0
+  name                           = "diagnostic-settings"
+  target_resource_id             = azurerm_kubernetes_cluster.aks.0.id
+  log_analytics_workspace_id     = azurerm_log_analytics_workspace.workspace.0.id
+  log_analytics_destination_type = "AzureDiagnostics" # "Dedicated"
 
   enabled_log {
     category = "kube-apiserver"

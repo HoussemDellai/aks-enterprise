@@ -3,6 +3,7 @@ resource "azurerm_virtual_network" "vnet_spoke_app" {
   location            = var.resources_location
   resource_group_name = azurerm_resource_group.rg_spoke_app.name
   address_space       = var.cidr_vnet_spoke_app
+  dns_servers         = [azurerm_firewall.firewall.0.ip_configuration.0.private_ip_address]
   tags                = var.tags
 }
 
@@ -155,11 +156,12 @@ resource "azurerm_subnet_route_table_association" "association_route_table_subne
   route_table_id = azurerm_route_table.route_table_to_firewall.0.id
 }
 
-resource "azurerm_monitor_diagnostic_setting" "diagnostic_settings_vnet" {
-  count                      = var.enable_monitoring ? 1 : 0
-  name                       = "diagnostic-settings"
-  target_resource_id         = azurerm_virtual_network.vnet_spoke_app.id
-  log_analytics_workspace_id = azurerm_log_analytics_workspace.workspace.0.id
+resource "azurerm_monitor_diagnostic_setting" "diagnostic_settings_vnet_app" {
+  count                          = var.enable_monitoring ? 1 : 0
+  name                           = "diagnostic-settings"
+  target_resource_id             = azurerm_virtual_network.vnet_spoke_app.id
+  log_analytics_workspace_id     = azurerm_log_analytics_workspace.workspace.0.id
+  log_analytics_destination_type = "AzureDiagnostics" # "Dedicated"
 
   enabled_log {
     category = "VMProtectionAlerts"

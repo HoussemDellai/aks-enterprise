@@ -97,10 +97,11 @@ resource "azurerm_role_assignment" "role_acrpull" {
 
 # https://github.com/Azure-Samples/aks-multi-cluster-service-mesh/blob/main/istio/container_registry.tf
 resource "azurerm_monitor_diagnostic_setting" "diagnostic_settings_acr" {
-  count                      = var.enable_monitoring ? 1 : 0
-  name                       = "diagnostic-settings"
-  target_resource_id         = azurerm_container_registry.acr.id
-  log_analytics_workspace_id = azurerm_log_analytics_workspace.workspace.0.id
+  count                          = var.enable_monitoring ? 1 : 0
+  name                           = "diagnostic-settings"
+  target_resource_id             = azurerm_container_registry.acr.id
+  log_analytics_workspace_id     = azurerm_log_analytics_workspace.workspace.0.id
+  log_analytics_destination_type = "AzureDiagnostics" # "Dedicated"
 
   enabled_log {
     category = "ContainerRegistryRepositoryEvents"
