@@ -32,31 +32,42 @@ resource "azurerm_bastion_host" "bastion_host" {
   }
 }
 
-resource "azurerm_monitor_diagnostic_setting" "diagnostic_settings_bastion" {
-  #   provider = azurerm.subscription_hub
-  count                          = var.enable_bastion && var.enable_monitoring ? 1 : 0
-  name                           = "diagnostic-settings"
-  target_resource_id             = azurerm_bastion_host.bastion_host.0.id
-  log_analytics_workspace_id     = azurerm_log_analytics_workspace.workspace.0.id
-  log_analytics_destination_type = "AzureDiagnostics" # "Dedicated"
-
-  enabled_log {
-    category = "BastionAuditLogs"
-
-    retention_policy {
-      enabled = true
-    }
-  }
-
-  metric {
-    category = "AllMetrics"
-    enabled  = true
-
-    retention_policy {
-      enabled = true
-    }
-  }
+module "diagnostic_setting_bastion" {
+  count                      = var.enable_bastion && var.enable_monitoring ? 1 : 0
+  source                     = "./modules/diagnostic_setting"
+  log_analytics_workspace_id = azurerm_log_analytics_workspace.workspace.0.id
+  target_resource_id         = azurerm_bastion_host.bastion_host.0.id
 }
+
+output "azurerm_monitor_diagnostic_categories_bastion" {
+  value = module.diagnostic_setting_bastion.0.azurerm_monitor_diagnostic_categories
+}
+
+# resource "azurerm_monitor_diagnostic_setting" "diagnostic_settings_bastion" {
+#   #   provider = azurerm.subscription_hub
+#   count                          = var.enable_bastion && var.enable_monitoring ? 1 : 0
+#   name                           = "diagnostic-settings"
+#   target_resource_id             = azurerm_bastion_host.bastion_host.0.id
+#   log_analytics_workspace_id     = azurerm_log_analytics_workspace.workspace.0.id
+#   log_analytics_destination_type = "AzureDiagnostics" # "Dedicated"
+
+#   enabled_log {
+#     category = "BastionAuditLogs"
+
+#     retention_policy {
+#       enabled = true
+#     }
+#   }
+
+#   metric {
+#     category = "AllMetrics"
+#     enabled  = true
+
+#     retention_policy {
+#       enabled = true
+#     }
+#   }
+# }
 
 # resource "azurerm_monitor_diagnostic_setting" "public_ip_bastion_diagnostic_settings" {
 #   count = var.bastion_host_enabled ? 1 : 0

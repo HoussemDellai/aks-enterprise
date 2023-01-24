@@ -89,3 +89,5 @@ SETTINGS
   # }
   # SETTINGS
 }
+
+#todo : diag settings

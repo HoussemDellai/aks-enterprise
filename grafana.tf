@@ -30,6 +30,14 @@ resource "azurerm_role_assignment" "role_monitoring_data_reader" {
   principal_id         = azurerm_dashboard_grafana.grafana_aks.identity.0.principal_id
 }
 
+# https://learn.microsoft.com/en-us/azure/azure-monitor/visualize/grafana-plugin
+# to monitor all Azure resources
+resource "azurerm_role_assignment" "role_monitoring_reader" {
+  scope                = data.azurerm_subscription.subscription_spoke.id
+  role_definition_name = "Monitoring Reader"
+  principal_id         = azurerm_dashboard_grafana.grafana_aks.identity.0.principal_id
+}
+
 # https://learn.microsoft.com/en-us/azure/azure-monitor/essentials/azure-monitor-workspace-overview?tabs=resource-manager#create-an-azure-monitor-workspace
 resource "azapi_resource" "monitor_workspace_aks" {
   type      = "microsoft.monitor/accounts@2021-06-03-preview"
@@ -61,21 +69,23 @@ resource "null_resource" "aks_enable_azuremonitormetrics" {
     interpreter = ["PowerShell", "-Command"]
     command     = <<-EOT
 
-    az aks update --enable-azuremonitormetrics `
-                  -g ${azurerm_kubernetes_cluster.aks.0.resource_group_name} `
-                  -n ${azurerm_kubernetes_cluster.aks.0.name} ` 
-                  --azure-monitor-workspace-resource-id ${azapi_resource.monitor_workspace_aks.id} `
-                  --grafana-resource-id ${azurerm_dashboard_grafana.grafana_aks.id}
+    az aks update --enable-azuremonitormetrics -g ${azurerm_kubernetes_cluster.aks.0.resource_group_name} -n ${azurerm_kubernetes_cluster.aks.0.name} --azure-monitor-workspace-resource-id ${azapi_resource.monitor_workspace_aks.id} --grafana-resource-id ${azurerm_dashboard_grafana.grafana_aks.id}
+    
+    # az aks update --enable-azuremonitormetrics `
+    #               -g ${azurerm_kubernetes_cluster.aks.0.resource_group_name} `
+    #               -n ${azurerm_kubernetes_cluster.aks.0.name} ` 
+    #               --azure-monitor-workspace-resource-id ${azapi_resource.monitor_workspace_aks.id} `
+    #               --grafana-resource-id ${azurerm_dashboard_grafana.grafana_aks.id}
     EOT
   }
 
   triggers = {
-    "key" = "value2"
+    "key" = "value1"
     # trigger = timestamp()
   }
 
   depends_on = [
-    # null_resource.connect_to_aks,
+    null_resource.connect_to_aks,
     azurerm_kubernetes_cluster_node_pool.poolapps[0],
     azurerm_kubernetes_cluster_node_pool.poolspot[0]
   ]
@@ -103,3 +113,7 @@ resource "null_resource" "aks_enable_azuremonitormetrics" {
 #     }
 #   })
 # }
+
+output "grafana_endpoint" {
+  value = azurerm_dashboard_grafana.grafana_aks.endpoint
+}

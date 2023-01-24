@@ -1,30 +1,29 @@
-# resource "null_resource" "connect_to_aks" {
-#   count = var.enable_aks_cluster ? 1 : 0
+resource "null_resource" "connect_to_aks" {
+  count = var.enable_aks_cluster ? 1 : 0
 
-#   provisioner "local-exec" {
-#     interpreter = ["PowerShell", "-Command"]
-#     command     = <<-EOT
-#       az aks get-credentials -g ${azurerm_kubernetes_cluster.aks.0.resource_group_name} `
-#                              -n ${azurerm_kubernetes_cluster.aks.0.name} `
-#                              --overwrite-existing
+  provisioner "local-exec" {
+    interpreter = ["PowerShell", "-Command"]
+    command     = <<-EOT
+      az aks get-credentials -g ${azurerm_kubernetes_cluster.aks.0.resource_group_name} `
+                             -n ${azurerm_kubernetes_cluster.aks.0.name} `
+                             --overwrite-existing
 
-#       kubelogin convert-kubeconfig -l azurecli
+      kubelogin convert-kubeconfig -l azurecli
 
-#       kubectl get nodes
-#     EOT
-#   }
+      kubectl get nodes
+    EOT
+  }
 
-#   triggers = {
-#     "key" = "value2"
-#     # trigger = timestamp()
-#   }
+  triggers = {
+    "key" = "value1"
+    # trigger = timestamp()
+  }
 
-#   depends_on = [
-#     null_resource.connect_to_aks,
-#     azurerm_kubernetes_cluster_node_pool.poolapps[0],
-#     azurerm_kubernetes_cluster_node_pool.poolspot[0]
-#   ]
-# }
+  depends_on = [
+    azurerm_kubernetes_cluster_node_pool.poolapps[0],
+    azurerm_kubernetes_cluster_node_pool.poolspot[0]
+  ]
+}
 
 # resource "null_resource" "enable_aks_addons" {
 #   count = var.enable_aks_cluster ? 1 : 0

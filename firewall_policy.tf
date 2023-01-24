@@ -13,10 +13,13 @@ resource "azurerm_firewall_policy" "firewall_policy" {
     servers       = ["168.63.129.16"]
   }
 
-  insights {
-    enabled                            = true
-    default_log_analytics_workspace_id = azurerm_log_analytics_workspace.workspace.0.id
-    retention_in_days                  = 7
+  dynamic "insights" {
+    for_each = var.enable_monitoring ? ["any_value"] : []
+    content {
+      enabled                            = true
+      default_log_analytics_workspace_id = azurerm_log_analytics_workspace.workspace.0.id
+      retention_in_days                  = 7
+    }
   }
 }
 

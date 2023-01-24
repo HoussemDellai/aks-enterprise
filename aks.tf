@@ -256,108 +256,121 @@ resource "azurerm_kubernetes_cluster" "aks" {
 #   depends_on = []
 # }
 
-# https://github.com/Azure-Samples/aks-multi-cluster-service-mesh/blob/main/istio/main.tf
-resource "azurerm_monitor_diagnostic_setting" "diagnostic_settings_aks" {
-  count                          = var.enable_monitoring && var.enable_aks_cluster ? 1 : 0
-  name                           = "diagnostic-settings"
-  target_resource_id             = azurerm_kubernetes_cluster.aks.0.id
-  log_analytics_workspace_id     = azurerm_log_analytics_workspace.workspace.0.id
-  log_analytics_destination_type = "AzureDiagnostics" # "Dedicated"
+module "diagnostic_setting_aks" {
+  count                      = var.enable_monitoring && var.enable_aks_cluster ? 1 : 0
+  source                     = "./modules/diagnostic_setting"
+  target_resource_id         = azurerm_kubernetes_cluster.aks.0.id
+  log_analytics_workspace_id = azurerm_log_analytics_workspace.workspace.0.id
 
-  enabled_log {
-    category = "kube-apiserver"
-
-    retention_policy {
-      enabled = true
-    }
-  }
-
-  enabled_log {
-    category = "kube-audit"
-
-    retention_policy {
-      enabled = true
-    }
-  }
-
-  enabled_log {
-    category = "kube-audit-admin"
-
-    retention_policy {
-      enabled = true
-    }
-  }
-
-  enabled_log {
-    category = "kube-controller-manager"
-
-    retention_policy {
-      enabled = true
-    }
-  }
-
-  enabled_log {
-    category = "cloud-controller-manager"
-
-    retention_policy {
-      enabled = true
-    }
-  }
-
-  enabled_log {
-    category = "kube-scheduler"
-
-    retention_policy {
-      enabled = true
-    }
-  }
-
-  enabled_log {
-    category = "cluster-autoscaler"
-
-    retention_policy {
-      enabled = true
-    }
-  }
-
-  enabled_log {
-    category = "guard"
-
-    retention_policy {
-      enabled = true
-    }
-  }
-
-  enabled_log {
-    category = "csi-azuredisk-controller"
-
-    retention_policy {
-      enabled = true
-    }
-  }
-
-  enabled_log {
-    category = "csi-azurefile-controller"
-
-    retention_policy {
-      enabled = true
-    }
-  }
-
-  enabled_log {
-    category = "csi-snapshot-controller"
-
-    retention_policy {
-      enabled = true
-    }
-  }
-
-  metric {
-    category = "AllMetrics"
-    enabled  = true
-
-    retention_policy {
-      enabled = true
-    }
-  }
+  # log_categories = ["kube-apiserver", "kube-audit"]
 }
+
+output "azurerm_monitor_diagnostic_categories_aks" {
+  value = var.enable_monitoring ? module.diagnostic_setting_aks.0.azurerm_monitor_diagnostic_categories
+}
+
+# https://github.com/Azure-Samples/aks-multi-cluster-service-mesh/blob/main/istio/main.tf
+# resource "azurerm_monitor_diagnostic_setting" "diagnostic_settings_aks" {
+#   count                          = var.enable_monitoring && var.enable_aks_cluster ? 1 : 0
+#   name                           = "diagnostic-settings"
+#   target_resource_id             = azurerm_kubernetes_cluster.aks.0.id
+#   log_analytics_workspace_id     = azurerm_log_analytics_workspace.workspace.0.id
+#   log_analytics_destination_type = "AzureDiagnostics" # "Dedicated"
+
+#   enabled_log {
+#     category = "kube-apiserver"
+
+#     retention_policy {
+#       enabled = true
+#     }
+#   }
+
+#   enabled_log {
+#     category = "kube-audit"
+
+#     retention_policy {
+#       enabled = true
+#     }
+#   }
+
+#   enabled_log {
+#     category = "kube-audit-admin"
+
+#     retention_policy {
+#       enabled = true
+#     }
+#   }
+
+#   enabled_log {
+#     category = "kube-controller-manager"
+
+#     retention_policy {
+#       enabled = true
+#     }
+#   }
+
+#   enabled_log {
+#     category = "cloud-controller-manager"
+
+#     retention_policy {
+#       enabled = true
+#     }
+#   }
+
+#   enabled_log {
+#     category = "kube-scheduler"
+
+#     retention_policy {
+#       enabled = true
+#     }
+#   }
+
+#   enabled_log {
+#     category = "cluster-autoscaler"
+
+#     retention_policy {
+#       enabled = true
+#     }
+#   }
+
+#   enabled_log {
+#     category = "guard"
+
+#     retention_policy {
+#       enabled = true
+#     }
+#   }
+
+#   enabled_log {
+#     category = "csi-azuredisk-controller"
+
+#     retention_policy {
+#       enabled = true
+#     }
+#   }
+
+#   enabled_log {
+#     category = "csi-azurefile-controller"
+
+#     retention_policy {
+#       enabled = true
+#     }
+#   }
+
+#   enabled_log {
+#     category = "csi-snapshot-controller"
+
+#     retention_policy {
+#       enabled = true
+#     }
+#   }
+
+#   metric {
+#     category = "AllMetrics"
+#     enabled  = true
+
+#     retention_policy {
+#       enabled = true
+#     }
+#   }
+# }

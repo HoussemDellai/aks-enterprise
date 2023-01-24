@@ -156,27 +156,38 @@ resource "azurerm_subnet_route_table_association" "association_route_table_subne
   route_table_id = azurerm_route_table.route_table_to_firewall.0.id
 }
 
-resource "azurerm_monitor_diagnostic_setting" "diagnostic_settings_vnet_app" {
-  count                          = var.enable_monitoring ? 1 : 0
-  name                           = "diagnostic-settings"
-  target_resource_id             = azurerm_virtual_network.vnet_spoke_app.id
-  log_analytics_workspace_id     = azurerm_log_analytics_workspace.workspace.0.id
-  log_analytics_destination_type = "AzureDiagnostics" # "Dedicated"
-
-  enabled_log {
-    category = "VMProtectionAlerts"
-
-    retention_policy {
-      enabled = true
-    }
-  }
-
-  metric {
-    category = "AllMetrics"
-    enabled  = true
-
-    retention_policy {
-      enabled = true
-    }
-  }
+module "diagnostic_setting_vnet_spoke_app" {
+  count                      = var.enable_monitoring ? 1 : 0
+  source                     = "./modules/diagnostic_setting"
+  log_analytics_workspace_id = azurerm_log_analytics_workspace.workspace.0.id
+  target_resource_id         = azurerm_virtual_network.vnet_spoke_app.id
 }
+
+output "azurerm_monitor_diagnostic_categories_vnet_spoke_app" {
+  value = module.diagnostic_setting_vnet_spoke_app.0.azurerm_monitor_diagnostic_categories
+}
+
+# resource "azurerm_monitor_diagnostic_setting" "diagnostic_settings_vnet_app" {
+#   count                          = var.enable_monitoring ? 1 : 0
+#   name                           = "diagnostic-settings"
+#   target_resource_id             = azurerm_virtual_network.vnet_spoke_app.id
+#   log_analytics_workspace_id     = azurerm_log_analytics_workspace.workspace.0.id
+#   log_analytics_destination_type = "AzureDiagnostics" # "Dedicated"
+
+#   enabled_log {
+#     category = "VMProtectionAlerts"
+
+#     retention_policy {
+#       enabled = true
+#     }
+#   }
+
+#   metric {
+#     category = "AllMetrics"
+#     enabled  = true
+
+#     retention_policy {
+#       enabled = true
+#     }
+#   }
+# }

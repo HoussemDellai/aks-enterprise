@@ -66,4 +66,13 @@ resource "azurerm_storage_blob" "blob" {
   source                 = "aks.tf"
 }
 
-#TODO add diag set
+module "diagnostic_setting_storage" {
+  count                      = var.enable_monitoring && var.enable_storage_account ? 1 : 0
+  source                     = "./modules/diagnostic_setting"
+  log_analytics_workspace_id = azurerm_log_analytics_workspace.workspace.0.id
+  target_resource_id         = azurerm_storage_account.storage.0.id
+}
+
+output "azurerm_monitor_diagnostic_categories_storage" {
+  value = module.diagnostic_setting_storage.0.azurerm_monitor_diagnostic_categories
+}

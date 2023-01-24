@@ -55,27 +55,38 @@ resource "azurerm_subnet_network_security_group_association" "association_nsg_su
   network_security_group_id = azurerm_network_security_group.nsg_subnet_mgt.0.id
 }
 
-resource "azurerm_monitor_diagnostic_setting" "diagnostic_settings_vnet_mgt" {
-  count                          = var.enable_monitoring && (var.enable_vm_jumpbox_windows || var.enable_vm_jumpbox_linux) ? 1 : 0
-  name                           = "diagnostic-settings"
-  target_resource_id             = azurerm_virtual_network.vnet_spoke_mgt.0.id
-  log_analytics_workspace_id     = azurerm_log_analytics_workspace.workspace.0.id
-  log_analytics_destination_type = "AzureDiagnostics" # "Dedicated"
-
-  enabled_log {
-    category = "VMProtectionAlerts"
-
-    retention_policy {
-      enabled = true
-    }
-  }
-
-  metric {
-    category = "AllMetrics"
-    enabled  = true
-
-    retention_policy {
-      enabled = true
-    }
-  }
+module "diagnostic_setting_vnet_spoke_mgt" {
+  count                      = var.enable_monitoring && (var.enable_vm_jumpbox_windows || var.enable_vm_jumpbox_linux) ? 1 : 0
+  source                     = "./modules/diagnostic_setting"
+  log_analytics_workspace_id = azurerm_log_analytics_workspace.workspace.0.id
+  target_resource_id         = azurerm_virtual_network.vnet_spoke_app.id
 }
+
+output "azurerm_monitor_diagnostic_categories_vnet_spoke_mgt" {
+  value = module.diagnostic_setting_vnet_spoke_mgt.0.azurerm_monitor_diagnostic_categories
+}
+
+# resource "azurerm_monitor_diagnostic_setting" "diagnostic_settings_vnet_mgt" {
+#   count                          = var.enable_monitoring && (var.enable_vm_jumpbox_windows || var.enable_vm_jumpbox_linux) ? 1 : 0
+#   name                           = "diagnostic-settings"
+#   target_resource_id             = azurerm_virtual_network.vnet_spoke_mgt.0.id
+#   log_analytics_workspace_id     = azurerm_log_analytics_workspace.workspace.0.id
+#   log_analytics_destination_type = "AzureDiagnostics" # "Dedicated"
+
+#   enabled_log {
+#     category = "VMProtectionAlerts"
+
+#     retention_policy {
+#       enabled = true
+#     }
+#   }
+
+#   metric {
+#     category = "AllMetrics"
+#     enabled  = true
+
+#     retention_policy {
+#       enabled = true
+#     }
+#   }
+# }

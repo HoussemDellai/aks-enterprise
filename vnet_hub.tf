@@ -25,3 +25,14 @@ resource "azurerm_subnet" "subnet_bastion" {
   resource_group_name  = azurerm_virtual_network.vnet_hub.resource_group_name
   address_prefixes     = var.cidr_subnet_bastion
 }
+
+module "diagnostic_setting_vnet_hub" {
+  count                      = var.enable_monitoring ? 1 : 0
+  source                     = "./modules/diagnostic_setting"
+  log_analytics_workspace_id = azurerm_log_analytics_workspace.workspace.0.id
+  target_resource_id         = azurerm_virtual_network.vnet_hub.id
+}
+
+output "azurerm_monitor_diagnostic_categories_vnet_hub" {
+  value = module.diagnostic_setting_vnet_hub.0.azurerm_monitor_diagnostic_categories
+}
