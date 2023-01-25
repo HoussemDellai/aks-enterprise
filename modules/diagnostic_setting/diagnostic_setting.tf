@@ -63,7 +63,8 @@ resource "azurerm_monitor_diagnostic_setting" "diagnostic_settings" {
 }
 
 output "monitor_diagnostic_categories" {
-  value = data.azurerm_monitor_diagnostic_categories.categories
+  value = join(", ", data.azurerm_monitor_diagnostic_categories.categories.log_category_types, data.azurerm_monitor_diagnostic_categories.categories.metrics)
+#   value = tolist(data.azurerm_monitor_diagnostic_categories.categories.log_category_types, data.azurerm_monitor_diagnostic_categories.categories.metrics)
 }
 
 # output "diagnostic_categories_metrics" {

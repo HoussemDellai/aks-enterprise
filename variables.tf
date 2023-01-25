@@ -42,6 +42,18 @@ variable "cidr_vnet_spoke_3" {
   description = "VNET Spoke 3 address prefix"
 }
 
+variable "cidr_vnet_spoke_mgt" {
+  description = "CIDR for Management/Jumpbox VM VNET."
+}
+
+variable "cidr_vnet_spoke_shared" {
+  description = "VNET Spoke Shared resources address prefix"
+}
+
+variable "cidr_subnet_shared" {
+  description = "Shared subnet for shared sresources."
+}
+
 variable "cidr_subnet_nodes" {
   description = "Subnet address prefix."
 }
@@ -69,10 +81,6 @@ variable "cidr_subnet_bastion" {
 
 variable "cidr_subnet_firewall" {
   description = "CIDR for Firewall Subnet."
-}
-
-variable "cidr_vnet_spoke_mgt" {
-  description = "CIDR for Management/Jumpbox VM VNET."
 }
 
 variable "cidr_subnet_mgt" {

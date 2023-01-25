@@ -46,22 +46,22 @@ resource "azapi_resource" "monitor_workspace_aks" {
   location  = azurerm_resource_group.rg_spoke_app.location
 }
 
-resource "azapi_update_resource" "grafana_monitor_workspace_integration" {
-  type        = "Microsoft.Dashboard/grafana@2022-08-01"
-  resource_id = azurerm_dashboard_grafana.grafana_aks.id
+# resource "azapi_update_resource" "grafana_monitor_workspace_integration" {
+#   type        = "Microsoft.Dashboard/grafana@2022-08-01"
+#   resource_id = azurerm_dashboard_grafana.grafana_aks.id
 
-  body = jsonencode({
-    properties = {
-      grafanaIntegrations = {
-        azureMonitorWorkspaceIntegrations = [
-          {
-            azureMonitorWorkspaceResourceId = azapi_resource.monitor_workspace_aks.id
-          }
-        ]
-      }
-    }
-  })
-}
+#   body = jsonencode({
+#     properties = {
+#       grafanaIntegrations = {
+#         azureMonitorWorkspaceIntegrations = [
+#           {
+#             azureMonitorWorkspaceResourceId = azapi_resource.monitor_workspace_aks.id
+#           }
+#         ]
+#       }
+#     }
+#   })
+# }
 
 resource "null_resource" "aks_enable_azuremonitormetrics" {
   #   count = var.enable_aks_cluster ? 1 : 0
@@ -75,7 +75,7 @@ resource "null_resource" "aks_enable_azuremonitormetrics" {
   }
 
   triggers = {
-    "key" = "value1"
+    "key" = "value2"
     # trigger = timestamp()
   }
 
