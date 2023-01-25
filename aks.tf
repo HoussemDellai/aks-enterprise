@@ -265,8 +265,20 @@ module "diagnostic_setting_aks" {
   # log_categories = ["kube-apiserver", "kube-audit"]
 }
 
-output "azurerm_monitor_diagnostic_categories_aks" {
-  value = var.enable_monitoring ? module.diagnostic_setting_aks.0.azurerm_monitor_diagnostic_categories
+output "monitor_diagnostic_categories_aks" {
+  value = var.enable_monitoring ? module.diagnostic_setting_aks.0.monitor_diagnostic_categories : null
+}
+
+data "azurerm_kubernetes_service_versions" "current" {
+  location = var.resources_location
+}
+
+output "versions" {
+  value = data.azurerm_kubernetes_service_versions.current.versions
+}
+
+output "latest_version" {
+  value = data.azurerm_kubernetes_service_versions.current.latest_version
 }
 
 # https://github.com/Azure-Samples/aks-multi-cluster-service-mesh/blob/main/istio/main.tf

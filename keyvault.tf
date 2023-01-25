@@ -43,8 +43,8 @@ module "diagnostic_setting_keyvault" {
   target_resource_id         = azurerm_key_vault.kv.0.id
 }
 
-output "azurerm_monitor_diagnostic_categories_keyvault" {
-  value = module.diagnostic_setting_keyvault.0.azurerm_monitor_diagnostic_categories
+output "monitor_diagnostic_categories_keyvault" {
+  value = module.diagnostic_setting_keyvault.0.monitor_diagnostic_categories
 }
 
 # # https://github.com/Azure-Samples/aks-multi-cluster-service-mesh/blob/main/istio/key_vault.tf

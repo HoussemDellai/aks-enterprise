@@ -104,8 +104,8 @@ module "diagnostic_setting_acr" {
   # log_categories = ["ContainerRegistryRepositoryEvents", "ContainerRegistryLoginEvents"]
 }
 
-output "azurerm_monitor_diagnostic_categories_acr" {
-  value = var.enable_monitoring ? module.diagnostic_setting_acr.0.azurerm_monitor_diagnostic_categories : null
+output "monitor_diagnostic_categories_acr" {
+  value = var.enable_monitoring ? module.diagnostic_setting_acr.0.monitor_diagnostic_categories : null
 }
 
 # https://github.com/Azure-Samples/aks-multi-cluster-service-mesh/blob/main/istio/container_registry.tf

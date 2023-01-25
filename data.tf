@@ -16,11 +16,6 @@ data "azurerm_subscription" "subscription_spoke" {
 # current client
 data "azuread_client_config" "current" {}
 
-# retrieve the versions of Kubernetes supported by AKS
-data "azurerm_kubernetes_service_versions" "current" {
-  location = var.resources_location
-}
-
 data "http" "machine_ip" {
   url = "http://ifconfig.me"
 

@@ -33,8 +33,19 @@ module "diagnostic_setting_firewall" {
   target_resource_id         = azurerm_firewall.firewall.0.id
 }
 
-output "azurerm_monitor_diagnostic_categories_firewall" {
-  value = module.diagnostic_setting_firewall.0.azurerm_monitor_diagnostic_categories
+output "monitor_diagnostic_categories_firewall" {
+  value = module.diagnostic_setting_firewall.0.monitor_diagnostic_categories
+}
+
+module "diagnostic_setting_firewall_public_ip" {
+  count                      = var.enable_firewall && var.enable_monitoring ? 1 : 0
+  source                     = "./modules/diagnostic_setting"
+  log_analytics_workspace_id = azurerm_log_analytics_workspace.workspace.0.id
+  target_resource_id         = azurerm_public_ip.public_ip_firewall.0.id
+}
+
+output "monitor_diagnostic_categories_firewall_public_ip" {
+  value = module.diagnostic_setting_firewall_public_ip.0.monitor_diagnostic_categories
 }
 
 # resource "azurerm_monitor_diagnostic_setting" "diagnostic_settings_firewall" {

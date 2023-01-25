@@ -70,12 +70,7 @@ resource "null_resource" "aks_enable_azuremonitormetrics" {
     command     = <<-EOT
 
     az aks update --enable-azuremonitormetrics -g ${azurerm_kubernetes_cluster.aks.0.resource_group_name} -n ${azurerm_kubernetes_cluster.aks.0.name} --azure-monitor-workspace-resource-id ${azapi_resource.monitor_workspace_aks.id} --grafana-resource-id ${azurerm_dashboard_grafana.grafana_aks.id}
-    
-    # az aks update --enable-azuremonitormetrics `
-    #               -g ${azurerm_kubernetes_cluster.aks.0.resource_group_name} `
-    #               -n ${azurerm_kubernetes_cluster.aks.0.name} ` 
-    #               --azure-monitor-workspace-resource-id ${azapi_resource.monitor_workspace_aks.id} `
-    #               --grafana-resource-id ${azurerm_dashboard_grafana.grafana_aks.id}
+
     EOT
   }
 
@@ -85,7 +80,6 @@ resource "null_resource" "aks_enable_azuremonitormetrics" {
   }
 
   depends_on = [
-    null_resource.connect_to_aks,
     azurerm_kubernetes_cluster_node_pool.poolapps[0],
     azurerm_kubernetes_cluster_node_pool.poolspot[0]
   ]

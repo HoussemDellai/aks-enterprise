@@ -73,6 +73,6 @@ module "diagnostic_setting_storage" {
   target_resource_id         = azurerm_storage_account.storage.0.id
 }
 
-output "azurerm_monitor_diagnostic_categories_storage" {
-  value = module.diagnostic_setting_storage.0.azurerm_monitor_diagnostic_categories
+output "monitor_diagnostic_categories_storage" {
+  value = module.diagnostic_setting_storage.0.monitor_diagnostic_categories
 }
