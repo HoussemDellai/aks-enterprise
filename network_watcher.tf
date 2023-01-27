@@ -30,14 +30,21 @@ data "azurerm_resources" "nsg_flowlogs" {
 }
 
 module "azurerm_network_watcher_flow_log" {
-  count                     = var.enable_nsg_flow_logs ? 1 : 0
+  count                     = var.enable_nsg_flow_logs ? length(data.azurerm_resources.nsg_flowlogs.resources) : 0
   source                    = "./modules/azurerm_network_watcher_flow_log"
-  network_watcher_name      = azurerm_network_watcher.network_watcher_regional.0.name
-  resource_group_name       = azurerm_network_watcher.network_watcher_regional.0.resource_group_name
-  network_security_group_id = azurerm_network_security_group.nsg_subnet_mgt.0.id
+  nsg_name                  = data.azurerm_resources.nsg_flowlogs.resources[count.index].name
+  network_watcher_name      = data.azurerm_network_watcher.network_watcher_regional.name
+  resource_group_name       = data.azurerm_network_watcher.network_watcher_regional.resource_group_name
+  network_security_group_id = data.azurerm_resources.nsg_flowlogs.resources[count.index].id
   storage_account_id        = azurerm_storage_account.network_log_data.0.id
 
-  azurerm_log_analytics_workspace = azurerm_log_analytics_workspace.workspace.0.workspace_id
+  workspace_id          = azurerm_log_analytics_workspace.workspace.0.workspace_id
+  workspace_region      = azurerm_log_analytics_workspace.workspace.0.location
+  workspace_resource_id = azurerm_log_analytics_workspace.workspace.0.id
+}
+
+output "azurerm_resources_nsg_flowlogs" {
+  value = data.azurerm_resources.nsg_flowlogs.resources[*].name
 }
 
 # resource "azurerm_network_watcher_flow_log" "network_flow_logs_nsg_subnet_mgt" {
