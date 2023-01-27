@@ -13,7 +13,6 @@ resource "azurerm_container_registry" "acr" {
   network_rule_bypass_option    = "AzureServices"
   tags                          = var.tags
 
-
   dynamic "network_rule_set" {
     for_each = var.enable_private_acr ? ["any_value"] : []
     content {
@@ -97,18 +96,18 @@ resource "azurerm_role_assignment" "role_acrpull" {
   skip_service_principal_aad_check = true
 }
 
-module "diagnostic_setting_acr" {
-  count                      = var.enable_monitoring ? 1 : 0
-  source                     = "./modules/diagnostic_setting"
-  target_resource_id         = azurerm_container_registry.acr.id
-  log_analytics_workspace_id = azurerm_log_analytics_workspace.workspace.0.id
+# module "diagnostic_setting_acr" {
+#   count                      = var.enable_monitoring ? 1 : 0
+#   source                     = "./modules/diagnostic_setting"
+#   target_resource_id         = azurerm_container_registry.acr.id
+#   log_analytics_workspace_id = azurerm_log_analytics_workspace.workspace.0.id
 
-  # log_categories = ["ContainerRegistryRepositoryEvents", "ContainerRegistryLoginEvents"]
-}
+#   # log_categories = ["ContainerRegistryRepositoryEvents", "ContainerRegistryLoginEvents"]
+# }
 
-output "monitor_diagnostic_categories_acr" {
-  value = var.enable_monitoring ? module.diagnostic_setting_acr.0.monitor_diagnostic_categories : null
-}
+# output "monitor_diagnostic_categories_acr" {
+#   value = var.enable_monitoring && var.enable_monitoring_output ? module.diagnostic_setting_acr.0.monitor_diagnostic_categories : null
+# }
 
 # https://github.com/Azure-Samples/aks-multi-cluster-service-mesh/blob/main/istio/container_registry.tf
 # resource "azurerm_monitor_diagnostic_setting" "diagnostic_settings_acr" {

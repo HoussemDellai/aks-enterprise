@@ -54,4 +54,6 @@ enable_spoke_3                    = true
 enable_storage_account            = true
 enable_vnet_peering               = true
 enable_monitoring                 = true
+enable_diagnostic_settings        = true
+enable_diagnostic_settings_output = true
 enable_fleet_manager              = false

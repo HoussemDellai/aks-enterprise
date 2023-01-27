@@ -2,6 +2,7 @@ resource "azurerm_resource_group" "rg_spoke3" {
   count    = var.enable_spoke_3 ? 1 : 0
   name     = "rg-spoke3"
   location = var.resources_location
+  tags     = var.tags
 }
 
 resource "azurerm_virtual_network" "vnet_spoke3" {
@@ -11,6 +12,7 @@ resource "azurerm_virtual_network" "vnet_spoke3" {
   resource_group_name = azurerm_resource_group.rg_spoke3.0.name
   address_space       = var.cidr_vnet_spoke_3
   dns_servers         = [azurerm_firewall.firewall.0.ip_configuration.0.private_ip_address]
+  tags                = var.tags
 }
 
 resource "azurerm_subnet" "snet_vnet_integration" {
@@ -46,6 +48,7 @@ resource "azurerm_service_plan" "service_plan" {
   resource_group_name = azurerm_resource_group.rg_spoke3.0.name
   os_type             = "Linux"
   sku_name            = "P1v2"
+  tags                = var.tags
 }
 
 resource "azurerm_linux_web_app" "webapp_frontent" {
@@ -55,6 +58,7 @@ resource "azurerm_linux_web_app" "webapp_frontent" {
   resource_group_name       = azurerm_resource_group.rg_spoke3.0.name
   service_plan_id           = azurerm_service_plan.service_plan.0.id
   virtual_network_subnet_id = azurerm_subnet.snet_vnet_integration.0.id
+  tags                      = var.tags
 
   app_settings = {
     "WEBSITE_DNS_SERVER" : "168.63.129.16",
@@ -84,6 +88,7 @@ resource "azurerm_linux_web_app" "webapp_backend" {
   resource_group_name = azurerm_resource_group.rg_spoke3.0.name
   service_plan_id     = azurerm_service_plan.service_plan.0.id
   https_only          = true
+  tags                = var.tags
 
   site_config {
     minimum_tls_version = "1.2"
@@ -94,6 +99,7 @@ resource "azurerm_private_dns_zone" "dnsprivatezone" {
   count               = var.enable_spoke_3 ? 1 : 0
   name                = "privatelink.azurewebsites.net"
   resource_group_name = azurerm_resource_group.rg_spoke3.0.name
+  tags                = var.tags
 }
 
 resource "azurerm_private_dns_zone_virtual_network_link" "dnszonelink" {
@@ -110,6 +116,7 @@ resource "azurerm_private_endpoint" "pe_backend" {
   location            = azurerm_resource_group.rg_spoke3.0.location
   resource_group_name = azurerm_resource_group.rg_spoke3.0.name
   subnet_id           = azurerm_subnet.snet_pe.0.id
+  tags                = var.tags
 
   private_dns_zone_group {
     name                 = "privatednszonegroup"
@@ -133,9 +140,6 @@ resource "azurerm_app_service_source_control" "sourcecontrol" {
   use_manual_integration = true
   use_mercurial          = false
 }
-
-#TODO: add dignostic settings
-#TODO: add NSG flow logs
 
 resource "azurerm_network_security_group" "nsg_subnet_vnet_integration" {
   count               = var.enable_spoke_3 ? 1 : 0

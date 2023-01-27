@@ -1,5 +1,5 @@
 resource "azurerm_log_analytics_workspace" "workspace" {
-  count = var.enable_monitoring ? 1 : 0
+  count = var.enable_monitoring || var.enable_diagnostic_settings ? 1 : 0
   # provider            = azurerm.subscription_hub
   name                = var.log_analytics_workspace
   resource_group_name = azurerm_resource_group.rg_spoke_app.name
@@ -10,7 +10,7 @@ resource "azurerm_log_analytics_workspace" "workspace" {
 }
 
 resource "azurerm_log_analytics_solution" "solution" {
-  count = var.enable_monitoring ? 1 : 0
+  count = var.enable_monitoring || var.enable_diagnostic_settings ? 1 : 0
   # provider              = azurerm.subscription_hub
   solution_name         = "ContainerInsights"
   location              = azurerm_log_analytics_workspace.workspace.0.location

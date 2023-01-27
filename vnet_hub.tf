@@ -35,5 +35,5 @@ resource "azurerm_subnet" "subnet_bastion" {
 # }
 
 # output "monitor_diagnostic_categories_vnet_hub" {
-#   value = module.diagnostic_setting_vnet_hub.0.monitor_diagnostic_categories
+#   value = var.enable_monitoring && var.enable_monitoring_output ? module.diagnostic_setting_vnet_hub.0.monitor_diagnostic_categories : null
 # }

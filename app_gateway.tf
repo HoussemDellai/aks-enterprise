@@ -24,6 +24,8 @@ resource "azurerm_application_gateway" "appgw" {
   name                = "appgw-aks"
   resource_group_name = azurerm_resource_group.rg_spoke_aks.name
   location            = var.resources_location
+  tags                = var.tags
+
   sku {
     name     = "Standard_v2"
     tier     = "Standard_v2"
@@ -70,8 +72,6 @@ resource "azurerm_application_gateway" "appgw" {
     priority                   = 10000 # value from 1 to 20000
   }
 
-  tags = var.tags
-
   lifecycle {
     # prevent_destroy       = true
     create_before_destroy = true
@@ -98,55 +98,3 @@ resource "azurerm_role_assignment" "role-contributor" {
   role_definition_name = "Contributor"
   principal_id         = azurerm_kubernetes_cluster.aks.0.ingress_application_gateway.0.ingress_application_gateway_identity.0.object_id
 }
-
-module "diagnostic_setting_appgw" {
-  count                      = var.enable_monitoring && var.enable_app_gateway ? 1 : 0
-  source                     = "./modules/diagnostic_setting"
-  log_analytics_workspace_id = azurerm_log_analytics_workspace.workspace.0.id
-  target_resource_id         = azurerm_application_gateway.appgw.0.id
-}
-
-output "azurerm_monitor_diagnostic_categories_appgw" {
-  value = var.enable_monitoring && var.enable_app_gateway ? module.diagnostic_setting_appgw.0.azurerm_monitor_diagnostic_categories : null
-}
-
-# resource "azurerm_monitor_diagnostic_setting" "diagnostic_settings_appgw" {
-#   count                          = var.enable_monitoring && var.enable_app_gateway ? 1 : 0
-#   name                           = "diagnostic-settings"
-#   target_resource_id             = azurerm_application_gateway.appgw.0.id
-#   log_analytics_workspace_id     = azurerm_log_analytics_workspace.workspace.0.id
-#   log_analytics_destination_type = "AzureDiagnostics" # "Dedicated"
-
-#   enabled_log {
-#     category = "ApplicationGatewayAccessLog"
-
-#     retention_policy {
-#       enabled = true
-#     }
-#   }
-
-#   enabled_log {
-#     category = "ApplicationGatewayPerformanceLog"
-
-#     retention_policy {
-#       enabled = true
-#     }
-#   }
-
-#   enabled_log {
-#     category = "ApplicationGatewayFirewallLog"
-
-#     retention_policy {
-#       enabled = true
-#     }
-#   }
-
-#   metric {
-#     category = "AllMetrics"
-#     enabled  = true
-
-#     retention_policy {
-#       enabled = true
-#     }
-#   }
-# }

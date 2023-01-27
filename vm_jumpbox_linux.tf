@@ -19,6 +19,7 @@ resource "azurerm_network_interface" "nic_vm_jumpbox_linux" {
   name                = "nic-vm-jumpbox-linux"
   location            = var.resources_location
   resource_group_name = azurerm_resource_group.rg_spoke_mgt.0.name
+  tags                = var.tags
 
   ip_configuration {
     name                          = "internal"
@@ -37,6 +38,7 @@ resource "azurerm_linux_virtual_machine" "vm_jumpbox_linux" {
   admin_username                  = "houssem"
   admin_password                  = "@Aa123456789"
   network_interface_ids           = [azurerm_network_interface.nic_vm_jumpbox_linux.0.id]
+  tags                            = var.tags
 
   os_disk {
     caching              = "ReadWrite"

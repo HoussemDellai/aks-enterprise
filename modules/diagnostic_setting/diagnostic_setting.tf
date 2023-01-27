@@ -26,14 +26,6 @@ resource "azurerm_monitor_diagnostic_setting" "diagnostic_settings" {
     }
   }
 
-#   enabled_log {
-#     category = var.log_categories[0] # "kube-apiserver"
-
-#     retention_policy {
-#       enabled = true
-#     }
-#   }
-
   dynamic "metric" {
     for_each = data.azurerm_monitor_diagnostic_categories.categories.metrics
 
@@ -46,14 +38,6 @@ resource "azurerm_monitor_diagnostic_setting" "diagnostic_settings" {
       }
     }
   }
-#   metric {
-#     category = "AllMetrics"
-#     enabled  = true
-
-#     retention_policy {
-#       enabled = true
-#     }
-#   }
 
   lifecycle {
     ignore_changes = [
@@ -64,7 +48,6 @@ resource "azurerm_monitor_diagnostic_setting" "diagnostic_settings" {
 
 output "monitor_diagnostic_categories" {
   value = join(", ", data.azurerm_monitor_diagnostic_categories.categories.log_category_types, data.azurerm_monitor_diagnostic_categories.categories.metrics)
-#   value = tolist(data.azurerm_monitor_diagnostic_categories.categories.log_category_types, data.azurerm_monitor_diagnostic_categories.categories.metrics)
 }
 
 # output "diagnostic_categories_metrics" {

@@ -181,7 +181,17 @@ variable "enable_private_cluster" {
 
 variable "enable_monitoring" {
   type        = bool
-  description = "Enable cluster monitoring using Azure Container Insights"
+  description = "Enable resources monitoring using Azure Log Analytics and Prometheus."
+}
+
+variable "enable_diagnostic_settings" {
+  type        = bool
+  description = "Enable Diagnostic Settings."
+}
+
+variable "enable_diagnostic_settings_output" {
+  type        = bool
+  description = "Enable showing monitored logs and metrics for every resource (very verbose!). "
 }
 
 variable "enable_nodepool_apps" {

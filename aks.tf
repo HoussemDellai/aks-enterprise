@@ -256,18 +256,18 @@ resource "azurerm_kubernetes_cluster" "aks" {
 #   depends_on = []
 # }
 
-module "diagnostic_setting_aks" {
-  count                      = var.enable_monitoring && var.enable_aks_cluster ? 1 : 0
-  source                     = "./modules/diagnostic_setting"
-  target_resource_id         = azurerm_kubernetes_cluster.aks.0.id
-  log_analytics_workspace_id = azurerm_log_analytics_workspace.workspace.0.id
+# module "diagnostic_setting_aks" {
+#   count                      = var.enable_monitoring && var.enable_aks_cluster ? 1 : 0
+#   source                     = "./modules/diagnostic_setting"
+#   target_resource_id         = azurerm_kubernetes_cluster.aks.0.id
+#   log_analytics_workspace_id = azurerm_log_analytics_workspace.workspace.0.id
 
-  # log_categories = ["kube-apiserver", "kube-audit"]
-}
+#   # log_categories = ["kube-apiserver", "kube-audit"]
+# }
 
-output "monitor_diagnostic_categories_aks" {
-  value = var.enable_monitoring ? module.diagnostic_setting_aks.0.monitor_diagnostic_categories : null
-}
+# output "monitor_diagnostic_categories_aks" {
+#   value = var.enable_monitoring && var.enable_monitoring_output ? module.diagnostic_setting_aks.0.monitor_diagnostic_categories : null
+# }
 
 data "azurerm_kubernetes_service_versions" "current" {
   location = var.resources_location

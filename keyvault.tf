@@ -36,16 +36,16 @@ resource "azurerm_role_assignment" "role_secret_officer" {
   principal_id         = data.azurerm_client_config.current.object_id
 }
 
-module "diagnostic_setting_keyvault" {
-  count                      = var.enable_monitoring && var.enable_keyvault ? 1 : 0
-  source                     = "./modules/diagnostic_setting"
-  log_analytics_workspace_id = azurerm_log_analytics_workspace.workspace.0.id
-  target_resource_id         = azurerm_key_vault.kv.0.id
-}
+# module "diagnostic_setting_keyvault" {
+#   count                      = var.enable_monitoring && var.enable_keyvault ? 1 : 0
+#   source                     = "./modules/diagnostic_setting"
+#   log_analytics_workspace_id = azurerm_log_analytics_workspace.workspace.0.id
+#   target_resource_id         = azurerm_key_vault.kv.0.id
+# }
 
-output "monitor_diagnostic_categories_keyvault" {
-  value = module.diagnostic_setting_keyvault.0.monitor_diagnostic_categories
-}
+# output "monitor_diagnostic_categories_keyvault" {
+#   value = var.enable_monitoring && var.enable_monitoring_output ? module.diagnostic_setting_keyvault.0.monitor_diagnostic_categories : null
+# }
 
 # # https://github.com/Azure-Samples/aks-multi-cluster-service-mesh/blob/main/istio/key_vault.tf
 # resource "azurerm_monitor_diagnostic_setting" "diagnostic_settings_keyvault" {

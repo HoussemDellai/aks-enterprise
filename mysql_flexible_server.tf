@@ -39,7 +39,7 @@ resource "azurerm_mysql_flexible_server" "mysql_flexible_server" {
   delegated_subnet_id    = azurerm_subnet.subnet_shared.id
   private_dns_zone_id    = azurerm_private_dns_zone.mysql_flexible_server.id
   sku_name               = "B_Standard_B1s" # "GP_Standard_D2ds_v4" # 
-  version                = "8.0.21" # "5.7"            # 
+  version                = "8.0.21"         # "5.7"            # 
   zone                   = "1"
   tags                   = var.tags
 

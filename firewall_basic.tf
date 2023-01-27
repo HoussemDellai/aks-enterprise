@@ -192,7 +192,7 @@
 #   resource_group_name = azurerm_resource_group.rg.name
 #   network_interface_ids = [azurerm_network_interface.AppVm1Nic1.id]
 #   vm_size = "Standard_DS1_V2"
-  
+
 #   storage_image_reference {
 #     publisher = "MicrosoftWindowsDesktop"
 #     offer     = "windows-11"
@@ -214,6 +214,6 @@
 #   }
 
 #   os_profile_windows_config {
-    
+
 #   }
 # }
