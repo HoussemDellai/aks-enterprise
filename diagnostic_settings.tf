@@ -1,7 +1,43 @@
-# # Get resources by type
-# data "azurerm_resources" "subnets" {
-#   type = "Microsoft.Network/virtualNetworks/subnets"
+# # # Get resources by type
+# # data "azurerm_resources" "subnets" {
+# #   type = "Microsoft.Network/virtualNetworks/subnets"
+# #   required_tags = var.tags
+# # }
+
+# locals {
+#   resource_types = [
+#     "Microsoft.Network/networkSecurityGroups", 
+#     "Microsoft.Network/virtualNetworks", 
+#     "Microsoft.Network/applicationGateways",
+#     "Microsoft.Network/bastionHosts",
+#     "Microsoft.Network/networkInterfaces",
+#     "Microsoft.Compute/virtualMachines",
+#     "Microsoft.KeyVault/vaults",
+#     "Microsoft.Network/azureFirewalls",
+#     "Microsoft.Storage/storageAccounts",
+#     "Microsoft.ContainerRegistry/registries",
+#     "Microsoft.ContainerService/managedClusters",
+#     "Microsoft.Network/publicIPAddresses"
+#     ]
+
+#   resource_ids = flatten([ for r in data.azurerm_resources.resources_ds : [ r.resources.*.id ] ])
+# }
+
+# data "azurerm_resources" "resources_ds" {
+#   count         = length(local.resource_types)
+#   type          = local.resource_types[count.index]
 #   required_tags = var.tags
+# }
+
+# module "diagnostic_setting" {
+#   count                      = var.enable_diagnostic_settings ? length(local.resource_ids) : 0
+#   source                     = "./modules/diagnostic_setting"
+#   log_analytics_workspace_id = azurerm_log_analytics_workspace.workspace.0.id
+#   target_resource_id         = local.resource_ids[count.index]
+# }
+
+# output resources_id {
+#   value = local.resource_ids
 # }
 
 ##################################################################
@@ -153,7 +189,7 @@ output "monitor_diagnostic_categories_firewall" {
 ##################################################################
 
 data "azurerm_resources" "keyvault" {
-  type          = "Microsoft.KeyVault/vaultss"
+  type          = "Microsoft.KeyVault/vaults"
   required_tags = var.tags
 }
 

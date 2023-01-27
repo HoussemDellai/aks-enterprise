@@ -206,6 +206,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
     # create_before_destroy = true
     ignore_changes = [
       # all, # ignore all attributes
+      monitor_metrics,
       default_node_pool[0].node_count,
       microsoft_defender,
       # oms_agent

@@ -80,6 +80,9 @@ resource "null_resource" "aks_enable_azuremonitormetrics" {
   }
 
   depends_on = [
+    azurerm_kubernetes_cluster.aks[0],
+    azurerm_dashboard_grafana.grafana_aks,
+    azapi_resource.monitor_workspace_aks,
     azurerm_kubernetes_cluster_node_pool.poolapps[0],
     azurerm_kubernetes_cluster_node_pool.poolspot[0]
   ]

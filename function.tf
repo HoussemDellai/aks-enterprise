@@ -1,0 +1,32 @@
+resource "azurerm_resource_group" "rg_spoke_serverless" {
+  name     = "rg-spoke-serverless"
+  location = var.resources_location
+}
+
+resource "azurerm_storage_account" "storage_function" {
+  name                     = "storage4function0135"
+  resource_group_name      = azurerm_resource_group.rg_spoke_serverless.name
+  location                 = azurerm_resource_group.rg_spoke_serverless.location
+  account_tier             = "Standard"
+  account_replication_type = "LRS"
+}
+
+resource "azurerm_service_plan" "plan_function" {
+  name                = "function-app-service-plan"
+  resource_group_name = azurerm_resource_group.rg_spoke_serverless.name
+  location            = azurerm_resource_group.rg_spoke_serverless.location
+  os_type             = "Windows"
+  sku_name            = "Y1"
+}
+
+resource "azurerm_windows_function_app" "function_app" {
+  name                = "function-app-win-0135"
+  resource_group_name = azurerm_resource_group.rg_spoke_serverless.name
+  location            = azurerm_resource_group.rg_spoke_serverless.location
+
+  storage_account_name       = azurerm_storage_account.storage_function.name
+  storage_account_access_key = azurerm_storage_account.storage_function.primary_access_key
+  service_plan_id            = azurerm_service_plan.plan_function.id
+
+  site_config {}
+}
