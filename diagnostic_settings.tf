@@ -189,6 +189,26 @@ output "monitor_diagnostic_categories_vm" {
 }
 
 ##################################################################
+# Diagnostic Settings for all NICs
+##################################################################
+
+data "azurerm_resources" "nic" {
+  type          = "Microsoft.Network/networkInterfaces"
+  required_tags = var.tags
+}
+
+module "diagnostic_setting_nic" {
+  count                      = var.enable_diagnostic_settings ? length(data.azurerm_resources.nic.resources) : 0
+  source                     = "./modules/diagnostic_setting"
+  log_analytics_workspace_id = azurerm_log_analytics_workspace.workspace.0.id
+  target_resource_id         = data.azurerm_resources.nic.resources[count.index].id
+}
+
+output "monitor_diagnostic_categories_nic" {
+  value = var.enable_diagnostic_settings && var.enable_diagnostic_settings_output ? module.diagnostic_setting_nic.*.monitor_diagnostic_categories : null
+}
+
+##################################################################
 # Diagnostic Settings for all Bastion hosts
 ##################################################################
 

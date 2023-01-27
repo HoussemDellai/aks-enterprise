@@ -21,7 +21,7 @@ resource "azurerm_monitor_diagnostic_setting" "diagnostic_settings" {
 
       retention_policy {
         enabled = true
-        # days    = 7
+        days    = 7
       }
     }
   }
@@ -34,7 +34,7 @@ resource "azurerm_monitor_diagnostic_setting" "diagnostic_settings" {
 
       retention_policy {
         enabled = true
-        # days    = 7
+        days    = 7
       }
     }
   }

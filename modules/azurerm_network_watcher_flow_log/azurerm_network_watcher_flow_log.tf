@@ -1,6 +1,6 @@
 resource "azurerm_network_watcher_flow_log" "network_flow_logs" {
 #   count                     = var.enable_nsg_flow_logs && var.enable_monitoring && (var.enable_vm_jumpbox_windows || var.enable_vm_jumpbox_linux) ? 1 : 0
-  name                      = "network_flow_logs_nsg_subnet_mgt"
+  name                      = "network_flow_logs_nsg"
   network_watcher_name      = azurerm_network_watcher.network_watcher_regional.0.name
   resource_group_name       = azurerm_network_watcher.network_watcher_regional.0.resource_group_name
   network_security_group_id = azurerm_network_security_group.nsg_subnet_mgt.0.id
