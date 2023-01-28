@@ -11,7 +11,7 @@ resource "azurerm_virtual_network" "vnet_spoke3" {
   location            = azurerm_resource_group.rg_spoke3.0.location
   resource_group_name = azurerm_resource_group.rg_spoke3.0.name
   address_space       = var.cidr_vnet_spoke_3
-  dns_servers         = [azurerm_firewall.firewall.0.ip_configuration.0.private_ip_address]
+  dns_servers         = var.enable_firewall ? [azurerm_firewall.firewall.0.ip_configuration.0.private_ip_address] : null
   tags                = var.tags
 }
 
@@ -177,5 +177,5 @@ resource "azurerm_subnet_network_security_group_association" "association_nsg_su
 resource "azurerm_subnet_route_table_association" "association_route_table_subnet_vnet_integration" {
   count          = var.enable_spoke_3 ? 1 : 0
   subnet_id      = azurerm_subnet.snet_vnet_integration.0.id
-  route_table_id = azurerm_route_table.route_table_to_firewall.0.id
+  route_table_id = azurerm_route_table.route_table_to_firewall.id
 }

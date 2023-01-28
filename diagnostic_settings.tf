@@ -60,6 +60,10 @@ output "monitor_diagnostic_categories_nsg" {
   value = var.enable_diagnostic_settings && var.enable_diagnostic_settings_output ? module.diagnostic_setting_nsg.*.monitor_diagnostic_categories : null
 }
 
+output "diagnostic_settings_nsg" {
+  value = var.enable_diagnostic_settings && var.enable_diagnostic_settings_output ? data.azurerm_resources.nsg.resources.*.id : null
+}
+
 ##################################################################
 # Diagnostic Settings for all VNETs
 ##################################################################
@@ -78,6 +82,10 @@ module "diagnostic_setting_vnet" {
 
 output "monitor_diagnostic_categories_vnet" {
   value = var.enable_diagnostic_settings && var.enable_diagnostic_settings_output ? module.diagnostic_setting_vnet.*.monitor_diagnostic_categories : null
+}
+
+output "diagnostic_settings_application_vnet" {
+  value = var.enable_diagnostic_settings && var.enable_diagnostic_settings_output ? data.azurerm_resources.vnet.resources.*.id : null
 }
 
 ##################################################################
@@ -100,6 +108,10 @@ output "monitor_diagnostic_categories_public_ip" {
   value = var.enable_diagnostic_settings && var.enable_diagnostic_settings_output ? module.diagnostic_setting_public_ip.*.monitor_diagnostic_categories : null
 }
 
+output "diagnostic_settings_public_ip" {
+  value = var.enable_diagnostic_settings && var.enable_diagnostic_settings_output ? data.azurerm_resources.public_ip.resources.*.id : null
+}
+
 ##################################################################
 # Diagnostic Settings for all AKS
 ##################################################################
@@ -120,6 +132,79 @@ output "monitor_diagnostic_categories_aks" {
   value = var.enable_diagnostic_settings && var.enable_diagnostic_settings_output ? module.diagnostic_setting_aks.*.monitor_diagnostic_categories : null
 }
 
+output "diagnostic_settings_aks" {
+  value = var.enable_diagnostic_settings && var.enable_diagnostic_settings_output ? data.azurerm_resources.aks.resources.*.id : null
+}
+
+##################################################################
+# Diagnostic Settings for all Functions & App Services
+##################################################################
+
+data "azurerm_resources" "function" {
+  type          = "Microsoft.Web/sites"
+  required_tags = var.tags
+}
+
+module "diagnostic_setting_function" {
+  count                      = var.enable_diagnostic_settings ? length(data.azurerm_resources.function.resources) : 0
+  source                     = "./modules/diagnostic_setting"
+  log_analytics_workspace_id = azurerm_log_analytics_workspace.workspace.0.id
+  target_resource_id         = data.azurerm_resources.function.resources[count.index].id
+}
+
+output "monitor_diagnostic_categories_function" {
+  value = var.enable_diagnostic_settings && var.enable_diagnostic_settings_output ? {
+    "categories" = module.diagnostic_setting_function.*.monitor_diagnostic_categories,
+    "services" = data.azurerm_resources.function.resources.*.id
+    } : null
+}
+
+##################################################################
+# Diagnostic Settings for all Load Balancers
+##################################################################
+
+data "azurerm_resources" "load_balancer" {
+  type          = "Microsoft.Network/loadBalancers"
+  required_tags = var.tags
+}
+
+module "diagnostic_setting_load_balancer" {
+  count                      = var.enable_diagnostic_settings ? length(data.azurerm_resources.load_balancer.resources) : 0
+  source                     = "./modules/diagnostic_setting"
+  log_analytics_workspace_id = azurerm_log_analytics_workspace.workspace.0.id
+  target_resource_id         = data.azurerm_resources.load_balancer.resources[count.index].id
+}
+
+output "monitor_diagnostic_categories_load_balancer" {
+  value = var.enable_diagnostic_settings && var.enable_diagnostic_settings_output ? {
+    "categories" = module.diagnostic_setting_load_balancer.*.monitor_diagnostic_categories,
+    "services" = data.azurerm_resources.load_balancer.resources.*.id
+   } : null
+}
+
+##################################################################
+# Diagnostic Settings for all Log Analytics
+##################################################################
+
+data "azurerm_resources" "log_analytics" {
+  type          = "Microsoft.OperationalInsights/workspaces"
+  required_tags = var.tags
+}
+
+module "diagnostic_setting_log_analytics" {
+  count                      = var.enable_diagnostic_settings ? length(data.azurerm_resources.log_analytics.resources) : 0
+  source                     = "./modules/diagnostic_setting"
+  log_analytics_workspace_id = azurerm_log_analytics_workspace.workspace.0.id
+  target_resource_id         = data.azurerm_resources.log_analytics.resources[count.index].id
+}
+
+output "monitor_diagnostic_categories_log_analytics" {
+  value = var.enable_diagnostic_settings && var.enable_diagnostic_settings_output ? {
+    "categories" = module.diagnostic_setting_log_analytics.*.monitor_diagnostic_categories,
+    "services" = data.azurerm_resources.log_analytics.resources.*.id
+   } : null
+}
+
 ##################################################################
 # Diagnostic Settings for all ACR
 ##################################################################
@@ -137,7 +222,10 @@ module "diagnostic_setting_acr" {
 }
 
 output "monitor_diagnostic_categories_acr" {
-  value = var.enable_diagnostic_settings && var.enable_diagnostic_settings_output ? module.diagnostic_setting_acr.*.monitor_diagnostic_categories : null
+  value = var.enable_diagnostic_settings && var.enable_diagnostic_settings_output ? {
+    "categories" = module.diagnostic_setting_acr.*.monitor_diagnostic_categories,
+    "services" = data.azurerm_resources.acr.resources.*.id
+   } : null
 }
 
 ##################################################################
@@ -157,7 +245,10 @@ module "diagnostic_setting_storage_account" {
 }
 
 output "monitor_diagnostic_categories_storage_account" {
-  value = var.enable_diagnostic_settings && var.enable_diagnostic_settings_output ? module.diagnostic_setting_storage_account.*.monitor_diagnostic_categories : null
+  value = var.enable_diagnostic_settings && var.enable_diagnostic_settings_output ? [
+    module.diagnostic_setting_storage_account.*.monitor_diagnostic_categories,
+    data.azurerm_resources.storage_account.resources.*.id
+   ] : null
 }
 
 ##################################################################
@@ -181,7 +272,10 @@ module "diagnostic_setting_firewall" {
 }
 
 output "monitor_diagnostic_categories_firewall" {
-  value = var.enable_diagnostic_settings && var.enable_diagnostic_settings_output ? module.diagnostic_setting_firewall.*.monitor_diagnostic_categories : null
+  value = var.enable_diagnostic_settings && var.enable_diagnostic_settings_output ? [
+    module.diagnostic_setting_firewall.*.monitor_diagnostic_categories,
+        data.azurerm_resources.firewall.resources.*.id
+   ] : null
 }
 
 ##################################################################
@@ -204,6 +298,10 @@ output "monitor_diagnostic_categories_keyvault" {
   value = var.enable_diagnostic_settings && var.enable_diagnostic_settings_output ? module.diagnostic_setting_keyvault.*.monitor_diagnostic_categories : null
 }
 
+output "diagnostic_settings_keyvault" {
+  value = var.enable_diagnostic_settings && var.enable_diagnostic_settings_output ? data.azurerm_resources.keyvault.resources.*.id : null
+}
+
 ##################################################################
 # Diagnostic Settings for all VMs
 ##################################################################
@@ -222,6 +320,10 @@ module "diagnostic_setting_vm" {
 
 output "monitor_diagnostic_categories_vm" {
   value = var.enable_diagnostic_settings && var.enable_diagnostic_settings_output ? module.diagnostic_setting_vm.*.monitor_diagnostic_categories : null
+}
+
+output "diagnostic_settings_vm" {
+  value = var.enable_diagnostic_settings && var.enable_diagnostic_settings_output ? data.azurerm_resources.vm.resources.*.id : null
 }
 
 ##################################################################
@@ -244,6 +346,10 @@ output "monitor_diagnostic_categories_nic" {
   value = var.enable_diagnostic_settings && var.enable_diagnostic_settings_output ? module.diagnostic_setting_nic.*.monitor_diagnostic_categories : null
 }
 
+output "diagnostic_settings_nic" {
+  value = var.enable_diagnostic_settings && var.enable_diagnostic_settings_output ? data.azurerm_resources.nic.resources.*.id : null
+}
+
 ##################################################################
 # Diagnostic Settings for all Bastion hosts
 ##################################################################
@@ -264,6 +370,10 @@ output "monitor_diagnostic_categories_bastion" {
   value = var.enable_diagnostic_settings && var.enable_diagnostic_settings_output ? module.diagnostic_setting_bastion.*.monitor_diagnostic_categories : null
 }
 
+output "diagnostic_settings_bastion" {
+  value = var.enable_diagnostic_settings && var.enable_diagnostic_settings_output ? data.azurerm_resources.bastion.resources.*.id : null
+}
+
 ##################################################################
 # Diagnostic Settings for all Application Gateway
 ##################################################################
@@ -282,6 +392,10 @@ module "diagnostic_setting_application_gateway" {
 
 output "monitor_diagnostic_categories_application_gateway" {
   value = var.enable_diagnostic_settings && var.enable_diagnostic_settings_output ? module.diagnostic_setting_application_gateway.*.monitor_diagnostic_categories : null
+}
+
+output "diagnostic_settings_application_gateway" {
+  value = var.enable_diagnostic_settings && var.enable_diagnostic_settings_output ? data.azurerm_resources.application_gateway.resources.*.id : null
 }
 
 # # Get resources by type, create spoke vNet peerings
