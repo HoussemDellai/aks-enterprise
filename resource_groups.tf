@@ -24,14 +24,15 @@ resource "azurerm_resource_group" "rg_spoke_aks" {
   tags     = var.tags
 }
 
-resource "azurerm_resource_group" "rg_log_flow" {
+resource "azurerm_resource_group" "rg_network_watcher" {
   count    = var.enable_nsg_flow_logs ? 1 : 0
-  name     = "rg_log_flow"
+  name     = "NetworkWatcherRG"
   location = var.resources_location
   tags     = var.tags
 }
 
 resource "azurerm_resource_group" "rg_spoke_shared" {
   name     = "rg-spoke-shared"
-  location = "westeurope"
+  location = var.resources_location
+  tags     = var.tags
 }

@@ -262,6 +262,27 @@ module "diagnostic_setting_storage_account_blob" {
   target_resource_id         = format("%s/%sServices/default/", data.azurerm_resources.storage_account.resources[count.index].id, "blob")
 }
 
+module "diagnostic_setting_storage_account_file" {
+  count                      = var.enable_diagnostic_settings ? length(data.azurerm_resources.storage_account.resources) : 0
+  source                     = "./modules/diagnostic_setting"
+  log_analytics_workspace_id = azurerm_log_analytics_workspace.workspace.0.id
+  target_resource_id         = format("%s/%sServices/default/", data.azurerm_resources.storage_account.resources[count.index].id, "file")
+}
+
+module "diagnostic_setting_storage_account_table" {
+  count                      = var.enable_diagnostic_settings ? length(data.azurerm_resources.storage_account.resources) : 0
+  source                     = "./modules/diagnostic_setting"
+  log_analytics_workspace_id = azurerm_log_analytics_workspace.workspace.0.id
+  target_resource_id         = format("%s/%sServices/default/", data.azurerm_resources.storage_account.resources[count.index].id, "table")
+}
+
+module "diagnostic_setting_storage_account_queue" {
+  count                      = var.enable_diagnostic_settings ? length(data.azurerm_resources.storage_account.resources) : 0
+  source                     = "./modules/diagnostic_setting"
+  log_analytics_workspace_id = azurerm_log_analytics_workspace.workspace.0.id
+  target_resource_id         = format("%s/%sServices/default/", data.azurerm_resources.storage_account.resources[count.index].id, "queue")
+}
+
 ##################################################################
 # Diagnostic Settings for all Firewall
 ##################################################################

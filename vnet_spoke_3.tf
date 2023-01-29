@@ -47,7 +47,7 @@ resource "azurerm_service_plan" "service_plan" {
   location            = azurerm_resource_group.rg_spoke3.0.location
   resource_group_name = azurerm_resource_group.rg_spoke3.0.name
   os_type             = "Linux"
-  sku_name            = "P1v2"
+  sku_name            = "P1v3"
   tags                = var.tags
 }
 
@@ -147,25 +147,6 @@ resource "azurerm_network_security_group" "nsg_subnet_vnet_integration" {
   location            = var.resources_location
   resource_group_name = azurerm_resource_group.rg_spoke3.0.name
   tags                = var.tags
-
-  # security_rule {
-  #   name                                       = "rule_subnet_vnet_integration"
-  #   priority                                   = 100
-  #   direction                                  = "Inbound"
-  #   access                                     = "Allow"
-  #   protocol                                   = "Tcp"
-  #   source_port_range                          = "*"
-  #   destination_port_range                     = "*"
-  #   source_address_prefix                      = "*"
-  #   destination_address_prefix                 = "*"
-  #   description                                = ""
-  #   destination_address_prefixes               = []
-  #   destination_application_security_group_ids = []
-  #   destination_port_ranges                    = []
-  #   source_address_prefixes                    = []
-  #   source_application_security_group_ids      = []
-  #   source_port_ranges                         = []
-  # }
 }
 
 resource "azurerm_subnet_network_security_group_association" "association_nsg_subnet_vnet_integration" {
