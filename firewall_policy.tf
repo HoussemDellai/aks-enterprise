@@ -117,6 +117,19 @@ resource "azurerm_firewall_policy_rule_collection_group" "policy_group_aks" {
     #   protocols             = ["TCP"]
     # }
   }
+
+  network_rule_collection {
+    name     = "allow_pods_to_subnet_mgt"
+    priority = 202
+    action   = "Allow"
+    rule {
+      name                  = "http"
+      protocols             = ["TCP"]
+      source_addresses      = azurerm_subnet.subnet_pods.address_prefixes # ["10.3.1.0/24"]
+      destination_addresses = azurerm_subnet.subnet_mgt.0.address_prefixes
+      destination_ports     = ["80"]
+    }
+  }
 }
 
 resource "azurerm_firewall_policy_rule_collection_group" "policy_group_subnet_mgt" {
@@ -211,6 +224,58 @@ resource "azurerm_firewall_policy_rule_collection_group" "policy_group_deny" {
       }
       source_addresses  = ["*"] # local.cidr_subnet_aks_nodes_pods # azurerm_subnet.subnet_mgt.0.address_prefixes
       destination_fqdns = ["*.yahoo.com"]
+    }
+  }
+}
+
+resource "azurerm_firewall_policy_rule_collection_group" "policy_group_spoke_3" {
+  count              = var.enable_firewall ? 1 : 0
+  name               = "policy_group_spoke_3"
+  firewall_policy_id = azurerm_firewall_policy.firewall_policy.0.id
+  priority           = 400
+
+  application_rule_collection {
+    name     = "app_rules_spoke_3"
+    priority = 305
+    action   = "Allow"
+    rule {
+      name = "allow_internet"
+      protocols {
+        type = "Http"
+        port = 80
+      }
+      protocols {
+        type = "Https"
+        port = 443
+      }
+      source_addresses  = azurerm_subnet.subnet_mgt.0.address_prefixes
+      destination_fqdns = ["*"]
+    }
+  }
+
+  network_rule_collection {
+    name     = "allow_spoke_3_to_subnet_mgt"
+    priority = 201
+    action   = "Allow"
+    rule {
+      name                  = "http"
+      protocols             = ["TCP"]
+      source_addresses      = azurerm_subnet.snet_vnet_integration.0.address_prefixes # ["10.3.1.0/24"]
+      destination_addresses = azurerm_subnet.subnet_mgt.0.address_prefixes
+      destination_ports     = ["80"]
+    }
+  }
+
+  network_rule_collection {
+    name     = "allow_spoke_3_to_subnet_pods"
+    priority = 202
+    action   = "Allow"
+    rule {
+      name                  = "http"
+      protocols             = ["TCP"]
+      source_addresses      = azurerm_subnet.snet_vnet_integration.0.address_prefixes # ["10.3.1.0/24"]
+      destination_addresses = azurerm_subnet.subnet_pods.address_prefixes
+      destination_ports     = ["80"]
     }
   }
 }

@@ -160,3 +160,4 @@ resource "azurerm_subnet_route_table_association" "association_route_table_subne
   subnet_id      = azurerm_subnet.snet_vnet_integration.0.id
   route_table_id = azurerm_route_table.route_table_to_firewall.id
 }
+

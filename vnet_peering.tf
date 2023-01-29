@@ -49,7 +49,6 @@ resource "azurerm_virtual_network_peering" "vnet_peering_spoke_mgt_to_hub" {
   allow_gateway_transit        = false # `allow_gateway_transit` must be set to false for vnet Global Peering
 }
 
-
 resource "azurerm_virtual_network_peering" "vnet_peering_hub_to_spoke3" {
   count                        = var.enable_vnet_peering ? 1 : 0
   provider                     = azurerm.subscription_hub
