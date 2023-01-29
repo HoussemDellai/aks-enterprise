@@ -17,12 +17,12 @@ data "azurerm_network_watcher" "network_watcher_regional" {
   resource_group_name = "NetworkWatcherRG"
 }
 
-# resource "azurerm_network_watcher" "network_watcher_regional" {
-#   count               = var.enable_nsg_flow_logs ? 1 : 0
-#   name                = "NetworkWatcher_${var.resources_location}"
-#   location            = var.resources_location
-#   resource_group_name = azurerm_resource_group.rg_log_flow.0.name
-# }
+resource "azurerm_network_watcher" "network_watcher_regional" {
+  count               = var.enable_nsg_flow_logs ? 1 : 0
+  name                = "NetworkWatcher_${var.resources_location}"
+  location            = var.resources_location
+  resource_group_name = azurerm_resource_group.rg_log_flow.0.name
+}
 
 data "azurerm_resources" "nsg_flowlogs" {
   type          = "Microsoft.Network/networkSecurityGroups"

@@ -155,8 +155,8 @@ module "diagnostic_setting_function" {
 output "monitor_diagnostic_categories_function" {
   value = var.enable_diagnostic_settings && var.enable_diagnostic_settings_output ? {
     "categories" = module.diagnostic_setting_function.*.monitor_diagnostic_categories,
-    "services" = data.azurerm_resources.function.resources.*.id
-    } : null
+    "services"   = data.azurerm_resources.function.resources.*.id
+  } : null
 }
 
 ##################################################################
@@ -178,8 +178,8 @@ module "diagnostic_setting_load_balancer" {
 output "monitor_diagnostic_categories_load_balancer" {
   value = var.enable_diagnostic_settings && var.enable_diagnostic_settings_output ? {
     "categories" = module.diagnostic_setting_load_balancer.*.monitor_diagnostic_categories,
-    "services" = data.azurerm_resources.load_balancer.resources.*.id
-   } : null
+    "services"   = data.azurerm_resources.load_balancer.resources.*.id
+  } : null
 }
 
 ##################################################################
@@ -201,8 +201,8 @@ module "diagnostic_setting_log_analytics" {
 output "monitor_diagnostic_categories_log_analytics" {
   value = var.enable_diagnostic_settings && var.enable_diagnostic_settings_output ? {
     "categories" = module.diagnostic_setting_log_analytics.*.monitor_diagnostic_categories,
-    "services" = data.azurerm_resources.log_analytics.resources.*.id
-   } : null
+    "services"   = data.azurerm_resources.log_analytics.resources.*.id
+  } : null
 }
 
 ##################################################################
@@ -224,8 +224,8 @@ module "diagnostic_setting_acr" {
 output "monitor_diagnostic_categories_acr" {
   value = var.enable_diagnostic_settings && var.enable_diagnostic_settings_output ? {
     "categories" = module.diagnostic_setting_acr.*.monitor_diagnostic_categories,
-    "services" = data.azurerm_resources.acr.resources.*.id
-   } : null
+    "services"   = data.azurerm_resources.acr.resources.*.id
+  } : null
 }
 
 ##################################################################
@@ -248,12 +248,19 @@ output "monitor_diagnostic_categories_storage_account" {
   value = var.enable_diagnostic_settings && var.enable_diagnostic_settings_output ? [
     module.diagnostic_setting_storage_account.*.monitor_diagnostic_categories,
     data.azurerm_resources.storage_account.resources.*.id
-   ] : null
+  ] : null
 }
 
 ##################################################################
 # Diagnostic Settings for all Storage Accounts Blobs, Files, Queues, Tables
 ##################################################################
+
+module "diagnostic_setting_storage_account_blob" {
+  count                      = var.enable_diagnostic_settings ? length(data.azurerm_resources.storage_account.resources) : 0
+  source                     = "./modules/diagnostic_setting"
+  log_analytics_workspace_id = azurerm_log_analytics_workspace.workspace.0.id
+  target_resource_id         = format("%s/%sServices/default/", data.azurerm_resources.storage_account.resources[count.index].id, "blob")
+}
 
 ##################################################################
 # Diagnostic Settings for all Firewall
@@ -274,8 +281,8 @@ module "diagnostic_setting_firewall" {
 output "monitor_diagnostic_categories_firewall" {
   value = var.enable_diagnostic_settings && var.enable_diagnostic_settings_output ? [
     module.diagnostic_setting_firewall.*.monitor_diagnostic_categories,
-        data.azurerm_resources.firewall.resources.*.id
-   ] : null
+    data.azurerm_resources.firewall.resources.*.id
+  ] : null
 }
 
 ##################################################################

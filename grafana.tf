@@ -1,6 +1,3 @@
-##############################
-## Azure Managed Grafana:-
-##############################
 resource "azurerm_dashboard_grafana" "grafana_aks" {
   name                              = "grafana-aks-011"
   resource_group_name               = azurerm_resource_group.rg_spoke_app.name
