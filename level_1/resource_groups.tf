@@ -36,3 +36,10 @@ resource "azurerm_resource_group" "rg_spoke_shared" {
   location = var.resources_location
   tags     = var.tags
 }
+
+resource "azurerm_resource_group" "rg_spoke3" {
+  count    = var.enable_spoke_3 ? 1 : 0
+  name     = "rg-spoke3"
+  location = var.resources_location
+  tags     = var.tags
+}

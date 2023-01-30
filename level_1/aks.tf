@@ -1,3 +1,46 @@
+resource "azurerm_subnet" "subnet_nodes" {
+  name                 = "subnet-nodes"
+  virtual_network_name = azurerm_virtual_network.vnet_spoke_app.name
+  resource_group_name  = azurerm_virtual_network.vnet_spoke_app.resource_group_name
+  address_prefixes     = var.cidr_subnet_nodes
+}
+
+resource "azurerm_subnet" "subnet_pods" {
+  name                 = "subnet-pods"
+  virtual_network_name = azurerm_virtual_network.vnet_spoke_app.name
+  resource_group_name  = azurerm_virtual_network.vnet_spoke_app.resource_group_name
+  address_prefixes     = var.cidr_subnet_pods
+
+  # src: https://github.com/hashicorp/terraform-provider-azurerm/blob/4ea5f92ccc27a75807d704f6d66d53a6c31459cb/internal/services/containers/kubernetes_cluster_node_pool_resource_test.go#L1433
+  delegation {
+    name = "aks-delegation"
+    service_delegation {
+      actions = [
+        "Microsoft.Network/virtualNetworks/subnets/join/action",
+      ]
+      name = "Microsoft.ContainerService/managedClusters"
+    }
+  }
+}
+
+resource "azurerm_subnet" "subnet_apiserver" {
+  count                = var.enable_apiserver_vnet_integration ? 1 : 0
+  name                 = "subnet-apiserver"
+  virtual_network_name = azurerm_virtual_network.vnet_spoke_app.name
+  resource_group_name  = azurerm_virtual_network.vnet_spoke_app.resource_group_name
+  address_prefixes     = var.cidr_subnet_apiserver_vnetint
+
+  delegation {
+    name = "aks-delegation"
+    service_delegation {
+      actions = [
+        "Microsoft.Network/virtualNetworks/subnets/join/action",
+      ]
+      name = "Microsoft.ContainerService/managedClusters"
+    }
+  }
+}
+
 resource "azurerm_kubernetes_cluster" "aks" {
   count                               = var.enable_aks_cluster ? 1 : 0
   name                                = "aks-cluster"

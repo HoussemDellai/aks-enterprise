@@ -84,3 +84,9 @@
 # output "aks_identity" {
 #   value = var.enable_aks_cluster ? azurerm_kubernetes_cluster.aks.0.identity.0.principal_id : null
 # }
+
+# output "subnet_id" {
+#   value = [
+#     azurerm_subnet.
+#   ]
+# }
