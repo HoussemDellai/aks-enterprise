@@ -31,8 +31,8 @@
 
 # module "diagnostic_setting" {
 #   count                      = var.enable_diagnostic_settings ? length(local.resource_ids) : 0
-#   source                     = "./modules/diagnostic_setting"
-#   log_analytics_workspace_id = azurerm_log_analytics_workspace.workspace.0.id
+#   source                     = "../modules/diagnostic_setting"
+#   log_analytics_workspace_id = data.azurerm_log_analytics_workspace.workspace.id
 #   target_resource_id         = local.resource_ids[count.index]
 # }
 
@@ -51,8 +51,8 @@ data "azurerm_resources" "nsg" {
 
 module "diagnostic_setting_nsg" {
   count                      = var.enable_diagnostic_settings ? length(data.azurerm_resources.nsg.resources) : 0
-  source                     = "./modules/diagnostic_setting"
-  log_analytics_workspace_id = azurerm_log_analytics_workspace.workspace.0.id
+  source                     = "../modules/diagnostic_setting"
+  log_analytics_workspace_id = data.azurerm_log_analytics_workspace.workspace.id
   target_resource_id         = data.azurerm_resources.nsg.resources[count.index].id
 }
 
@@ -75,8 +75,8 @@ data "azurerm_resources" "vnet" {
 
 module "diagnostic_setting_vnet" {
   count                      = var.enable_diagnostic_settings ? length(data.azurerm_resources.vnet.resources) : 0
-  source                     = "./modules/diagnostic_setting"
-  log_analytics_workspace_id = azurerm_log_analytics_workspace.workspace.0.id
+  source                     = "../modules/diagnostic_setting"
+  log_analytics_workspace_id = data.azurerm_log_analytics_workspace.workspace.id
   target_resource_id         = data.azurerm_resources.vnet.resources[count.index].id
 }
 
@@ -99,8 +99,8 @@ data "azurerm_resources" "public_ip" {
 
 module "diagnostic_setting_public_ip" {
   count                      = var.enable_diagnostic_settings ? length(data.azurerm_resources.public_ip.resources) : 0
-  source                     = "./modules/diagnostic_setting"
-  log_analytics_workspace_id = azurerm_log_analytics_workspace.workspace.0.id
+  source                     = "../modules/diagnostic_setting"
+  log_analytics_workspace_id = data.azurerm_log_analytics_workspace.workspace.id
   target_resource_id         = data.azurerm_resources.public_ip.resources[count.index].id
 }
 
@@ -123,8 +123,8 @@ data "azurerm_resources" "aks" {
 
 module "diagnostic_setting_aks" {
   count                      = var.enable_diagnostic_settings ? length(data.azurerm_resources.aks.resources) : 0
-  source                     = "./modules/diagnostic_setting"
-  log_analytics_workspace_id = azurerm_log_analytics_workspace.workspace.0.id
+  source                     = "../modules/diagnostic_setting"
+  log_analytics_workspace_id = data.azurerm_log_analytics_workspace.workspace.id
   target_resource_id         = data.azurerm_resources.aks.resources[count.index].id
 }
 
@@ -147,8 +147,8 @@ data "azurerm_resources" "function" {
 
 module "diagnostic_setting_function" {
   count                      = var.enable_diagnostic_settings ? length(data.azurerm_resources.function.resources) : 0
-  source                     = "./modules/diagnostic_setting"
-  log_analytics_workspace_id = azurerm_log_analytics_workspace.workspace.0.id
+  source                     = "../modules/diagnostic_setting"
+  log_analytics_workspace_id = data.azurerm_log_analytics_workspace.workspace.id
   target_resource_id         = data.azurerm_resources.function.resources[count.index].id
 }
 
@@ -170,8 +170,8 @@ data "azurerm_resources" "load_balancer" {
 
 module "diagnostic_setting_load_balancer" {
   count                      = var.enable_diagnostic_settings ? length(data.azurerm_resources.load_balancer.resources) : 0
-  source                     = "./modules/diagnostic_setting"
-  log_analytics_workspace_id = azurerm_log_analytics_workspace.workspace.0.id
+  source                     = "../modules/diagnostic_setting"
+  log_analytics_workspace_id = data.azurerm_log_analytics_workspace.workspace.id
   target_resource_id         = data.azurerm_resources.load_balancer.resources[count.index].id
 }
 
@@ -193,8 +193,8 @@ data "azurerm_resources" "log_analytics" {
 
 module "diagnostic_setting_log_analytics" {
   count                      = var.enable_diagnostic_settings ? length(data.azurerm_resources.log_analytics.resources) : 0
-  source                     = "./modules/diagnostic_setting"
-  log_analytics_workspace_id = azurerm_log_analytics_workspace.workspace.0.id
+  source                     = "../modules/diagnostic_setting"
+  log_analytics_workspace_id = data.azurerm_log_analytics_workspace.workspace.id
   target_resource_id         = data.azurerm_resources.log_analytics.resources[count.index].id
 }
 
@@ -216,8 +216,8 @@ data "azurerm_resources" "acr" {
 
 module "diagnostic_setting_acr" {
   count                      = var.enable_diagnostic_settings ? length(data.azurerm_resources.acr.resources) : 0
-  source                     = "./modules/diagnostic_setting"
-  log_analytics_workspace_id = azurerm_log_analytics_workspace.workspace.0.id
+  source                     = "../modules/diagnostic_setting"
+  log_analytics_workspace_id = data.azurerm_log_analytics_workspace.workspace.id
   target_resource_id         = data.azurerm_resources.acr.resources[count.index].id
 }
 
@@ -239,8 +239,8 @@ data "azurerm_resources" "storage_account" {
 
 module "diagnostic_setting_storage_account" {
   count                      = var.enable_diagnostic_settings ? length(data.azurerm_resources.storage_account.resources) : 0
-  source                     = "./modules/diagnostic_setting"
-  log_analytics_workspace_id = azurerm_log_analytics_workspace.workspace.0.id
+  source                     = "../modules/diagnostic_setting"
+  log_analytics_workspace_id = data.azurerm_log_analytics_workspace.workspace.id
   target_resource_id         = data.azurerm_resources.storage_account.resources[count.index].id
 }
 
@@ -257,29 +257,29 @@ output "monitor_diagnostic_categories_storage_account" {
 
 module "diagnostic_setting_storage_account_blob" {
   count                      = var.enable_diagnostic_settings ? length(data.azurerm_resources.storage_account.resources) : 0
-  source                     = "./modules/diagnostic_setting"
-  log_analytics_workspace_id = azurerm_log_analytics_workspace.workspace.0.id
+  source                     = "../modules/diagnostic_setting"
+  log_analytics_workspace_id = data.azurerm_log_analytics_workspace.workspace.id
   target_resource_id         = format("%s/%sServices/default/", data.azurerm_resources.storage_account.resources[count.index].id, "blob")
 }
 
 module "diagnostic_setting_storage_account_file" {
   count                      = var.enable_diagnostic_settings ? length(data.azurerm_resources.storage_account.resources) : 0
-  source                     = "./modules/diagnostic_setting"
-  log_analytics_workspace_id = azurerm_log_analytics_workspace.workspace.0.id
+  source                     = "../modules/diagnostic_setting"
+  log_analytics_workspace_id = data.azurerm_log_analytics_workspace.workspace.id
   target_resource_id         = format("%s/%sServices/default/", data.azurerm_resources.storage_account.resources[count.index].id, "file")
 }
 
 module "diagnostic_setting_storage_account_table" {
   count                      = var.enable_diagnostic_settings ? length(data.azurerm_resources.storage_account.resources) : 0
-  source                     = "./modules/diagnostic_setting"
-  log_analytics_workspace_id = azurerm_log_analytics_workspace.workspace.0.id
+  source                     = "../modules/diagnostic_setting"
+  log_analytics_workspace_id = data.azurerm_log_analytics_workspace.workspace.id
   target_resource_id         = format("%s/%sServices/default/", data.azurerm_resources.storage_account.resources[count.index].id, "table")
 }
 
 module "diagnostic_setting_storage_account_queue" {
   count                      = var.enable_diagnostic_settings ? length(data.azurerm_resources.storage_account.resources) : 0
-  source                     = "./modules/diagnostic_setting"
-  log_analytics_workspace_id = azurerm_log_analytics_workspace.workspace.0.id
+  source                     = "../modules/diagnostic_setting"
+  log_analytics_workspace_id = data.azurerm_log_analytics_workspace.workspace.id
   target_resource_id         = format("%s/%sServices/default/", data.azurerm_resources.storage_account.resources[count.index].id, "queue")
 }
 
@@ -294,8 +294,8 @@ data "azurerm_resources" "firewall" {
 
 module "diagnostic_setting_firewall" {
   count                      = var.enable_diagnostic_settings ? length(data.azurerm_resources.firewall.resources) : 0
-  source                     = "./modules/diagnostic_setting"
-  log_analytics_workspace_id = azurerm_log_analytics_workspace.workspace.0.id
+  source                     = "../modules/diagnostic_setting"
+  log_analytics_workspace_id = data.azurerm_log_analytics_workspace.workspace.id
   target_resource_id         = data.azurerm_resources.firewall.resources[count.index].id
 }
 
@@ -317,8 +317,8 @@ data "azurerm_resources" "keyvault" {
 
 module "diagnostic_setting_keyvault" {
   count                      = var.enable_diagnostic_settings ? length(data.azurerm_resources.keyvault.resources) : 0
-  source                     = "./modules/diagnostic_setting"
-  log_analytics_workspace_id = azurerm_log_analytics_workspace.workspace.0.id
+  source                     = "../modules/diagnostic_setting"
+  log_analytics_workspace_id = data.azurerm_log_analytics_workspace.workspace.id
   target_resource_id         = data.azurerm_resources.keyvault.resources[count.index].id
 }
 
@@ -341,8 +341,8 @@ data "azurerm_resources" "vm" {
 
 module "diagnostic_setting_vm" {
   count                      = var.enable_diagnostic_settings ? length(data.azurerm_resources.vm.resources) : 0
-  source                     = "./modules/diagnostic_setting"
-  log_analytics_workspace_id = azurerm_log_analytics_workspace.workspace.0.id
+  source                     = "../modules/diagnostic_setting"
+  log_analytics_workspace_id = data.azurerm_log_analytics_workspace.workspace.id
   target_resource_id         = data.azurerm_resources.vm.resources[count.index].id
 }
 
@@ -365,8 +365,8 @@ data "azurerm_resources" "nic" {
 
 module "diagnostic_setting_nic" {
   count                      = var.enable_diagnostic_settings ? length(data.azurerm_resources.nic.resources) : 0
-  source                     = "./modules/diagnostic_setting"
-  log_analytics_workspace_id = azurerm_log_analytics_workspace.workspace.0.id
+  source                     = "../modules/diagnostic_setting"
+  log_analytics_workspace_id = data.azurerm_log_analytics_workspace.workspace.id
   target_resource_id         = data.azurerm_resources.nic.resources[count.index].id
 }
 
@@ -389,8 +389,8 @@ data "azurerm_resources" "bastion" {
 
 module "diagnostic_setting_bastion" {
   count                      = var.enable_diagnostic_settings ? length(data.azurerm_resources.bastion.resources) : 0
-  source                     = "./modules/diagnostic_setting"
-  log_analytics_workspace_id = azurerm_log_analytics_workspace.workspace.0.id
+  source                     = "../modules/diagnostic_setting"
+  log_analytics_workspace_id = data.azurerm_log_analytics_workspace.workspace.id
   target_resource_id         = data.azurerm_resources.bastion.resources[count.index].id
 }
 
@@ -413,8 +413,8 @@ data "azurerm_resources" "application_gateway" {
 
 module "diagnostic_setting_application_gateway" {
   count                      = var.enable_diagnostic_settings ? length(data.azurerm_resources.application_gateway.resources) : 0
-  source                     = "./modules/diagnostic_setting"
-  log_analytics_workspace_id = azurerm_log_analytics_workspace.workspace.0.id
+  source                     = "../modules/diagnostic_setting"
+  log_analytics_workspace_id = data.azurerm_log_analytics_workspace.workspace.id
   target_resource_id         = data.azurerm_resources.application_gateway.resources[count.index].id
 }
 
