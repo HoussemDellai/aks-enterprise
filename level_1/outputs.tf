@@ -90,3 +90,7 @@
 #     azurerm_subnet.
 #   ]
 # }
+
+output "route_table_to_firewall_id" {
+  value = var.enable_firewall ? azurerm_route_table.route_table_to_firewall.0.id : null
+}

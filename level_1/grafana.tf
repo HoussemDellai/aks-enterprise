@@ -1,4 +1,5 @@
 resource "azurerm_dashboard_grafana" "grafana_aks" {
+  count                             = var.enable_grafana_prometheus ? 1 : 0
   name                              = "grafana-aks-011"
   resource_group_name               = azurerm_resource_group.rg_spoke_app.name
   location                          = azurerm_resource_group.rg_spoke_app.location
@@ -16,27 +17,31 @@ resource "azurerm_dashboard_grafana" "grafana_aks" {
 }
 
 resource "azurerm_role_assignment" "role_grafana_admin" {
-  scope                = azurerm_dashboard_grafana.grafana_aks.id
+  count                = var.enable_grafana_prometheus ? 1 : 0
+  scope                = azurerm_dashboard_grafana.grafana_aks.0.id
   role_definition_name = "Grafana Admin"
   principal_id         = data.azurerm_client_config.current.object_id
 }
 
 resource "azurerm_role_assignment" "role_monitoring_data_reader" {
-  scope                = azapi_resource.monitor_workspace_aks.id
+  count                = var.enable_grafana_prometheus ? 1 : 0
+  scope                = azapi_resource.monitor_workspace_aks.0.id
   role_definition_name = "Monitoring Data Reader"
-  principal_id         = azurerm_dashboard_grafana.grafana_aks.identity.0.principal_id
+  principal_id         = azurerm_dashboard_grafana.grafana_aks.0.identity.0.principal_id
 }
 
 # https://learn.microsoft.com/en-us/azure/azure-monitor/visualize/grafana-plugin
 # to monitor all Azure resources
 resource "azurerm_role_assignment" "role_monitoring_reader" {
+  count                = var.enable_grafana_prometheus ? 1 : 0
   scope                = data.azurerm_subscription.subscription_spoke.id
   role_definition_name = "Monitoring Reader"
-  principal_id         = azurerm_dashboard_grafana.grafana_aks.identity.0.principal_id
+  principal_id         = azurerm_dashboard_grafana.grafana_aks.0.identity.0.principal_id
 }
 
 # https://learn.microsoft.com/en-us/azure/azure-monitor/essentials/azure-monitor-workspace-overview?tabs=resource-manager#create-an-azure-monitor-workspace
 resource "azapi_resource" "monitor_workspace_aks" {
+  count     = var.enable_grafana_prometheus ? 1 : 0
   type      = "microsoft.monitor/accounts@2021-06-03-preview"
   name      = "monitor-workspace-aks"
   parent_id = azurerm_resource_group.rg_spoke_app.id
@@ -61,12 +66,16 @@ resource "azapi_resource" "monitor_workspace_aks" {
 # }
 
 resource "null_resource" "aks_enable_azuremonitormetrics" {
-  #   count = var.enable_aks_cluster ? 1 : 0
+  count = var.enable_grafana_prometheus ? 1 : 0
   provisioner "local-exec" {
     interpreter = ["PowerShell", "-Command"]
     command     = <<-EOT
 
-    az aks update --enable-azuremonitormetrics -g ${azurerm_kubernetes_cluster.aks.0.resource_group_name} -n ${azurerm_kubernetes_cluster.aks.0.name} --azure-monitor-workspace-resource-id ${azapi_resource.monitor_workspace_aks.id} --grafana-resource-id ${azurerm_dashboard_grafana.grafana_aks.id}
+    az aks update --enable-azuremonitormetrics `
+                  -g ${azurerm_kubernetes_cluster.aks.0.resource_group_name} `
+                  -n ${azurerm_kubernetes_cluster.aks.0.name} `
+                  --azure-monitor-workspace-resource-id ${azapi_resource.monitor_workspace_aks.0.id} `
+                  --grafana-resource-id ${azurerm_dashboard_grafana.grafana_aks.0.id}
 
     EOT
   }
@@ -109,5 +118,5 @@ resource "null_resource" "aks_enable_azuremonitormetrics" {
 # }
 
 output "grafana_endpoint" {
-  value = azurerm_dashboard_grafana.grafana_aks.endpoint
+  value = var.enable_grafana_prometheus ? azurerm_dashboard_grafana.grafana_aks.0.endpoint : null
 }

@@ -3,8 +3,8 @@ resource "azurerm_subnet" "subnet_firewall" {
   count                                     = var.enable_firewall ? 1 : 0
   provider                                  = azurerm.subscription_hub
   name                                      = "AzureFirewallSubnet"
-  resource_group_name                       = azurerm_virtual_network.vnet_hub.resource_group_name
-  virtual_network_name                      = azurerm_virtual_network.vnet_hub.name
+  resource_group_name                       = azurerm_virtual_network.vnet_hub.0.resource_group_name
+  virtual_network_name                      = azurerm_virtual_network.vnet_hub.0.name
   address_prefixes                          = var.cidr_subnet_firewall
   private_endpoint_network_policies_enabled = false
 }
@@ -14,7 +14,7 @@ resource "azurerm_public_ip" "public_ip_firewall" {
   provider            = azurerm.subscription_hub
   name                = "public-ip-firewall"
   location            = var.resources_location
-  resource_group_name = azurerm_resource_group.rg_hub.name
+  resource_group_name = azurerm_resource_group.rg_hub.0.name
   allocation_method   = "Static"
   sku                 = "Standard"
   zones               = ["1"]
@@ -26,7 +26,7 @@ resource "azurerm_firewall" "firewall" {
   provider            = azurerm.subscription_hub
   name                = "firewall-hub"
   location            = var.resources_location
-  resource_group_name = azurerm_resource_group.rg_hub.name
+  resource_group_name = azurerm_resource_group.rg_hub.0.name
   sku_name            = "AZFW_VNet" # AZFW_Hub
   sku_tier            = "Standard"  # Premium  # "Basic" # 
   # dns_servers         = ["168.63.129.16"]

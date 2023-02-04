@@ -1,8 +1,8 @@
 resource "azurerm_subnet" "subnet_bastion" {
   count                = var.enable_bastion ? 1 : 0
   name                 = "AzureBastionSubnet"
-  virtual_network_name = azurerm_virtual_network.vnet_hub.name
-  resource_group_name  = azurerm_virtual_network.vnet_hub.resource_group_name
+  virtual_network_name = azurerm_virtual_network.vnet_hub.0.name
+  resource_group_name  = azurerm_virtual_network.vnet_hub.0.resource_group_name
   address_prefixes     = var.cidr_subnet_bastion
 }
 
@@ -12,7 +12,7 @@ resource "azurerm_public_ip" "public_ip_bastion" {
   count               = var.enable_bastion ? 1 : 0
   name                = "public-ip-bastion"
   location            = var.resources_location
-  resource_group_name = azurerm_resource_group.rg_hub.name #var.rg_spoke
+  resource_group_name = azurerm_resource_group.rg_hub.0.name #var.rg_spoke
   allocation_method   = "Static"
   sku                 = "Standard"
   tags                = var.tags
@@ -23,7 +23,7 @@ resource "azurerm_bastion_host" "bastion_host" {
   count                  = var.enable_bastion ? 1 : 0
   name                   = "bastion-host"
   location               = var.resources_location
-  resource_group_name    = azurerm_resource_group.rg_hub.name
+  resource_group_name    = azurerm_resource_group.rg_hub.0.name
   sku                    = "Standard"
   scale_units            = 2 # between 2 and 50
   copy_paste_enabled     = true

@@ -1,5 +1,6 @@
 resource "azurerm_resource_group" "rg_hub" {
   provider = azurerm.subscription_hub
+  count    = var.enable_firewall || var.enable_bastion ? 1 : 0
   name     = var.rg_hub
   location = var.resources_location
   tags     = var.tags
@@ -38,7 +39,7 @@ resource "azurerm_resource_group" "rg_spoke_shared" {
 }
 
 resource "azurerm_resource_group" "rg_spoke3" {
-  count    = var.enable_spoke_3 ? 1 : 0
+  count    = var.enable_spoke_appservice ? 1 : 0
   name     = "rg-spoke3"
   location = var.resources_location
   tags     = var.tags

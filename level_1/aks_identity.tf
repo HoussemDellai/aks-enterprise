@@ -8,7 +8,7 @@ resource "azurerm_user_assigned_identity" "identity_aks" {
 
 resource "azurerm_role_assignment" "role_identity_aks_network_contributor" {
   count                            = var.enable_aks_cluster ? 1 : 0
-  scope                            = azurerm_virtual_network.vnet_spoke_app.id
+  scope                            = azurerm_virtual_network.vnet_spoke_aks.id
   role_definition_name             = "Network Contributor"
   principal_id                     = azurerm_user_assigned_identity.identity_aks.0.principal_id
   skip_service_principal_aad_check = true

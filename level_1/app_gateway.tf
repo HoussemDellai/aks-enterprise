@@ -1,8 +1,8 @@
 resource "azurerm_subnet" "subnet_appgw" {
   count                = var.enable_app_gateway ? 1 : 0
   name                 = "subnet-appgw"
-  virtual_network_name = azurerm_virtual_network.vnet_spoke_app.name
-  resource_group_name  = azurerm_virtual_network.vnet_spoke_app.resource_group_name
+  virtual_network_name = azurerm_virtual_network.vnet_spoke_aks.name
+  resource_group_name  = azurerm_virtual_network.vnet_spoke_aks.resource_group_name
   address_prefixes     = var.cidr_subnet_appgateway
 }
 
@@ -96,7 +96,9 @@ resource "azurerm_application_gateway" "appgw" {
     ]
   }
 
-  depends_on = [azurerm_virtual_network.vnet_spoke_app, azurerm_public_ip.appgw_pip]
+  depends_on = [
+    azurerm_virtual_network.vnet_spoke_aks, 
+    azurerm_public_ip.appgw_pip]
 }
 
 # AppGW (generated with addon) Identity needs also Contributor role over AKS/VNET RG

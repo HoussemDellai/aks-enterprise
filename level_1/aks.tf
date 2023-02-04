@@ -1,14 +1,14 @@
 resource "azurerm_subnet" "subnet_nodes" {
   name                 = "subnet-nodes"
-  virtual_network_name = azurerm_virtual_network.vnet_spoke_app.name
-  resource_group_name  = azurerm_virtual_network.vnet_spoke_app.resource_group_name
+  virtual_network_name = azurerm_virtual_network.vnet_spoke_aks.name
+  resource_group_name  = azurerm_virtual_network.vnet_spoke_aks.resource_group_name
   address_prefixes     = var.cidr_subnet_nodes
 }
 
 resource "azurerm_subnet" "subnet_pods" {
   name                 = "subnet-pods"
-  virtual_network_name = azurerm_virtual_network.vnet_spoke_app.name
-  resource_group_name  = azurerm_virtual_network.vnet_spoke_app.resource_group_name
+  virtual_network_name = azurerm_virtual_network.vnet_spoke_aks.name
+  resource_group_name  = azurerm_virtual_network.vnet_spoke_aks.resource_group_name
   address_prefixes     = var.cidr_subnet_pods
 
   # src: https://github.com/hashicorp/terraform-provider-azurerm/blob/4ea5f92ccc27a75807d704f6d66d53a6c31459cb/internal/services/containers/kubernetes_cluster_node_pool_resource_test.go#L1433
@@ -26,8 +26,8 @@ resource "azurerm_subnet" "subnet_pods" {
 resource "azurerm_subnet" "subnet_apiserver" {
   count                = var.enable_apiserver_vnet_integration ? 1 : 0
   name                 = "subnet-apiserver"
-  virtual_network_name = azurerm_virtual_network.vnet_spoke_app.name
-  resource_group_name  = azurerm_virtual_network.vnet_spoke_app.resource_group_name
+  virtual_network_name = azurerm_virtual_network.vnet_spoke_aks.name
+  resource_group_name  = azurerm_virtual_network.vnet_spoke_aks.resource_group_name
   address_prefixes     = var.cidr_subnet_apiserver_vnetint
 
   delegation {
@@ -118,7 +118,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
 
   azure_active_directory_role_based_access_control {
     managed                = true
-    azure_rbac_enabled     = true
+    azure_rbac_enabled     = var.enable_aks_admin_group || var.enable_aks_admin_rbac
     admin_group_object_ids = var.enable_aks_admin_group ? [azuread_group.aks_admins.0.object_id] : null
     tenant_id              = var.enable_aks_admin_group ? data.azurerm_subscription.subscription_spoke.tenant_id : null
   }
@@ -227,20 +227,20 @@ resource "azurerm_kubernetes_cluster" "aks" {
   #   labels_allowed = []
   # }
 
-  # storage_profile { #todo
-  #   file_driver_enabled         = true
-  #   blob_driver_enabled         = true
-  #   disk_driver_enabled         = true
-  #   disk_driver_version         = "v2"
-  #   snapshot_controller_enabled = true
-  # }
+  storage_profile { #todo
+    file_driver_enabled         = true
+    blob_driver_enabled         = true
+    disk_driver_enabled         = true
+    disk_driver_version         = "v2"
+    snapshot_controller_enabled = true
+  }
 
   # web_app_routing {
   #   dns_zone_id = null #TODO
   # }
 
   depends_on = [
-    azurerm_virtual_network.vnet_spoke_app,
+    azurerm_virtual_network.vnet_spoke_aks,
     azurerm_application_gateway.appgw
   ]
 

@@ -10,7 +10,7 @@ resource "azurerm_private_dns_zone_virtual_network_link" "private_dns_zone_stora
   name                  = "private_dns_zone_storage_link_hub"
   resource_group_name   = azurerm_private_dns_zone.private_dns_zone_storage.0.resource_group_name
   private_dns_zone_name = azurerm_private_dns_zone.private_dns_zone_storage.0.name
-  virtual_network_id    = azurerm_virtual_network.vnet_hub.id
+  virtual_network_id    = azurerm_virtual_network.vnet_hub.0.id
 }
 
 resource "azurerm_private_endpoint" "pe_storage" {
@@ -18,7 +18,7 @@ resource "azurerm_private_endpoint" "pe_storage" {
   name                = "private-endpoint-storage"
   resource_group_name = azurerm_resource_group.rg_spoke_app.name
   location            = var.resources_location
-  subnet_id           = azurerm_subnet.subnet_pe.0.id
+  subnet_id           = azurerm_subnet.subnet_spoke_aks_pe.0.id
   tags                = var.tags
 
   private_service_connection {
@@ -69,14 +69,3 @@ resource "azurerm_storage_blob" "blob" {
   type                   = "Block"
   source                 = "aks.tf"
 }
-
-# module "diagnostic_setting_storage" {
-#   count                      = var.enable_monitoring && var.enable_storage_account ? 1 : 0
-#   source                     = "./modules/diagnostic_setting"
-#   log_analytics_workspace_id = azurerm_log_analytics_workspace.workspace.0.id
-#   target_resource_id         = azurerm_storage_account.storage.0.id
-# }
-
-# output "monitor_diagnostic_categories_storage" {
-#   value = var.enable_monitoring && var.enable_monitoring_output ? module.diagnostic_setting_storage.0.monitor_diagnostic_categories : null
-# }

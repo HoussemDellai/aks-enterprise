@@ -1,8 +1,8 @@
-resource "azurerm_subnet" "snet_vnet_integration" {
-  count                = var.enable_spoke_3 ? 1 : 0
+resource "azurerm_subnet" "snet_spoke_appservice_vnetintegration" {
+  count                = var.enable_spoke_appservice ? 1 : 0
   name                 = "snet-vnet-integration"
   resource_group_name  = azurerm_resource_group.rg_spoke3.0.name
-  virtual_network_name = azurerm_virtual_network.vnet_spoke3.0.name
+  virtual_network_name = azurerm_virtual_network.vnet_spoke_appservice.0.name
   address_prefixes     = ["10.3.1.0/24"]
 
   delegation {
@@ -15,17 +15,17 @@ resource "azurerm_subnet" "snet_vnet_integration" {
   }
 }
 
-resource "azurerm_subnet" "snet_pe" {
-  count                                     = var.enable_spoke_3 ? 1 : 0
+resource "azurerm_subnet" "snet_spoke_appservice_pe" {
+  count                                     = var.enable_spoke_appservice ? 1 : 0
   name                                      = "snet-private-endpoint"
   resource_group_name                       = azurerm_resource_group.rg_spoke3.0.name
-  virtual_network_name                      = azurerm_virtual_network.vnet_spoke3.0.name
+  virtual_network_name                      = azurerm_virtual_network.vnet_spoke_appservice.0.name
   address_prefixes                          = ["10.3.2.0/24"]
   private_endpoint_network_policies_enabled = true
 }
 
 resource "azurerm_service_plan" "service_plan" {
-  count               = var.enable_spoke_3 ? 1 : 0
+  count               = var.enable_spoke_appservice ? 1 : 0
   name                = "service-plan"
   location            = azurerm_resource_group.rg_spoke3.0.location
   resource_group_name = azurerm_resource_group.rg_spoke3.0.name
@@ -35,12 +35,12 @@ resource "azurerm_service_plan" "service_plan" {
 }
 
 resource "azurerm_linux_web_app" "webapp_frontent" {
-  count                     = var.enable_spoke_3 ? 1 : 0
+  count                     = var.enable_spoke_appservice ? 1 : 0
   name                      = "webapp-frontent-011"
   location                  = azurerm_resource_group.rg_spoke3.0.location
   resource_group_name       = azurerm_resource_group.rg_spoke3.0.name
   service_plan_id           = azurerm_service_plan.service_plan.0.id
-  virtual_network_subnet_id = azurerm_subnet.snet_vnet_integration.0.id
+  virtual_network_subnet_id = azurerm_subnet.snet_spoke_appservice_vnetintegration.0.id
   tags                      = var.tags
 
   app_settings = {
@@ -65,7 +65,7 @@ resource "azurerm_linux_web_app" "webapp_frontent" {
 # }
 
 resource "azurerm_linux_web_app" "webapp_backend" {
-  count               = var.enable_spoke_3 ? 1 : 0
+  count               = var.enable_spoke_appservice ? 1 : 0
   name                = "webapp-backend-011"
   location            = azurerm_resource_group.rg_spoke3.0.location
   resource_group_name = azurerm_resource_group.rg_spoke3.0.name
@@ -79,26 +79,26 @@ resource "azurerm_linux_web_app" "webapp_backend" {
 }
 
 resource "azurerm_private_dns_zone" "dnsprivatezone" {
-  count               = var.enable_spoke_3 ? 1 : 0
+  count               = var.enable_spoke_appservice ? 1 : 0
   name                = "privatelink.azurewebsites.net"
   resource_group_name = azurerm_resource_group.rg_spoke3.0.name
   tags                = var.tags
 }
 
 resource "azurerm_private_dns_zone_virtual_network_link" "dnszonelink" {
-  count                 = var.enable_spoke_3 ? 1 : 0
+  count                 = var.enable_spoke_appservice ? 1 : 0
   name                  = "dnszonelink"
   resource_group_name   = azurerm_resource_group.rg_spoke3.0.name
   private_dns_zone_name = azurerm_private_dns_zone.dnsprivatezone.0.name
-  virtual_network_id    = azurerm_virtual_network.vnet_spoke3.0.id
+  virtual_network_id    = azurerm_virtual_network.vnet_spoke_appservice.0.id
 }
 
 resource "azurerm_private_endpoint" "pe_backend" {
-  count               = var.enable_spoke_3 ? 1 : 0
+  count               = var.enable_spoke_appservice ? 1 : 0
   name                = "private-endpoint-backend"
   location            = azurerm_resource_group.rg_spoke3.0.location
   resource_group_name = azurerm_resource_group.rg_spoke3.0.name
-  subnet_id           = azurerm_subnet.snet_pe.0.id
+  subnet_id           = azurerm_subnet.snet_spoke_appservice_pe.0.id
   tags                = var.tags
 
   private_dns_zone_group {
@@ -116,31 +116,10 @@ resource "azurerm_private_endpoint" "pe_backend" {
 
 #  Deploy code from a public GitHub repo
 resource "azurerm_app_service_source_control" "sourcecontrol" {
-  count                  = var.enable_spoke_3 ? 1 : 0
+  count                  = var.enable_spoke_appservice ? 1 : 0
   app_id                 = azurerm_linux_web_app.webapp_frontent.0.id
   repo_url               = "https://github.com/Azure-Samples/nodejs-docs-hello-world"
   branch                 = "master"
   use_manual_integration = true
   use_mercurial          = false
 }
-
-resource "azurerm_network_security_group" "nsg_subnet_vnet_integration" {
-  count               = var.enable_spoke_3 ? 1 : 0
-  name                = "nsg_subnet_vnet_integration"
-  location            = var.resources_location
-  resource_group_name = azurerm_resource_group.rg_spoke3.0.name
-  tags                = var.tags
-}
-
-# resource "azurerm_subnet_network_security_group_association" "association_nsg_subnet_vnet_integration" {
-#   count                     = var.enable_spoke_3 ? 1 : 0
-#   subnet_id                 = azurerm_subnet.snet_vnet_integration.0.id
-#   network_security_group_id = azurerm_network_security_group.nsg_subnet_vnet_integration.0.id
-# }
-
-# resource "azurerm_subnet_route_table_association" "association_route_table_subnet_vnet_integration" {
-#   count          = var.enable_spoke_3 ? 1 : 0
-#   subnet_id      = azurerm_subnet.snet_vnet_integration.0.id
-#   route_table_id = azurerm_route_table.route_table_to_firewall.id
-# }
-
