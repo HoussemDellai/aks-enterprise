@@ -227,13 +227,13 @@ resource "azurerm_kubernetes_cluster" "aks" {
   #   labels_allowed = []
   # }
 
-  storage_profile { #todo
-    file_driver_enabled         = true
-    blob_driver_enabled         = true
-    disk_driver_enabled         = true
-    disk_driver_version         = "v2"
-    snapshot_controller_enabled = true
-  }
+  # storage_profile { #todo
+  #   file_driver_enabled         = true
+  #   blob_driver_enabled         = true
+  #   disk_driver_enabled         = true
+  #   disk_driver_version         = "v2"
+  #   snapshot_controller_enabled = true
+  # }
 
   # web_app_routing {
   #   dns_zone_id = null #TODO
@@ -300,14 +300,10 @@ resource "azurerm_kubernetes_cluster" "aks" {
 #   depends_on = []
 # }
 
-data "azurerm_kubernetes_service_versions" "current" {
+data "azurerm_kubernetes_service_versions" "aks" {
   location = var.resources_location
 }
 
-output "versions" {
-  value = data.azurerm_kubernetes_service_versions.current.versions
-}
-
 output "latest_version" {
-  value = data.azurerm_kubernetes_service_versions.current.latest_version
+  value = data.azurerm_kubernetes_service_versions.aks.latest_version
 }

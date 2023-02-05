@@ -1,5 +1,5 @@
 resource "null_resource" "connect_to_aks" {
-  count = var.enable_aks_cluster ? 1 : 0
+  count = 0 #cvar.enable_aks_cluster ? 1 : 0
 
   provisioner "local-exec" {
     interpreter = ["PowerShell", "-Command"]

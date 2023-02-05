@@ -86,7 +86,7 @@ resource "azurerm_virtual_machine_extension" "vm_extension_linux" {
 SETTINGS
   # settings = <<SETTINGS
   # {
-  #   "fileUris": ["./install-cli-tools.sh"]
+  #   "fileUris": ["https://${azurerm_storage_account.storage.0.name}.blob.core.windows.net/${azurerm_storage_container.container.0.name}/vm-install-cli-tools.sh"],
   #   "commandToExecute": "./install-cli-tools.sh"
   # }
   # SETTINGS

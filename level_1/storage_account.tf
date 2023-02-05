@@ -63,9 +63,9 @@ resource "azurerm_storage_container" "container" {
 
 resource "azurerm_storage_blob" "blob" {
   count                  = var.enable_storage_account ? 1 : 0
-  name                   = "aks.tf"
+  name                   = "vm-install-cli-tools.sh"
   storage_account_name   = azurerm_storage_account.storage.0.name
   storage_container_name = azurerm_storage_container.container.0.name
   type                   = "Block"
-  source                 = "aks.tf"
+  source                 = "vm-install-cli-tools.sh"
 }
