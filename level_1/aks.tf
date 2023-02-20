@@ -90,9 +90,9 @@ resource "azurerm_kubernetes_cluster" "aks" {
     os_disk_size_gb              = var.aks_agent_os_disk_size
     os_disk_type                 = "Managed" # "Ephemeral" # 
     ultra_ssd_enabled            = false
-    os_sku                       = "Ubuntu"                 # Ubuntu, CBLMariner, Mariner, Windows2019, Windows2022
-    only_critical_addons_enabled = var.enable_nodepool_apps # taint default node pool with CriticalAddonsOnly=true:NoSchedule
-    zones                        = [1, 2, 3]                # []
+    os_sku                       = "Ubuntu"                                        # Ubuntu, CBLMariner, Mariner, Windows2019, Windows2022
+    only_critical_addons_enabled = var.enable_system_nodepool_only_critical_addons # taint default node pool with CriticalAddonsOnly=true:NoSchedule
+    zones                        = [1, 2, 3]                                       # []
     vnet_subnet_id               = azurerm_subnet.subnet_nodes.id
     pod_subnet_id                = azurerm_subnet.subnet_pods.id
     scale_down_mode              = "Delete" # ScaleDownModeDeallocate

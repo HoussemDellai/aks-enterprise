@@ -1,5 +1,5 @@
 resource "null_resource" "connect_to_aks" {
-  count = 0 #cvar.enable_aks_cluster ? 1 : 0
+  count = var.enable_aks_cluster ? 1 : 0
 
   provisioner "local-exec" {
     interpreter = ["PowerShell", "-Command"]
@@ -15,7 +15,7 @@ resource "null_resource" "connect_to_aks" {
   }
 
   triggers = {
-    "key" = "value1"
+    "key" = "value2"
     # trigger = timestamp()
   }
 

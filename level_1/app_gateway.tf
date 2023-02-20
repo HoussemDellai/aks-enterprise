@@ -97,8 +97,8 @@ resource "azurerm_application_gateway" "appgw" {
   }
 
   depends_on = [
-    azurerm_virtual_network.vnet_spoke_aks, 
-    azurerm_public_ip.appgw_pip]
+    azurerm_virtual_network.vnet_spoke_aks,
+  azurerm_public_ip.appgw_pip]
 }
 
 # AppGW (generated with addon) Identity needs also Contributor role over AKS/VNET RG

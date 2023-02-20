@@ -1,4 +1,4 @@
-# variable "prefix" {
+# variable prefix {
 #   type        = string
 #   description = "A prefix used for all resources in this example"
 # }
@@ -153,7 +153,7 @@ variable "storage_account_name" {
   description = "Storage Account name"
 }
 
-# variable "aks_admin_group_object_ids" {
+# variable aks_admin_group_object_ids {
 #   description = "Azure AD admin group for AKS."
 # }
 
@@ -210,6 +210,11 @@ variable "enable_nodepool_apps" {
 variable "enable_nodepool_spot" {
   type        = bool
   description = "Creates Spot Nodepool"
+}
+
+variable "enable_system_nodepool_only_critical_addons" {
+  type        = bool
+  description = "Enable system nodepool only for critical addons"
 }
 
 variable "enable_vnet_peering" {
