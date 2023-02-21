@@ -5,7 +5,7 @@ locals {
 resource "azurerm_firewall_policy" "firewall_policy" {
   count               = var.enable_firewall ? 1 : 0
   name                = "firewall-policy"
-  resource_group_name = azurerm_resource_group.rg_hub.0.name
+  resource_group_name = azurerm_resource_group.rg_hub.name
   location            = var.resources_location
 
   dns {
@@ -17,7 +17,7 @@ resource "azurerm_firewall_policy" "firewall_policy" {
     for_each = var.enable_monitoring ? ["any_value"] : []
     content {
       enabled                            = true
-      default_log_analytics_workspace_id = azurerm_log_analytics_workspace.workspace.0.id
+      default_log_analytics_workspace_id = azurerm_log_analytics_workspace.workspace.id
       retention_in_days                  = 7
     }
   }
@@ -26,7 +26,7 @@ resource "azurerm_firewall_policy" "firewall_policy" {
 resource "azurerm_firewall_policy_rule_collection_group" "policy_group_aks" {
   count              = var.enable_firewall && var.enable_aks_cluster ? 1 : 0
   name               = "policy_group_aks"
-  firewall_policy_id = azurerm_firewall_policy.firewall_policy.0.id
+  firewall_policy_id = azurerm_firewall_policy.firewall_policy.id
   priority           = 200
 
   application_rule_collection {
@@ -126,7 +126,7 @@ resource "azurerm_firewall_policy_rule_collection_group" "policy_group_aks" {
       name                  = "http"
       protocols             = ["TCP"]
       source_addresses      = azurerm_subnet.subnet_pods.address_prefixes # ["10.3.1.0/24"]
-      destination_addresses = azurerm_subnet.subnet_mgt.0.address_prefixes
+      destination_addresses = azurerm_subnet.subnet_mgt.address_prefixes
       destination_ports     = ["80"]
     }
   }
@@ -135,7 +135,7 @@ resource "azurerm_firewall_policy_rule_collection_group" "policy_group_aks" {
 resource "azurerm_firewall_policy_rule_collection_group" "policy_group_subnet_mgt" {
   count              = var.enable_firewall && (var.enable_vm_jumpbox_linux || var.enable_vm_jumpbox_windows) ? 1 : 0
   name               = "policy_group_subnet_mgt"
-  firewall_policy_id = azurerm_firewall_policy.firewall_policy.0.id
+  firewall_policy_id = azurerm_firewall_policy.firewall_policy.id
   priority           = 300
 
   application_rule_collection {
@@ -152,7 +152,7 @@ resource "azurerm_firewall_policy_rule_collection_group" "policy_group_subnet_mg
     #     type = "Https"
     #     port = 443
     #   }
-    #   source_addresses  = azurerm_subnet.subnet_mgt.0.address_prefixes
+    #   source_addresses  = azurerm_subnet.subnet_mgt.address_prefixes
     #   destination_fqdns = [
     #     azurerm_private_dns_zone.private_dns_zone_storage.name,
     #     azurerm_private_dns_zone.private_dns_zone_acr.name
@@ -169,7 +169,7 @@ resource "azurerm_firewall_policy_rule_collection_group" "policy_group_subnet_mg
     #     type = "Https"
     #     port = 443
     #   }
-    #   source_addresses  = azurerm_subnet.subnet_mgt.0.address_prefixes
+    #   source_addresses  = azurerm_subnet.subnet_mgt.address_prefixes
     #   destination_fqdns = ["*.microsoft.com"]
     # }
     rule {
@@ -182,7 +182,7 @@ resource "azurerm_firewall_policy_rule_collection_group" "policy_group_subnet_mg
         type = "Https"
         port = 443
       }
-      source_addresses  = azurerm_subnet.subnet_mgt.0.address_prefixes
+      source_addresses  = azurerm_subnet.subnet_mgt.address_prefixes
       destination_fqdns = ["*"]
     }
   }
@@ -194,8 +194,8 @@ resource "azurerm_firewall_policy_rule_collection_group" "policy_group_subnet_mg
     rule {
       name                  = "https"
       protocols             = ["TCP"]
-      source_addresses      = azurerm_subnet.subnet_mgt.0.address_prefixes
-      destination_addresses = azurerm_subnet.subnet_spoke_aks_pe.0.address_prefixes
+      source_addresses      = azurerm_subnet.subnet_mgt.address_prefixes
+      destination_addresses = azurerm_subnet.subnet_spoke_aks_pe.address_prefixes
       destination_ports     = ["443"]
     }
   }
@@ -204,7 +204,7 @@ resource "azurerm_firewall_policy_rule_collection_group" "policy_group_subnet_mg
 resource "azurerm_firewall_policy_rule_collection_group" "policy_group_deny" {
   count              = var.enable_firewall ? 1 : 0
   name               = "policy_group_deny"
-  firewall_policy_id = azurerm_firewall_policy.firewall_policy.0.id
+  firewall_policy_id = azurerm_firewall_policy.firewall_policy.id
   priority           = 100
 
   application_rule_collection {
@@ -222,7 +222,7 @@ resource "azurerm_firewall_policy_rule_collection_group" "policy_group_deny" {
         type = "Https"
         port = 443
       }
-      source_addresses  = ["*"] # local.cidr_subnet_aks_nodes_pods # azurerm_subnet.subnet_mgt.0.address_prefixes
+      source_addresses  = ["*"] # local.cidr_subnet_aks_nodes_pods # azurerm_subnet.subnet_mgt.address_prefixes
       destination_fqdns = ["*.yahoo.com"]
     }
   }
@@ -231,7 +231,7 @@ resource "azurerm_firewall_policy_rule_collection_group" "policy_group_deny" {
 resource "azurerm_firewall_policy_rule_collection_group" "policy_group_spoke_appservice" {
   count              = var.enable_firewall && var.enable_spoke_appservice ? 1 : 0
   name               = "policy_group_spoke_appservie"
-  firewall_policy_id = azurerm_firewall_policy.firewall_policy.0.id
+  firewall_policy_id = azurerm_firewall_policy.firewall_policy.id
   priority           = 400
 
   application_rule_collection {
@@ -248,7 +248,7 @@ resource "azurerm_firewall_policy_rule_collection_group" "policy_group_spoke_app
         type = "Https"
         port = 443
       }
-      source_addresses  = azurerm_subnet.subnet_mgt.0.address_prefixes
+      source_addresses  = azurerm_subnet.subnet_mgt.address_prefixes
       destination_fqdns = ["*"]
     }
   }
@@ -260,8 +260,8 @@ resource "azurerm_firewall_policy_rule_collection_group" "policy_group_spoke_app
     rule {
       name                  = "http"
       protocols             = ["TCP"]
-      source_addresses      = azurerm_subnet.snet_spoke_appservice_vnetintegration.0.address_prefixes # ["10.3.1.0/24"]
-      destination_addresses = azurerm_subnet.subnet_mgt.0.address_prefixes
+      source_addresses      = azurerm_subnet.snet_spoke_appservice_vnetintegration.address_prefixes # ["10.3.1.0/24"]
+      destination_addresses = azurerm_subnet.subnet_mgt.address_prefixes
       destination_ports     = ["80"]
     }
   }
@@ -273,7 +273,7 @@ resource "azurerm_firewall_policy_rule_collection_group" "policy_group_spoke_app
     rule {
       name                  = "http"
       protocols             = ["TCP"]
-      source_addresses      = azurerm_subnet.snet_spoke_appservice_vnetintegration.0.address_prefixes # ["10.3.1.0/24"]
+      source_addresses      = azurerm_subnet.snet_spoke_appservice_vnetintegration.address_prefixes # ["10.3.1.0/24"]
       destination_addresses = azurerm_subnet.subnet_pods.address_prefixes
       destination_ports     = ["80"]
     }

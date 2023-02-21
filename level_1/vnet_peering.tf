@@ -5,7 +5,7 @@ module "virtual_network_peering_hub_and_spoke_app" {
   vnet_spoke_id = azurerm_virtual_network.vnet_spoke_aks.id
 }
 
-module "virtual_network_peering_hub_and_spoke_mg" {
+module "virtual_network_peering_hub_and_spoke_mgt" {
   count         = var.enable_vnet_peering && (var.enable_vm_jumpbox_windows || var.enable_vm_jumpbox_linux) ? 1 : 0
   source        = "../modules/azurerm_virtual_network_peering"
   vnet_hub_id   = azurerm_virtual_network.vnet_hub.0.id

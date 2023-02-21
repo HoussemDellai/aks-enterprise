@@ -107,5 +107,5 @@ resource "azurerm_role_assignment" "role-contributor" {
   count                = var.enable_app_gateway ? 1 : 0
   scope                = azurerm_resource_group.rg_spoke_aks.id
   role_definition_name = "Contributor"
-  principal_id         = azurerm_kubernetes_cluster.aks.0.ingress_application_gateway.0.ingress_application_gateway_identity.0.object_id
+  principal_id         = azurerm_kubernetes_cluster.aks.ingress_application_gateway.0.ingress_application_gateway_identity.0.object_id
 }
