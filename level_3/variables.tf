@@ -42,7 +42,7 @@ variable "cidr_vnet_hub" {
   description = "HUB VNET address prefix"
 }
 
-variable "cidr_vnet_spoke_app" {
+variable "cidr_vnet_spoke_aks" {
   description = "VNET Spoke address prefix"
 }
 
@@ -78,7 +78,7 @@ variable "cidr_subnet_apiserver_vnetint" {
   description = "AKS API Server IP address."
 }
 
-variable "cidr_subnet_pe" {
+variable "cidr_subnet_spoke_aks_pe" {
   description = "Private Endpoints IP addresses."
   default     = ["10.3.0.0/28"]
 }
@@ -267,7 +267,7 @@ variable "enable_nsg_flow_logs" {
   default     = "true"
 }
 
-variable "enable_spoke_3" {
+variable "enable_spoke_appservice" {
   type        = bool
   description = "Creates Spoke 3"
 }
@@ -280,6 +280,18 @@ variable "enable_storage_account" {
 variable "enable_fleet_manager" {
   type        = bool
   description = "Creates AKS Fleet Manager reosurce"
+}
+
+variable "enable_mysql_flexible_server" {
+  type = bool
+}
+
+variable "enable_spoke_serverless" {
+  type = bool
+}
+
+variable "enable_grafana_prometheus" {
+  type = bool
 }
 
 variable "log_analytics_workspace" {

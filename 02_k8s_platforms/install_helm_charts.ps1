@@ -16,7 +16,7 @@ start microsoft-edge:http://localhost:8000
 
 # ARGOCD
 helm repo add argo https://argoproj.github.io/argo-helm
-helm upgrade --install argo argo/argo-cd --namespace gitops --create-namespace
+helm upgrade --install argo argo/argo-cd --namespace gitops --create-namespace --set configs.secret.argocdServerAdminPassword="$2b$12$DsmD/P54.U4qMhf9dZbAp.dtPQMumJ7b5VCz36nwSR1k2FUpux4Sm"
 start powershell {kubectl port-forward service/argo-argocd-server 8002:80 -n gitops}
 start microsoft-edge:http://localhost:8002
 # pip3 install bcrypt

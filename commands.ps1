@@ -3,8 +3,8 @@ copy variables.tf level_1
 copy terraform.tfvars level_1
 
 terraform -chdir=level_1 init
-
-terraform plan -out tfplan -chdir=level_1
+terraform -chdir=level_1 plan -out tfplan
+terraform -chdir=level_1 apply tfplan
 
 
 

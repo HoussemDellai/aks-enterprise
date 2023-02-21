@@ -30,19 +30,47 @@ data "azurerm_resources" "nsg_flowlogs" {
   required_tags = var.tags
 }
 
+locals {
+  # resource_ids = flatten([ for r in data.azurerm_resources.resources_ds : [ r.resources.*.id ] ])
+  nsg = tomap({for nsg in data.azurerm_resources.nsg_flowlogs.resources : 
+    nsg.name => {
+      name = nsg.name
+      id   = nsg.id
+    }
+  })
+}
+
+output "nsg" {
+  value = local.nsg
+}
+
 module "azurerm_network_watcher_flow_log" {
-  count                     = var.enable_nsg_flow_logs ? length(data.azurerm_resources.nsg_flowlogs.resources) : 0
+  for_each                  = local.nsg
   source                    = "../modules/azurerm_network_watcher_flow_log"
-  nsg_name                  = data.azurerm_resources.nsg_flowlogs.resources[count.index].name
+  nsg_name                  = each.value.name
+  network_security_group_id = each.value.id
   network_watcher_name      = data.azurerm_network_watcher.network_watcher_regional.name
   resource_group_name       = data.azurerm_network_watcher.network_watcher_regional.resource_group_name
-  network_security_group_id = data.azurerm_resources.nsg_flowlogs.resources[count.index].id
   storage_account_id        = azurerm_storage_account.network_log_data.0.id
 
   workspace_id          = data.azurerm_log_analytics_workspace.workspace.workspace_id
   workspace_region      = data.azurerm_log_analytics_workspace.workspace.location
   workspace_resource_id = data.azurerm_log_analytics_workspace.workspace.id
 }
+
+# module "azurerm_network_watcher_flow_log" {
+#   count                     = var.enable_nsg_flow_logs ? length(data.azurerm_resources.nsg_flowlogs.resources) : 0
+#   source                    = "../modules/azurerm_network_watcher_flow_log"
+#   nsg_name                  = data.azurerm_resources.nsg_flowlogs.resources[count.index].name
+#   network_watcher_name      = data.azurerm_network_watcher.network_watcher_regional.name
+#   resource_group_name       = data.azurerm_network_watcher.network_watcher_regional.resource_group_name
+#   network_security_group_id = data.azurerm_resources.nsg_flowlogs.resources[count.index].id
+#   storage_account_id        = azurerm_storage_account.network_log_data.0.id
+
+#   workspace_id          = data.azurerm_log_analytics_workspace.workspace.workspace_id
+#   workspace_region      = data.azurerm_log_analytics_workspace.workspace.location
+#   workspace_resource_id = data.azurerm_log_analytics_workspace.workspace.id
+# }
 
 output "azurerm_resources_nsg_flowlogs" {
   value = data.azurerm_resources.nsg_flowlogs.resources[*].name
