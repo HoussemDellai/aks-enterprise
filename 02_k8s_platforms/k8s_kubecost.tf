@@ -1,5 +1,5 @@
 # Create the kubecost namespace
-resource "kubernetes_namespace" "kubecost" {
+resource kubernetes_namespace" "kubecost" {
   provider = kubernetes.aks-module
   metadata {
     name = "finops"
@@ -11,7 +11,7 @@ resource "kubernetes_namespace" "kubecost" {
 # kubectl create namespace kubecost
 # helm repo add kubecost https://kubecost.github.io/cost-analyzer/
 # helm install kubecost kubecost/cost-analyzer --namespace kubecost --set kubecostToken="aG91c3NlbS5kZWxsYWlAbGl2ZS5jb20=xm343yadf98"
-resource "helm_release" "kubecost" {
+resource helm_release" "kubecost" {
   provider   = helm.aks-module
   name       = "kubecost"
   chart      = "cost-analyzer"
@@ -81,7 +81,7 @@ resource "helm_release" "kubecost" {
 # kubectl port-forward --namespace kubecost deployment/kubecost-cost-analyzer 9090
 # Access dashboard: http://localhost:9090
 
-# resource "null_resource" "portforward" {
+# resource null_resource" "portforward" {
 #   provisioner "local-exec" {
 #     command = "kubectl port-forward --namespace finops deployment/kubecost-cost-analyzer 9090"
 #     interpreter = ["PowerShell", "-Command"]

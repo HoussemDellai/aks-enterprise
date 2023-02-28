@@ -4,7 +4,7 @@ data "azurerm_monitor_diagnostic_categories" "categories" {
   resource_id = var.target_resource_id
 }
 
-resource "azurerm_monitor_diagnostic_setting" "diagnostic_settings" {
+resource azurerm_monitor_diagnostic_setting" "diagnostic_settings" {
   name                           = "diagnostic-settings"
   target_resource_id             = var.target_resource_id
   log_analytics_workspace_id     = var.log_analytics_workspace_id

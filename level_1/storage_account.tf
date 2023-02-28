@@ -1,11 +1,11 @@
-resource "azurerm_private_dns_zone" "private_dns_zone_storage" {
+resource azurerm_private_dns_zone" "private_dns_zone_storage" {
   count               = var.enable_storage_account ? 1 : 0
   name                = "privatelink.blob.core.windows.net"
   resource_group_name = azurerm_resource_group.rg_spoke_app.name
   tags                = var.tags
 }
 
-resource "azurerm_private_dns_zone_virtual_network_link" "private_dns_zone_storage_link_hub" {
+resource azurerm_private_dns_zone_virtual_network_link" "private_dns_zone_storage_link_hub" {
   count                 = var.enable_storage_account ? 1 : 0
   name                  = "private_dns_zone_storage_link_hub"
   resource_group_name   = azurerm_private_dns_zone.private_dns_zone_storage.0.resource_group_name
@@ -13,7 +13,7 @@ resource "azurerm_private_dns_zone_virtual_network_link" "private_dns_zone_stora
   virtual_network_id    = azurerm_virtual_network.vnet_hub.0.id
 }
 
-resource "azurerm_private_endpoint" "pe_storage" {
+resource azurerm_private_endpoint" "pe_storage" {
   count               = var.enable_storage_account ? 1 : 0
   name                = "private-endpoint-storage"
   resource_group_name = azurerm_resource_group.rg_spoke_app.name
@@ -33,7 +33,7 @@ resource "azurerm_private_endpoint" "pe_storage" {
   }
 }
 
-resource "azurerm_storage_account_network_rules" "rules_storage" {
+resource azurerm_storage_account_network_rules" "rules_storage" {
   count                      = var.enable_storage_account ? 1 : 0
   storage_account_id         = azurerm_storage_account.storage.0.id
   default_action             = "Deny"
@@ -42,7 +42,7 @@ resource "azurerm_storage_account_network_rules" "rules_storage" {
   virtual_network_subnet_ids = null # [azurerm_subnet.subnet_mgt.0.id]
 }
 
-resource "azurerm_storage_account" "storage" {
+resource azurerm_storage_account" "storage" {
   count                         = var.enable_storage_account ? 1 : 0
   name                          = var.storage_account_name
   resource_group_name           = azurerm_resource_group.rg_spoke_app.name
@@ -54,14 +54,14 @@ resource "azurerm_storage_account" "storage" {
   tags                          = var.tags
 }
 
-resource "azurerm_storage_container" "container" {
+resource azurerm_storage_container" "container" {
   count                 = var.enable_storage_account ? 1 : 0
   name                  = "my-files"
   storage_account_name  = azurerm_storage_account.storage.0.name
   container_access_type = "container" # "blob" "private"
 }
 
-resource "azurerm_storage_blob" "blob" {
+resource azurerm_storage_blob" "blob" {
   count                  = var.enable_storage_account ? 1 : 0
   name                   = "vm-install-cli-tools.sh"
   storage_account_name   = azurerm_storage_account.storage.0.name

@@ -1,4 +1,4 @@
-resource "azurerm_subnet" "snet_spoke_appservice_vnetintegration" {
+resource azurerm_subnet" "snet_spoke_appservice_vnetintegration" {
   count                = var.enable_spoke_appservice ? 1 : 0
   name                 = "snet-vnet-integration"
   resource_group_name  = azurerm_resource_group.rg_spoke3.0.name
@@ -15,7 +15,7 @@ resource "azurerm_subnet" "snet_spoke_appservice_vnetintegration" {
   }
 }
 
-resource "azurerm_subnet" "snet_spoke_appservice_pe" {
+resource azurerm_subnet" "snet_spoke_appservice_pe" {
   count                                     = var.enable_spoke_appservice ? 1 : 0
   name                                      = "snet-private-endpoint"
   resource_group_name                       = azurerm_resource_group.rg_spoke3.0.name
@@ -24,7 +24,7 @@ resource "azurerm_subnet" "snet_spoke_appservice_pe" {
   private_endpoint_network_policies_enabled = true
 }
 
-resource "azurerm_service_plan" "service_plan" {
+resource azurerm_service_plan" "service_plan" {
   count               = var.enable_spoke_appservice ? 1 : 0
   name                = "service-plan"
   location            = azurerm_resource_group.rg_spoke3.0.location
@@ -34,7 +34,7 @@ resource "azurerm_service_plan" "service_plan" {
   tags                = var.tags
 }
 
-resource "azurerm_linux_web_app" "webapp_frontent" {
+resource azurerm_linux_web_app" "webapp_frontent" {
   count                     = var.enable_spoke_appservice ? 1 : 0
   name                      = "webapp-frontent-011"
   location                  = azurerm_resource_group.rg_spoke3.0.location
@@ -59,12 +59,12 @@ resource "azurerm_linux_web_app" "webapp_frontent" {
 
 # The following resources support associating the vNet for Regional vNet Integration directly on the resource 
 # and via the azurerm_app_service_virtual_network_swift_connection resource. You can't use both simultaneously.
-# resource "azurerm_app_service_virtual_network_swift_connection" "vnetintegrationconnection" {
+# resource azurerm_app_service_virtual_network_swift_connection" "vnetintegrationconnection" {
 #   app_service_id = azurerm_linux_web_app.webapp_frontent.id
 #   subnet_id      = azurerm_subnet.snet_vnet_integration.id
 # }
 
-resource "azurerm_linux_web_app" "webapp_backend" {
+resource azurerm_linux_web_app" "webapp_backend" {
   count               = var.enable_spoke_appservice ? 1 : 0
   name                = "webapp-backend-011"
   location            = azurerm_resource_group.rg_spoke3.0.location
@@ -78,14 +78,14 @@ resource "azurerm_linux_web_app" "webapp_backend" {
   }
 }
 
-resource "azurerm_private_dns_zone" "dnsprivatezone" {
+resource azurerm_private_dns_zone" "dnsprivatezone" {
   count               = var.enable_spoke_appservice ? 1 : 0
   name                = "privatelink.azurewebsites.net"
   resource_group_name = azurerm_resource_group.rg_spoke3.0.name
   tags                = var.tags
 }
 
-resource "azurerm_private_dns_zone_virtual_network_link" "dnszonelink" {
+resource azurerm_private_dns_zone_virtual_network_link" "dnszonelink" {
   count                 = var.enable_spoke_appservice ? 1 : 0
   name                  = "dnszonelink"
   resource_group_name   = azurerm_resource_group.rg_spoke3.0.name
@@ -93,7 +93,7 @@ resource "azurerm_private_dns_zone_virtual_network_link" "dnszonelink" {
   virtual_network_id    = azurerm_virtual_network.vnet_spoke_appservice.0.id
 }
 
-resource "azurerm_private_endpoint" "pe_backend" {
+resource azurerm_private_endpoint" "pe_backend" {
   count               = var.enable_spoke_appservice ? 1 : 0
   name                = "private-endpoint-backend"
   location            = azurerm_resource_group.rg_spoke3.0.location
@@ -115,7 +115,7 @@ resource "azurerm_private_endpoint" "pe_backend" {
 }
 
 #  Deploy code from a public GitHub repo
-resource "azurerm_app_service_source_control" "sourcecontrol" {
+resource azurerm_app_service_source_control" "sourcecontrol" {
   count                  = var.enable_spoke_appservice ? 1 : 0
   app_id                 = azurerm_linux_web_app.webapp_frontent.0.id
   repo_url               = "https://github.com/Azure-Samples/nodejs-docs-hello-world"

@@ -1,5 +1,5 @@
 # Log collection components
-resource "azurerm_storage_account" "network_log_data" {
+resource azurerm_storage_account" "network_log_data" {
   count                    = var.enable_nsg_flow_logs ? 1 : 0
   name                     = "storageforlogs011"
   resource_group_name      = var.rg_network_watcher
@@ -18,7 +18,7 @@ data "azurerm_network_watcher" "network_watcher_regional" {
   resource_group_name = var.rg_network_watcher
 }
 
-# resource "azurerm_network_watcher" "network_watcher_regional" {
+# resource azurerm_network_watcher" "network_watcher_regional" {
 #   count               = var.enable_nsg_flow_logs ? 1 : 0
 #   name                = "NetworkWatcher_${var.resources_location}"
 #   location            = var.resources_location

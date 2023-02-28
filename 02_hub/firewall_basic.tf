@@ -1,6 +1,6 @@
 # # https://github.com/Azure/Azure-Network-Security/blob/master/Azure%20Firewall/Template%20-%20Firewall%20Basic%20with%20Firewall%20Policy%20and%20Hub%20Spoke%20Network/FwBasicTFMain.tf
 
-# resource "azurerm_public_ip" "transitip" {
+# resource azurerm_public_ip" "transitip" {
 #   name                   = "FWBasicTransitIP"
 #   location               = azurerm_resource_group.rg.location
 #   resource_group_name    = azurerm_resource_group.rg.name
@@ -8,7 +8,7 @@
 #   sku                    = "Standard"
 # }
 
-# resource "azurerm_public_ip" "managementip" {
+# resource azurerm_public_ip" "managementip" {
 #   name                   = "FWBasicManagementIP"
 #   location               = azurerm_resource_group.rg.location
 #   resource_group_name    = azurerm_resource_group.rg.name
@@ -16,7 +16,7 @@
 #   sku                    = "Standard"
 # }
 
-# resource "azurerm_route_table" "Spoke1RT" {
+# resource azurerm_route_table" "Spoke1RT" {
 #   name                          = "Spoke1RT"
 #   location                      = azurerm_resource_group.rg.location
 #   resource_group_name           = azurerm_resource_group.rg.name
@@ -30,80 +30,80 @@
 #   }
 # }
 
-# resource "azurerm_virtual_network" "hubvnet" {
+# resource azurerm_virtual_network" "hubvnet" {
 #   name                   = "HubVnet"
 #   location               = azurerm_resource_group.rg.location
 #   resource_group_name    = azurerm_resource_group.rg.name
 #   address_space          = ["10.10.10.0/24"]
 # }
 
-# resource "azurerm_subnet" "AzureFirewallSubnet" {
+# resource azurerm_subnet" "AzureFirewallSubnet" {
 #   name                   = "AzureFirewallSubnet"
 #   resource_group_name    = azurerm_resource_group.rg.name
 #   virtual_network_name   = azurerm_virtual_network.hubvnet.name
 #   address_prefixes       = ["10.10.10.0/26"]
 # }
 
-# resource "azurerm_subnet" "AzureFirewallMgmtSubnet" {
+# resource azurerm_subnet" "AzureFirewallMgmtSubnet" {
 #   name                   = "AzureFirewallManagementSubnet"
 #   resource_group_name    = azurerm_resource_group.rg.name
 #   virtual_network_name   = azurerm_virtual_network.hubvnet.name
 #   address_prefixes       = ["10.10.10.64/26"]
 # }
 
-# resource "azurerm_virtual_network" "spokevnet1" {
+# resource azurerm_virtual_network" "spokevnet1" {
 #   name                   = "SpokeVnet1"
 #   location               = azurerm_resource_group.rg.location
 #   resource_group_name    = azurerm_resource_group.rg.name
 #   address_space          = ["10.10.11.0/24"]
 # }
 
-# resource "azurerm_subnet" "AppSubnet" {
+# resource azurerm_subnet" "AppSubnet" {
 #   name                   = "AppSubnet"
 #   resource_group_name    = azurerm_resource_group.rg.name
 #   virtual_network_name   = azurerm_virtual_network.spokevnet1.name
 #   address_prefixes       = ["10.10.11.0/27"]
 # }
 
-# resource "azurerm_subnet" "InfraSubnet" {
+# resource azurerm_subnet" "InfraSubnet" {
 #   name                   = "InfraSubnet"
 #   resource_group_name    = azurerm_resource_group.rg.name
 #   virtual_network_name   = azurerm_virtual_network.spokevnet1.name
 #   address_prefixes       = ["10.10.11.32/27"]
 # }
 
-# resource "azurerm_subnet_route_table_association" "AppSubnetRT" {
+# resource azurerm_subnet_route_table_association" "AppSubnetRT" {
 #   subnet_id              = azurerm_subnet.AppSubnet.id
 #   route_table_id         = azurerm_route_table.Spoke1RT.id
 # }
 
-# resource "azurerm_subnet_route_table_association" "InfraSubnetRT" {
+# resource azurerm_subnet_route_table_association" "InfraSubnetRT" {
 #   subnet_id              = azurerm_subnet.InfraSubnet.id
 #   route_table_id         = azurerm_route_table.Spoke1RT.id
 # }
 
-# resource "azurerm_virtual_network_peering" "HubToSpoke1" {
+# resource azurerm_virtual_network_peering" "HubToSpoke1" {
 #   name                      = "HubToSpoke1"
 #   resource_group_name       = azurerm_resource_group.rg.name
 #   virtual_network_name      = azurerm_virtual_network.hubvnet.name
 #   remote_virtual_network_id = azurerm_virtual_network.spokevnet1.id
 # }
 
-# resource "azurerm_virtual_network_peering" "Spoke1ToHub" {
+# resource azurerm_virtual_network_peering" "Spoke1ToHub" {
 #   name                      = "HubToSpoke1"
 #   resource_group_name       = azurerm_resource_group.rg.name
 #   virtual_network_name      = azurerm_virtual_network.spokevnet1.name
 #   remote_virtual_network_id = azurerm_virtual_network.hubvnet.id
 # }
 
-# resource "azurerm_firewall_policy" "FwBasicPolicy" {
+# resource azurerm_firewall_policy" "FwBasicPolicy" {
 #   name                   = "FwBasicPolicy"
 #   location               = azurerm_resource_group.rg.location
 #   resource_group_name    = azurerm_resource_group.rg.name
 #   sku                    = "Basic"
 # }
 
-# resource "azurerm_firewall_policy_rule_collection_group" "FwBasicLabRcg" {
+# resource azurerm_firewall_policy_rule_collection_group" "FwBasicLabRcg" {
 #   name = "FwBasicLabRcg"
 #   firewall_policy_id = azurerm_firewall_policy.FwBasicPolicy.id
 #   priority = 600
@@ -153,7 +153,7 @@
 #   }
 # }
 
-# resource "azurerm_firewall" "FwBasic" {
+# resource azurerm_firewall" "FwBasic" {
 #   name                   = "FwBasic"
 #   location               = azurerm_resource_group.rg.location
 #   resource_group_name    = azurerm_resource_group.rg.name
@@ -174,7 +174,7 @@
 #   }
 # }
 
-# resource "azurerm_network_interface" "AppVm1Nic1" {
+# resource azurerm_network_interface" "AppVm1Nic1" {
 #   name                  = "AppVm1Nic1"
 #   location              = azurerm_resource_group.rg.location
 #   resource_group_name   = azurerm_resource_group.rg.name
@@ -186,7 +186,7 @@
 #   }
 # }
 
-# resource "azurerm_virtual_machine" "AppVm1" {
+# resource azurerm_virtual_machine" "AppVm1" {
 #   name = "AppVm1"
 #   location = azurerm_resource_group.rg.location
 #   resource_group_name = azurerm_resource_group.rg.name

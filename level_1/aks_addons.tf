@@ -1,4 +1,4 @@
-resource "null_resource" "connect_to_aks" {
+resource null_resource" "connect_to_aks" {
   count = var.enable_aks_cluster ? 1 : 0
 
   provisioner "local-exec" {
@@ -25,7 +25,7 @@ resource "null_resource" "connect_to_aks" {
   ]
 }
 
-# resource "null_resource" "enable_aks_addons" {
+# resource null_resource" "enable_aks_addons" {
 #   count = var.enable_aks_cluster ? 1 : 0
 
 #   provisioner "local-exec" {
@@ -43,7 +43,7 @@ resource "null_resource" "connect_to_aks" {
 #   #   }
 # }
 
-# resource "null_resource" "enable_aks_vnet_integration" {
+# resource null_resource" "enable_aks_vnet_integration" {
 #   count = var.enable_aks_cluster && var.enable_apiserver_vnet_integration ? 1 : 0
 
 #   provisioner "local-exec" {
@@ -65,7 +65,7 @@ resource "null_resource" "connect_to_aks" {
 #   #   }
 # }
 
-# resource "null_resource" "install_helm_charts" {
+# resource null_resource" "install_helm_charts" {
 #   count = var.enable_aks_cluster ? 1 : 0
 
 #   provisioner "local-exec" {

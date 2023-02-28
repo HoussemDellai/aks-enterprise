@@ -1,11 +1,11 @@
-resource "azurerm_subnet" "subnet_nodes" {
+resource azurerm_subnet" "subnet_nodes" {
   name                 = "subnet-nodes"
   virtual_network_name = azurerm_virtual_network.vnet_spoke_aks.name
   resource_group_name  = azurerm_virtual_network.vnet_spoke_aks.resource_group_name
   address_prefixes     = var.cidr_subnet_nodes
 }
 
-resource "azurerm_subnet" "subnet_pods" {
+resource azurerm_subnet" "subnet_pods" {
   name                 = "subnet-pods"
   virtual_network_name = azurerm_virtual_network.vnet_spoke_aks.name
   resource_group_name  = azurerm_virtual_network.vnet_spoke_aks.resource_group_name
@@ -23,7 +23,7 @@ resource "azurerm_subnet" "subnet_pods" {
   }
 }
 
-resource "azurerm_subnet" "subnet_apiserver" {
+resource azurerm_subnet" "subnet_apiserver" {
   count                = var.enable_apiserver_vnet_integration ? 1 : 0
   name                 = "subnet-apiserver"
   virtual_network_name = azurerm_virtual_network.vnet_spoke_aks.name
@@ -41,7 +41,7 @@ resource "azurerm_subnet" "subnet_apiserver" {
   }
 }
 
-resource "azurerm_kubernetes_cluster" "aks" {
+resource azurerm_kubernetes_cluster" "aks" {
   count                               = var.enable_aks_cluster ? 1 : 0
   name                                = "aks-cluster"
   resource_group_name                 = azurerm_resource_group.rg_spoke_aks.name
@@ -275,7 +275,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
 #     -g <resource-group> \
 #     --enable-apiserver-vnet-integration \
 #     --apiserver-subnet-id <apiserver-subnet-resource-id>
-# resource "azapi_update_resource" "aks_api_vnet_integration" {
+# resource azapi_update_resource" "aks_api_vnet_integration" {
 #   count       = var.enable_apiserver_vnet_integration ? 1 : 0
 #   type        = "Microsoft.ContainerService/managedClusters@2022-06-02-preview"
 #   resource_id = azurerm_kubernetes_cluster.aks.0.id

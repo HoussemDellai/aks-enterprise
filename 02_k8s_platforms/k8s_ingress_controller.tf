@@ -1,4 +1,4 @@
-resource "kubernetes_namespace" "nginx_ingress" {
+resource kubernetes_namespace" "nginx_ingress" {
   provider = kubernetes.aks-module
   metadata {
     name = "ingress"
@@ -6,7 +6,7 @@ resource "kubernetes_namespace" "nginx_ingress" {
 }
 
 # https://github.com/kubernetes/ingress-nginx/tree/main/charts/ingress-nginx
-resource "helm_release" "nginx_ingress" {
+resource helm_release" "nginx_ingress" {
   provider   = helm.aks-module
   name       = "ingress-nginx"
   repository = "https://kubernetes.github.io/ingress-nginx"

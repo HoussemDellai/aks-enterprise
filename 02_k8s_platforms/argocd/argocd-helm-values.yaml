@@ -1,0 +1,40 @@
+  ingress:
+    # -- Enable an ingress resource for the Argo CD server
+    enabled: false
+    # -- Additional ingress annotations
+    annotations: {}
+    # -- Additional ingress labels
+    labels: {}
+    # -- Defines which ingress controller will implement the resource
+    ingressClassName: ""
+
+    # -- List of ingress hosts
+    ## Argo Ingress.
+    ## Hostnames must be provided if Ingress is enabled.
+    ## Secrets must be manually created in the namespace
+    hosts: []
+      # - argocd.example.com
+
+    # -- List of ingress paths
+    paths:
+      - /
+    # -- Ingress path type. One of `Exact`, `Prefix` or `ImplementationSpecific`
+    pathType: Prefix
+    # -- Additional ingress paths
+    extraPaths: []
+      # - path: /*
+      #   pathType: Prefix
+      #   backend:
+      #     service:
+      #       name: ssl-redirect
+      #       port:
+      #         name: use-annotation
+
+    # -- Ingress TLS configuration
+    tls: []
+      # - secretName: your-certificate-name
+      #   hosts:
+      #     - argocd.example.com
+
+    # -- Uses `server.service.servicePortHttps` instead `server.service.servicePortHttp`
+    https: false

@@ -1,5 +1,5 @@
 # https://github.com/Azure-Samples/aks-multi-cluster-service-mesh/blob/main/istio/private_endpoint.tf
-resource "azurerm_private_endpoint" "pe_acr" {
+resource azurerm_private_endpoint" "pe_acr" {
   count               = var.enable_private_acr && var.enable_aks_cluster ? 1 : 0
   name                = "private-endpoint-acr"
   location            = var.resources_location
@@ -20,14 +20,14 @@ resource "azurerm_private_endpoint" "pe_acr" {
   }
 }
 
-resource "azurerm_private_dns_zone" "private_dns_zone_acr" {
+resource azurerm_private_dns_zone" "private_dns_zone_acr" {
   count               = var.enable_private_acr && var.enable_aks_cluster ? 1 : 0
   name                = "privatelink.azurecr.io"
   resource_group_name = azurerm_resource_group.rg_spoke_app.name
   tags                = var.tags
 }
 
-resource "azurerm_private_dns_zone_virtual_network_link" "link_private_dns_zone_acr_to_vnet_hub" {
+resource azurerm_private_dns_zone_virtual_network_link" "link_private_dns_zone_acr_to_vnet_hub" {
   count                 = var.enable_vnet_peering && var.enable_private_acr ? 1 : 0
   name                  = "link_private_dns_zone_acr_to_vnet_hub"
   resource_group_name   = azurerm_private_dns_zone.private_dns_zone_acr.0.resource_group_name

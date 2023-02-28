@@ -1,6 +1,6 @@
 # todo: add subnet for pods and nodes for spot nodepool
 
-resource "azurerm_kubernetes_cluster_node_pool" "poolspot" {
+resource azurerm_kubernetes_cluster_node_pool" "poolspot" {
   count                  = var.enable_nodepool_spot ? 1 : 0
   kubernetes_cluster_id  = azurerm_kubernetes_cluster.aks.id
   name                   = "poolspot"

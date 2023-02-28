@@ -1,6 +1,6 @@
 # https://github.com/claranet/terraform-azurerm-acr/blob/master/resources.tf
 
-resource "azurerm_container_registry" "acr" {
+resource azurerm_container_registry" "acr" {
   count                         = var.enable_aks_cluster ? 1 : 0
   name                          = var.acr_name
   resource_group_name           = azurerm_resource_group.rg_spoke_app.name
@@ -65,7 +65,7 @@ resource "azurerm_container_registry" "acr" {
   }
 }
 
-# resource "null_resource" "acr_import_image" {
+# resource null_resource" "acr_import_image" {
 #   # Changes to any instance of the cluster requires re-provisioning
 #   # triggers = {
 #   #   cluster_instance_ids = join(",", aws_instance.cluster.*.id)
@@ -81,7 +81,7 @@ resource "azurerm_container_registry" "acr" {
 #   depends_on = [azurerm_container_registry.acr]
 # }
 
-resource "azurerm_user_assigned_identity" "identity-kubelet" {
+resource azurerm_user_assigned_identity" "identity-kubelet" {
   count               = var.enable_aks_cluster ? 1 : 0
   name                = "identity-kubelet"
   resource_group_name = azurerm_resource_group.rg_spoke_aks.name
@@ -89,7 +89,7 @@ resource "azurerm_user_assigned_identity" "identity-kubelet" {
   tags                = var.tags
 }
 
-resource "azurerm_role_assignment" "role_acrpull" {
+resource azurerm_role_assignment" "role_acrpull" {
   count                            = var.enable_aks_cluster ? 1 : 0
   scope                            = azurerm_container_registry.acr.0.id
   role_definition_name             = "AcrPull"

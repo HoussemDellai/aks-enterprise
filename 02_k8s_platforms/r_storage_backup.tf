@@ -2,7 +2,7 @@
 # Resource Group to store disk snapshots + Storage Account to store backup configuration files       #
 #----------------------------------------------------------------------------------------------------#
 
-resource "azurerm_resource_group" "aks_backups" {
+resource azurerm_resource_group" "aks_backups" {
   # for_each = var.enable_velero_backups ? [] : []
   # count = var.enable_velero_backups ? 1 : 0
   name     = var.backups_rg_name
@@ -10,7 +10,7 @@ resource "azurerm_resource_group" "aks_backups" {
   tags     = var.tags
 }
 
-resource "azurerm_storage_account" "aks_backups" {
+resource azurerm_storage_account" "aks_backups" {
   # for_each = var.enable_velero_backups ? [] : []
   # count = var.enable_velero_backups ? 1 : 0
   name                      = var.storage_account_name_backup
@@ -24,7 +24,7 @@ resource "azurerm_storage_account" "aks_backups" {
   tags                      = var.tags
 }
 
-resource "azurerm_storage_container" "aks_backups" {
+resource azurerm_storage_container" "aks_backups" {
   # for_each = var.enable_velero_backups ? [] : []
   # count = var.enable_velero_backups ? 1 : 0
   name                  = "velero"

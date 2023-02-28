@@ -1,4 +1,4 @@
-resource "azurerm_user_assigned_identity" "identity_vm_linux" {
+resource azurerm_user_assigned_identity" "identity_vm_linux" {
   count               = var.enable_vm_jumpbox_linux ? 1 : 0
   name                = "identity_vm_linux"
   resource_group_name = azurerm_resource_group.rg_spoke_mgt.0.name
@@ -6,7 +6,7 @@ resource "azurerm_user_assigned_identity" "identity_vm_linux" {
   tags                = var.tags
 }
 
-resource "azurerm_role_assignment" "role_identity_vm_linux_contributor" {
+resource azurerm_role_assignment" "role_identity_vm_linux_contributor" {
   count                            = var.enable_vm_jumpbox_linux ? 1 : 0
   scope                            = data.azurerm_subscription.subscription_spoke.id
   role_definition_name             = "Contributor"
@@ -14,7 +14,7 @@ resource "azurerm_role_assignment" "role_identity_vm_linux_contributor" {
   skip_service_principal_aad_check = true
 }
 
-resource "azurerm_network_interface" "nic_vm_jumpbox_linux" {
+resource azurerm_network_interface" "nic_vm_jumpbox_linux" {
   count               = var.enable_vm_jumpbox_linux ? 1 : 0
   name                = "nic-vm-jumpbox-linux"
   location            = var.resources_location
@@ -28,7 +28,7 @@ resource "azurerm_network_interface" "nic_vm_jumpbox_linux" {
   }
 }
 
-resource "azurerm_linux_virtual_machine" "vm_jumpbox_linux" {
+resource azurerm_linux_virtual_machine" "vm_jumpbox_linux" {
   count                           = var.enable_vm_jumpbox_linux ? 1 : 0
   name                            = "vm-jumpbox-linux"
   resource_group_name             = azurerm_resource_group.rg_spoke_mgt.0.name
@@ -70,7 +70,7 @@ resource "azurerm_linux_virtual_machine" "vm_jumpbox_linux" {
   # }
 }
 
-resource "azurerm_virtual_machine_extension" "vm_extension_linux" {
+resource azurerm_virtual_machine_extension" "vm_extension_linux" {
   count                = var.enable_vm_jumpbox_linux ? 1 : 0
   name                 = "vm_extension_linux"
   virtual_machine_id   = azurerm_linux_virtual_machine.vm_jumpbox_linux.0.id

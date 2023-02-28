@@ -1,7 +1,7 @@
 data "azurerm_subscription" "current" {
 }
 
-resource "kubernetes_namespace" "velero" {
+resource kubernetes_namespace" "velero" {
   metadata {
     name = var.velero_namespace
     labels = {
@@ -10,7 +10,7 @@ resource "kubernetes_namespace" "velero" {
   }
 }
 
-resource "kubernetes_secret" "velero" {
+resource kubernetes_secret" "velero" {
   metadata {
     name      = "cloud-credentials"
     namespace = kubernetes_namespace.velero.metadata[0].name
@@ -20,7 +20,7 @@ resource "kubernetes_secret" "velero" {
   }
 }
 
-resource "helm_release" "velero" {
+resource helm_release" "velero" {
   name       = "velero"
   chart      = "velero"
   repository = var.velero_chart_repository

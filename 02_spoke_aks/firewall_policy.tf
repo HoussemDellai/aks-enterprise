@@ -2,10 +2,10 @@ locals {
   cidr_subnet_aks_nodes_pods = concat(azurerm_subnet.subnet_nodes.address_prefixes, azurerm_subnet.subnet_pods.address_prefixes)
 }
 
-resource "azurerm_firewall_policy_rule_collection_group" "policy_group_aks" {
+resource azurerm_firewall_policy_rule_collection_group" "policy_group_aks" {
   count              = var.enable_firewall ? 1 : 0
   name               = "policy_group_aks"
-  firewall_policy_id = data.terraform_remote_state.hub.outputs.firewall_policy_id # azurerm_firewall_policy.firewall_policy.id
+  firewall_policy_id = data.terraform_remote_state.hub.0.outputs.firewall_policy_id # azurerm_firewall_policy.firewall_policy.id
   priority           = 200
 
   application_rule_collection {

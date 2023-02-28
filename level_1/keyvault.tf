@@ -1,4 +1,4 @@
-resource "azurerm_key_vault" "kv" {
+resource azurerm_key_vault" "kv" {
   count                         = var.enable_keyvault ? 1 : 0
   name                          = var.keyvault_name
   location                      = var.resources_location
@@ -20,7 +20,7 @@ resource "azurerm_key_vault" "kv" {
   }
 }
 
-resource "azurerm_key_vault_secret" "secret" {
+resource azurerm_key_vault_secret" "secret" {
   count        = var.enable_keyvault ? 1 : 0
   name         = "database-password"
   value        = "@Aa123456789"
@@ -29,7 +29,7 @@ resource "azurerm_key_vault_secret" "secret" {
   depends_on   = [azurerm_role_assignment.role_secret_officer]
 }
 
-resource "azurerm_role_assignment" "role_secret_officer" {
+resource azurerm_role_assignment" "role_secret_officer" {
   count                = var.enable_keyvault ? 1 : 0
   scope                = azurerm_key_vault.kv.0.id
   role_definition_name = "Key Vault Secrets Officer"

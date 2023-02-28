@@ -1,5 +1,5 @@
 # https://www.kasten.io/kubernetes/resources/videos/-kubernetes-backup-and-restore-made-easy
-resource "kubernetes_namespace" "kasten" {
+resource kubernetes_namespace" "kasten" {
   provider = kubernetes.aks-module
   metadata {
     name = "kasten-io"
@@ -11,7 +11,7 @@ resource "kubernetes_namespace" "kasten" {
 #  --set secrets.azureClientId="d56eec9e-d2f2-4ff5-a8d8-6795d3557b39" `
 #  --set secrets.azureClientSecret="aHg8Q~5jDUgSTUFcPoX9lQ2Hwr5EmCoY1hCobaWD" `
 #  --set services.dashboardbff.hostNetwork=true
-resource "helm_release" "kasten" {
+resource helm_release" "kasten" {
   provider   = helm.aks-module
   name       = "k10"
   repository = "https://charts.kasten.io/"
@@ -39,7 +39,7 @@ resource "helm_release" "kasten" {
 # kubectl --namespace kasten-io port-forward service/gateway 8000:8000
 # Access dashboard: http://127.0.0.1:8000/k10/#/
 
-# resource "kubernetes_service" "kasten_gateway_lb" {
+# resource kubernetes_service" "kasten_gateway_lb" {
 #   metadata {
 #     name = "gatewaylb"
 #     namespace = kubernetes_namespace.kasten.metadata[0].name

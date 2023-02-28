@@ -46,7 +46,7 @@ variable cidr_vnet_spoke_aks {
   description = "VNET Spoke address prefix"
 }
 
-variable cidr_vnet_spoke_3 {
+variable cidr_vnet_spoke_appservice {
   description = "VNET Spoke 3 address prefix"
 }
 

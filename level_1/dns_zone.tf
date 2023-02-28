@@ -3,12 +3,12 @@ data "azurerm_dns_zone" "dns_zone" {
   resource_group_name = "rg-dns-zone-houssem-cloud"
 }
 
-resource "azurerm_dns_zone" "dns_zone_apps" {
+resource azurerm_dns_zone" "dns_zone_apps" {
   name                = "apps.${data.azurerm_dns_zone.dns_zone.name}"
   resource_group_name = data.azurerm_dns_zone.dns_zone.resource_group_name
 }
 
-resource "azurerm_dns_a_record" "example" {
+resource azurerm_dns_a_record" "example" {
   name                = "test"
   zone_name           = azurerm_dns_zone.dns_zone_apps.name
   resource_group_name = azurerm_dns_zone.dns_zone_apps.resource_group_name

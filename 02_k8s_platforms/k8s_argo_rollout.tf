@@ -1,4 +1,4 @@
-resource "kubernetes_namespace" "argo_rollouts" {
+resource kubernetes_namespace" "argo_rollouts" {
   provider = kubernetes.aks-module
   metadata {
     name = "argo-rollouts"
@@ -6,7 +6,7 @@ resource "kubernetes_namespace" "argo_rollouts" {
 }
 
 # helm repo add argo https://argoproj.github.io/argo-helm
-resource "helm_release" "argo_rollouts" {
+resource helm_release" "argo_rollouts" {
   provider   = helm.aks-module
   name       = "argo-rollouts"
   repository = "https://argoproj.github.io/argo-helm"
