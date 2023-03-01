@@ -1,5 +1,5 @@
 # Log collection components
-resource azurerm_storage_account" "network_log_data" {
+resource azurerm_storage_account network_log_data {
   count                    = var.enable_nsg_flow_logs ? 1 : 0
   name                     = "storageforlogs011"
   resource_group_name      = var.rg_network_watcher
@@ -13,19 +13,19 @@ resource azurerm_storage_account" "network_log_data" {
 
 # The Network Watcher Instance & network log flow
 # There can only be one Network Watcher per subscription and region
-data "azurerm_network_watcher" "network_watcher_regional" {
+data azurerm_network_watcher network_watcher_regional {
   name                = "NetworkWatcher_${var.resources_location}"
   resource_group_name = var.rg_network_watcher
 }
 
-# resource azurerm_network_watcher" "network_watcher_regional" {
+# resource azurerm_network_watcher network_watcher_regional {
 #   count               = var.enable_nsg_flow_logs ? 1 : 0
 #   name                = "NetworkWatcher_${var.resources_location}"
 #   location            = var.resources_location
 #   resource_group_name = azurerm_resource_group.rg_network_watcher.0.name
 # }
 
-data "azurerm_resources" "nsg_flowlogs" {
+data azurerm_resources nsg_flowlogs {
   type          = "Microsoft.Network/networkSecurityGroups"
   required_tags = var.tags
 }
@@ -40,11 +40,11 @@ locals {
   })
 }
 
-output "nsg" {
+output nsg {
   value = local.nsg
 }
 
-module "azurerm_network_watcher_flow_log" {
+module "azurerm_network_watcher_flow_log {
   for_each                  = local.nsg
   source                    = "../modules/azurerm_network_watcher_flow_log"
   nsg_name                  = each.value.name
@@ -58,7 +58,7 @@ module "azurerm_network_watcher_flow_log" {
   workspace_resource_id = data.azurerm_log_analytics_workspace.workspace.id
 }
 
-# module "azurerm_network_watcher_flow_log" {
+# module "azurerm_network_watcher_flow_log {
 #   count                     = var.enable_nsg_flow_logs ? length(data.azurerm_resources.nsg_flowlogs.resources) : 0
 #   source                    = "../modules/azurerm_network_watcher_flow_log"
 #   nsg_name                  = data.azurerm_resources.nsg_flowlogs.resources[count.index].name
@@ -72,6 +72,6 @@ module "azurerm_network_watcher_flow_log" {
 #   workspace_resource_id = data.azurerm_log_analytics_workspace.workspace.id
 # }
 
-output "azurerm_resources_nsg_flowlogs" {
+output azurerm_resources_nsg_flowlogs {
   value = data.azurerm_resources.nsg_flowlogs.resources[*].name
 }

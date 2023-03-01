@@ -2,7 +2,7 @@ locals {
   cidr_subnet_aks_nodes_pods = concat(azurerm_subnet.subnet_nodes.address_prefixes, azurerm_subnet.subnet_pods.address_prefixes)
 }
 
-resource azurerm_firewall_policy" "firewall_policy" {
+resource azurerm_firewall_policy firewall_policy {
   count               = var.enable_firewall ? 1 : 0
   name                = "firewall-policy"
   resource_group_name = azurerm_resource_group.rg_hub.name
@@ -13,7 +13,7 @@ resource azurerm_firewall_policy" "firewall_policy" {
     servers       = ["168.63.129.16"]
   }
 
-  dynamic "insights" {
+  dynamic insights {
     for_each = var.enable_monitoring ? ["any_value"] : []
     content {
       enabled                            = true
@@ -23,7 +23,7 @@ resource azurerm_firewall_policy" "firewall_policy" {
   }
 }
 
-resource azurerm_firewall_policy_rule_collection_group" "policy_group_aks" {
+resource azurerm_firewall_policy_rule_collection_group policy_group_aks {
   count              = var.enable_firewall && var.enable_aks_cluster ? 1 : 0
   name               = "policy_group_aks"
   firewall_policy_id = azurerm_firewall_policy.firewall_policy.id
@@ -132,7 +132,7 @@ resource azurerm_firewall_policy_rule_collection_group" "policy_group_aks" {
   }
 }
 
-resource azurerm_firewall_policy_rule_collection_group" "policy_group_subnet_mgt" {
+resource azurerm_firewall_policy_rule_collection_group policy_group_subnet_mgt {
   count              = var.enable_firewall && (var.enable_vm_jumpbox_linux || var.enable_vm_jumpbox_windows) ? 1 : 0
   name               = "policy_group_subnet_mgt"
   firewall_policy_id = azurerm_firewall_policy.firewall_policy.id
@@ -201,7 +201,7 @@ resource azurerm_firewall_policy_rule_collection_group" "policy_group_subnet_mgt
   }
 }
 
-resource azurerm_firewall_policy_rule_collection_group" "policy_group_deny" {
+resource azurerm_firewall_policy_rule_collection_group policy_group_deny {
   count              = var.enable_firewall ? 1 : 0
   name               = "policy_group_deny"
   firewall_policy_id = azurerm_firewall_policy.firewall_policy.id
@@ -228,7 +228,7 @@ resource azurerm_firewall_policy_rule_collection_group" "policy_group_deny" {
   }
 }
 
-resource azurerm_firewall_policy_rule_collection_group" "policy_group_spoke_appservice" {
+resource azurerm_firewall_policy_rule_collection_group policy_group_spoke_appservice {
   count              = var.enable_firewall && var.enable_spoke_appservice ? 1 : 0
   name               = "policy_group_spoke_appservie"
   firewall_policy_id = azurerm_firewall_policy.firewall_policy.id

@@ -5,7 +5,7 @@ data "azuread_service_principal" "aks_aad_server" {
 
 data "azurerm_client_config" "current" {}
 
-# data "azurerm_subscription" "subscription_hub" {
+# data azurerm_subscription subscription_hub {
 #   subscription_id = var.subscription_id_hub
 # }
 

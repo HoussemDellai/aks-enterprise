@@ -1,5 +1,5 @@
 # Create the kubecost namespace
-resource kubernetes_namespace" "portainer" {
+resource kubernetes_namespace portainer {
   provider = kubernetes.aks-module
   metadata {
     name = "portainer"
@@ -7,7 +7,7 @@ resource kubernetes_namespace" "portainer" {
 }
 
 # https://docs.portainer.io/start/install/server/kubernetes/baremetal
-resource helm_release" "portainer" {
+resource helm_release portainer {
   provider   = helm.aks-module
   name       = "portainer"
   chart      = "portainer"

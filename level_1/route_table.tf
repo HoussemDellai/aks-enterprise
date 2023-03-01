@@ -1,4 +1,4 @@
-resource azurerm_route_table" "route_table_to_firewall" {
+resource azurerm_route_table route_table_to_firewall {
   count                         = var.enable_firewall ? 1 : 0
   name                          = "route-table-to-firewall"
   location                      = var.resources_location
@@ -6,7 +6,7 @@ resource azurerm_route_table" "route_table_to_firewall" {
   disable_bgp_route_propagation = true
   tags                          = var.tags
 
-  # dynamic "route" {
+  # dynamic route {
   #   for_each = var.enable_firewall ? ["any_value"] : []
   #   content {
   #     name                   = "route-to-firewall"
@@ -23,7 +23,7 @@ resource azurerm_route_table" "route_table_to_firewall" {
   # }
 }
 
-resource azurerm_route" "route_to_firewall" {
+resource azurerm_route route_to_firewall {
   count                  = var.enable_firewall ? 1 : 0
   name                   = "route-to-firewall"
   resource_group_name    = azurerm_resource_group.rg_hub.0.name
@@ -33,7 +33,7 @@ resource azurerm_route" "route_to_firewall" {
   next_hop_in_ip_address = azurerm_firewall.firewall.0.ip_configuration.0.private_ip_address
 }
 
-# resource azurerm_route" "force_internet_tunneling" {
+# resource azurerm_route force_internet_tunneling {
 #   name                = "InternetForceTunneling"
 #   resource_group_name = var.resource_group_name
 #   route_table_name    = azurerm_route_table.route_table.name

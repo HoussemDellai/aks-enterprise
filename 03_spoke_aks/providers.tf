@@ -6,7 +6,7 @@ terraform {
 
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = ">= 3.44.1"
+      version = "= 3.43.0"
     }
 
     azuread = {
@@ -92,13 +92,13 @@ provider "azurerm" {
 provider "azuread" { # default takes current user/identity tenant
 }
 
-# provider "azuread" {
+# provider azuread {
 #   alias     = "tenant_hub"
 #   tenant_id = "72f988bf-86f1-41af-91ab-2d7cd011db47"
 #   # use_cli = true
 # }
 
-# provider "azuread" {
+# provider azuread {
 #   alias     = "tenant_spoke"
 #   tenant_id = "558506eb-9459-4ef3-b920-ad55c555e729"
 #   # use_cli = true

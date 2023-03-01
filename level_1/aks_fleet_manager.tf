@@ -1,5 +1,5 @@
 # https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/kubernetes_fleet_manager
-resource azurerm_kubernetes_fleet_manager" "fleet_manager" {
+resource azurerm_kubernetes_fleet_manager fleet_manager {
   count = var.enable_fleet_manager ? 1 : 0
   hub_profile {
     dns_prefix = "aksfleet"

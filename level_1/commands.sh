@@ -124,7 +124,7 @@ PS1="\[\e]0;\u@\h: \w\a\]${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\
 az acr login -n acrforakstf0111
 docker pull acrforakstf0111.azurecr.io/hello-world:latest
 
-curl -s -H Metadata:true --noproxy "*" "http://169.254.169.254/metadata/instance?api-version=2021-02-01" | jq
+curl -s -H Metadata:true --noproxy "* http://169.254.169.254/metadata/instance?api-version=2021-02-01" | jq
 
 
 

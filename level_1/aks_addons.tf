@@ -1,7 +1,7 @@
-resource null_resource" "connect_to_aks" {
+resource null_resource connect_to_aks {
   count = var.enable_aks_cluster ? 1 : 0
 
-  provisioner "local-exec" {
+  provisioner local-exec {
     interpreter = ["PowerShell", "-Command"]
     command     = <<-EOT
       az aks get-credentials -g ${azurerm_kubernetes_cluster.aks.0.resource_group_name} `
@@ -25,10 +25,10 @@ resource null_resource" "connect_to_aks" {
   ]
 }
 
-# resource null_resource" "enable_aks_addons" {
+# resource null_resource enable_aks_addons {
 #   count = var.enable_aks_cluster ? 1 : 0
 
-#   provisioner "local-exec" {
+#   provisioner local-exec {
 #     command = <<-EOT
 #       az aks update -g ${azurerm_kubernetes_cluster.aks.0.resource_group_name} -n ${azurerm_kubernetes_cluster.aks.0.name} --enable-image-cleaner
 #     EOT
@@ -43,10 +43,10 @@ resource null_resource" "connect_to_aks" {
 #   #   }
 # }
 
-# resource null_resource" "enable_aks_vnet_integration" {
+# resource null_resource enable_aks_vnet_integration {
 #   count = var.enable_aks_cluster && var.enable_apiserver_vnet_integration ? 1 : 0
 
-#   provisioner "local-exec" {
+#   provisioner local-exec {
 #     interpreter = ["PowerShell", "-Command"]
 #     command     = <<-EOT
 #       az aks update -g ${azurerm_kubernetes_cluster.aks.0.resource_group_name} `
@@ -65,10 +65,10 @@ resource null_resource" "connect_to_aks" {
 #   #   }
 # }
 
-# resource null_resource" "install_helm_charts" {
+# resource null_resource install_helm_charts {
 #   count = var.enable_aks_cluster ? 1 : 0
 
-#   provisioner "local-exec" {
+#   provisioner local-exec {
 #     interpreter = ["PowerShell", "-Command"]
 #     command     = <<-EOT
 #       .\02_k8s_platforms\install_helm_charts.ps1

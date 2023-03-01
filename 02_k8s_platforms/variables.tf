@@ -1,176 +1,176 @@
-# variable "prefix" {
+# variable prefix {
 #   type        = string
 #   description = "A prefix used for all resources in this example"
 # }
 
-variable "resource_group_name" {
+variable resource_group_name {
   default     = "rg-aks-cluster"
   description = "Name of the resource group."
 }
 
-# variable "node_resource_group" {
+# variable node_resource_group {
 #   default = "rg-aks-cluster-managed"
 # }
 
-# variable "resources_location" {
+# variable resources_location {
 #   default     = "westeurope"
 #   description = "Location of the resource group."
 # }
 
-# variable "virtual_network_name" {
+# variable virtual_network_name {
 #   description = "Virtual network name"
 #   default     = "vnet-spoke-aks"
 # }
 
-# variable "virtual_network_address_prefix" {
+# variable virtual_network_address_prefix {
 #   description = "VNET address prefix"
 #   default     = "10.0.0.0/8"
 # }
 
-# variable "subnet_nodes_name" {
+# variable subnet_nodes_name {
 #   description = "Subnet Name."
 #   default     = "subnet-aks-nodes"
 # }
 
-# variable "subnet_pods" {
+# variable subnet_pods {
 #   description = "Subnet Name."
 #   default     = "subnet-aks-pods"
 # }
 
-# variable "subnet_app_gateway" {
+# variable subnet_app_gateway {
 #   description = "Subnet Name."
 #   default     = "subnet-appgw"
 # }
 
-# variable "cidr_subnet_nodes" {
+# variable cidr_subnet_nodes {
 #   description = "Subnet address prefix."
 #   default     = ["10.240.0.0/16"]
 # }
 
-# variable "cidr_subnet_pods" {
+# variable cidr_subnet_pods {
 #   description = "Subnet address prefix."
 #   default     = ["10.241.0.0/16"]
 # }
 
-# variable "cidr_subnet_appgateway" {
+# variable cidr_subnet_appgateway {
 #   description = "Subnet server IP address."
 #   default     = ["10.1.0.0/16"]
 # }
 
-# variable "app_gateway" {
+# variable app_gateway {
 #   description = "Name of the Application Gateway"
 #   default     = "appgw-aks"
 # }
 
-# variable "app_gateway_sku" {
+# variable app_gateway_sku {
 #   description = "Name of the Application Gateway SKU"
 #   default     = "Standard_v2"
 # }
 
-# variable "acr_name" {
+# variable acr_name {
 #   description = "Name of ACR container registry"
 # }
 
-variable "aks_name" {
+variable aks_name {
   description = "AKS cluster name"
   default     = "aks-cluster"
 }
 
-# variable "aks_dns_prefix" {
+# variable aks_dns_prefix {
 #   description = "Optional DNS prefix to use with hosted Kubernetes API server FQDN."
 #   default     = "aks"
 # }
 
-# variable "aks_agent_os_disk_size" {
+# variable aks_agent_os_disk_size {
 #   description = "Disk size (in GB) to provision for each of the agent pool nodes. This value ranges from 0 to 1023. Specifying 0 applies the default disk size for that agentVMSize."
 #   default     = 40
 # }
 
-# variable "aks_agent_count" {
+# variable aks_agent_count {
 #   description = "The number of agent nodes for the cluster."
 #   default     = 1
 # }
 
-# variable "kubernetes_version" {
+# variable kubernetes_version {
 #   description = "Kubernetes version"
 #   default     = "1.23.5"
 # }
 
-# variable "cidr_aks_service" {
+# variable cidr_aks_service {
 #   description = "CIDR notation IP range from which to assign service cluster IPs"
 #   default     = "10.0.0.0/16"
 # }
 
-# variable "aks_dns_service_ip" {
+# variable aks_dns_service_ip {
 #   description = "DNS server IP address"
 #   default     = "10.0.0.10"
 # }
 
-# variable "cidr_aks_docker_bridge" {
+# variable cidr_aks_docker_bridge {
 #   description = "CIDR notation IP for Docker bridge."
 #   default     = "172.17.0.1/16"
 # }
 
-# variable "aks_enable_rbac" {
+# variable aks_enable_rbac {
 #   description = "Enable RBAC on the AKS cluster. Defaults to true."
 #   default     = "true"
 # }
 
-# variable "vm_user_name" {
+# variable vm_user_name {
 #   description = "User name for the VM"
 #   default     = "vmuser1"
 # }
 
-# variable "public_ssh_key_path" {
+# variable public_ssh_key_path {
 #   description = "Public key path for SSH."
 #   default     = "~/.ssh/id_rsa.pub"
 # }
 
-# variable "keyvault_name" {
+# variable keyvault_name {
 #   description = "Key Vault instance name"
 #   default     = "kvforaks011"
 # }
 
-# variable "aks_admin_group_object_ids" {
+# variable aks_admin_group_object_ids {
 #   description = "Azure AD admin group for AKS."
 # }
 
-# variable "aks_network_plugin" {
+# variable aks_network_plugin {
 #   type        = string
 #   description = "AKS network Plugin (Azure CNI or Kubenet)"
 # }
 
-# variable "spn_name" {
+# variable spn_name {
 #   type        = string
 #   description = "Name of Service Principal"
 # }
 
-variable "aad_group_aks_admins" {
+variable aad_group_aks_admins {
   type        = string
   description = "Name of AAD group for AKS admins"
 }
 
-# variable "enable_velero_backups" {
+# variable enable_velero_backups {
 #   type        = bool
 #   description = "Enable installing Velero and creating backups for AKS"
 # }
 
-variable "storage_account_name_backup" {
+variable storage_account_name_backup {
   type        = string
   description = "Name of Storage Account for Backup"
 }
 
-variable "backups_rg_name" {
+variable backups_rg_name {
   type        = string
   description = "Name of Resource Group for AKS backups"
 }
 
-variable "backups_region" {
+variable backups_region {
   type        = string
   description = "Region for AKS backups"
 }
 
-variable "velero_values" {
+variable velero_values {
   description = <<EOVV
 Settings for Velero helm chart:
 ```
@@ -210,27 +210,27 @@ EOVV
   default     = {}
 }
 
-variable "harbor_admin_password" {
+variable harbor_admin_password {
   type        = string
   description = "Password for Harbor"
 }
 
-variable "grafana_admin_user" {
+variable grafana_admin_user {
   type        = string
   description = "Admin user for Grafana"
 }
 
-variable "grafana_admin_password" {
+variable grafana_admin_password {
   type        = string
   description = "Password for Grafana"
 }
 
-variable "argocd_admin_password" {
+variable argocd_admin_password {
   type        = string
   description = "Password for Argo CD, should be bcrypt"
 }
 
-variable "tags" {
+variable tags {
   type = map(string)
 
   default = {

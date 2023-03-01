@@ -1,11 +1,11 @@
-resource azurerm_resource_group" "rg_spoke_serverless" {
+resource azurerm_resource_group rg_spoke_serverless {
   # count    = var.enable_spoke_serverless ? 1 : 0
   name     = "rg-spoke-serverless"
   location = var.resources_location
   tags     = var.tags
 }
 
-resource azurerm_storage_account" "storage_function" {
+resource azurerm_storage_account storage_function {
   # count                    = var.enable_spoke_serverless ? 1 : 0
   name                     = "storage4function0135"
   resource_group_name      = azurerm_resource_group.rg_spoke_serverless.name
@@ -15,7 +15,7 @@ resource azurerm_storage_account" "storage_function" {
   tags                     = var.tags
 }
 
-resource azurerm_service_plan" "plan_function" {
+resource azurerm_service_plan plan_function {
   # count               = var.enable_spoke_serverless ? 1 : 0
   name                = "function-app-service-plan"
   resource_group_name = azurerm_resource_group.rg_spoke_serverless.name
@@ -25,7 +25,7 @@ resource azurerm_service_plan" "plan_function" {
   tags                = var.tags
 }
 
-resource azurerm_windows_function_app" "function_app" {
+resource azurerm_windows_function_app function_app {
   # count               = var.enable_spoke_serverless ? 1 : 0
   name                = "function-app-win-0135"
   resource_group_name = azurerm_resource_group.rg_spoke_serverless.name

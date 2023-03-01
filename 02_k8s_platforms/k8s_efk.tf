@@ -1,4 +1,4 @@
-resource kubernetes_namespace" "efk" {
+resource kubernetes_namespace efk {
   provider = kubernetes.aks-module
   metadata {
     name = "elk"
@@ -6,7 +6,7 @@ resource kubernetes_namespace" "efk" {
 }
 
 # https://github.com/elastic/helm-charts
-resource helm_release" "elastic_search" {
+resource helm_release elastic_search {
   provider   = helm.aks-module
   name       = "elasticsearch"
   repository = "https://helm.elastic.co"
@@ -14,7 +14,7 @@ resource helm_release" "elastic_search" {
   namespace  = kubernetes_namespace.efk.metadata.0.name
 }
 
-resource helm_release" "filebeat" {
+resource helm_release filebeat {
   provider   = helm.aks-module
   name       = "filebeat"
   repository = "https://helm.elastic.co"
@@ -22,7 +22,7 @@ resource helm_release" "filebeat" {
   namespace  = kubernetes_namespace.efk.metadata.0.name
 }
 
-resource helm_release" "metricbeat" {
+resource helm_release metricbeat {
   provider   = helm.aks-module
   name       = "metricbeat"
   repository = "https://helm.elastic.co"
@@ -30,7 +30,7 @@ resource helm_release" "metricbeat" {
   namespace  = kubernetes_namespace.efk.metadata.0.name
 }
 
-resource helm_release" "apm-server" {
+resource helm_release apm-server {
   provider   = helm.aks-module
   name       = "apm-server"
   repository = "https://helm.elastic.co"
@@ -38,7 +38,7 @@ resource helm_release" "apm-server" {
   namespace  = kubernetes_namespace.efk.metadata.0.name
 }
 
-resource helm_release" "kibana" {
+resource helm_release kibana {
   provider   = helm.aks-module
   name       = "kibana"
   repository = "https://helm.elastic.co"

@@ -1,5 +1,5 @@
 # Subnet for Azure Firewall, without NSG as per Firewall requirements
-resource azurerm_subnet subnet_firewall {
+resource "azurerm_subnet" "subnet_firewall" {
   # count                                     = var.enable_firewall ? 1 : 0
   provider                                  = azurerm.subscription_hub
   name                                      = "AzureFirewallSubnet"
@@ -9,7 +9,7 @@ resource azurerm_subnet subnet_firewall {
   private_endpoint_network_policies_enabled = false
 }
 
-resource azurerm_public_ip public_ip_firewall {
+resource "azurerm_public_ip" "public_ip_firewall" {
   # count               = var.enable_firewall ? 1 : 0
   provider            = azurerm.subscription_hub
   name                = "public-ip-firewall"
@@ -21,7 +21,7 @@ resource azurerm_public_ip public_ip_firewall {
   tags                = var.tags
 }
 
-resource azurerm_firewall firewall {
+resource "azurerm_firewall" "firewall" {
   # count               = var.enable_firewall ? 1 : 0
   provider            = azurerm.subscription_hub
   name                = "firewall-hub"
@@ -29,9 +29,9 @@ resource azurerm_firewall firewall {
   resource_group_name = azurerm_resource_group.rg_hub.name
   sku_name            = "AZFW_VNet" # AZFW_Hub
   sku_tier            = "Standard"  # Premium  # "Basic" # 
-  firewall_policy_id = azurerm_firewall_policy.firewall_policy.id
-  zones              = ["1"] # ["1", "2", "3"]
-  tags               = var.tags
+  firewall_policy_id  = azurerm_firewall_policy.firewall_policy.id
+  zones               = ["1"] # ["1", "2", "3"]
+  tags                = var.tags
   # dns_servers         = ["168.63.129.16"]
 
   ip_configuration {
@@ -39,8 +39,4 @@ resource azurerm_firewall firewall {
     subnet_id            = azurerm_subnet.subnet_firewall.id
     public_ip_address_id = azurerm_public_ip.public_ip_firewall.id
   }
-}
-
-output "firewall_private_ip" {
-  value = azurerm_firewall.firewall.ip_configuration.0.private_ip_address
 }

@@ -1,4 +1,5 @@
-resource azurerm_subnet" "subnet_bastion" {
+resource "azurerm_subnet" "subnet_bastion" {
+    provider = azurerm.subscription_hub
   # count                = var.enable_bastion ? 1 : 0
   name                 = "AzureBastionSubnet"
   virtual_network_name = azurerm_virtual_network.vnet_hub.name
@@ -7,8 +8,8 @@ resource azurerm_subnet" "subnet_bastion" {
 }
 
 # https://github.com/Azure-Samples/aks-multi-cluster-service-mesh/blob/main/istio/bastion_host.tf
-resource azurerm_public_ip" "public_ip_bastion" {
-  provider            = azurerm.subscription_hub
+resource "azurerm_public_ip" "public_ip_bastion" {
+  provider = azurerm.subscription_hub
   # count               = var.enable_bastion ? 1 : 0
   name                = "public-ip-bastion"
   location            = var.resources_location
@@ -18,8 +19,8 @@ resource azurerm_public_ip" "public_ip_bastion" {
   tags                = var.tags
 }
 
-resource azurerm_bastion_host" "bastion_host" {
-  provider               = azurerm.subscription_hub
+resource "azurerm_bastion_host" "bastion_host" {
+  provider = azurerm.subscription_hub
   # count                  = var.enable_bastion ? 1 : 0
   name                   = "bastion-host"
   location               = var.resources_location

@@ -1,11 +1,11 @@
-resource azurerm_subnet" "subnet_nodes" {
+resource "azurerm_subnet" "subnet_nodes" {
   name                 = "subnet-nodes"
   virtual_network_name = azurerm_virtual_network.vnet_spoke_aks.name
   resource_group_name  = azurerm_virtual_network.vnet_spoke_aks.resource_group_name
   address_prefixes     = var.cidr_subnet_nodes
 }
 
-resource azurerm_subnet" "subnet_pods" {
+resource "azurerm_subnet" "subnet_pods" {
   name                 = "subnet-pods"
   virtual_network_name = azurerm_virtual_network.vnet_spoke_aks.name
   resource_group_name  = azurerm_virtual_network.vnet_spoke_aks.resource_group_name
@@ -23,7 +23,7 @@ resource azurerm_subnet" "subnet_pods" {
   }
 }
 
-resource azurerm_subnet" "subnet_apiserver" {
+resource "azurerm_subnet" "subnet_apiserver" {
   count                = var.enable_apiserver_vnet_integration ? 1 : 0
   name                 = "subnet-apiserver"
   virtual_network_name = azurerm_virtual_network.vnet_spoke_aks.name
@@ -41,7 +41,7 @@ resource azurerm_subnet" "subnet_apiserver" {
   }
 }
 
-resource azurerm_kubernetes_cluster" "aks" {
+resource azurerm_kubernetes_cluster aks {
   # count                               = var.enable_aks_cluster ? 1 : 0
   name                                = "aks-cluster"
   resource_group_name                 = azurerm_resource_group.rg_spoke_aks.name
@@ -71,12 +71,6 @@ resource azurerm_kubernetes_cluster" "aks" {
     subnet_id                = azurerm_subnet.subnet_apiserver.0.id
     vnet_integration_enabled = var.enable_apiserver_vnet_integration
   }
-  # linux_profile {
-  #   admin_username = var.vm_user_name
-  #   ssh_key {
-  #     key_data = file(var.public_ssh_key_path)
-  #   }
-  # }
 
   default_node_pool {
     name                         = "poolsystem"
@@ -125,13 +119,13 @@ resource azurerm_kubernetes_cluster" "aks" {
   network_profile {
     # network_plugin_mode = "Overlay"
     # ebpf_data_plane     = "cilium"
-    # network_mode        = "bridge"               # "" "transparent"
+    # network_mode        = "bridge"               # " transparent"
     network_plugin     = var.aks_network_plugin # "kubenet", "azure", "none"
     network_policy     = "calico"               # "azure" 
     dns_service_ip     = var.aks_dns_service_ip
     docker_bridge_cidr = var.cidr_aks_docker_bridge
     service_cidr       = var.cidr_aks_service
-    outbound_type      = var.aks_outbound_type # "userAssignedNATGateway" "loadBalancer" # userDefinedRouting, managedNATGateway
+    outbound_type      = var.aks_outbound_type # "userAssignedNATGateway loadBalancer" # userDefinedRouting, managedNATGateway
     load_balancer_sku  = "standard"            # "basic"
     pod_cidr           = null                  # can only be set when network_plugin is set to kubenet
     # pod_cidr    = var.aks_network_plugin == "kubenet" ? var.cidr_subnet_pods : null # only set when network_plugin is set to kubenet
@@ -221,6 +215,13 @@ resource azurerm_kubernetes_cluster" "aks" {
     keda_enabled = true
   }
 
+  # linux_profile {
+  #   admin_username = var.vm_user_name
+  #   ssh_key {
+  #     key_data = file(var.public_ssh_key_path)
+  #   }
+  # }
+
   # monitor_metrics {
   #   annotations_allowed = []
   #   labels_allowed = []
@@ -274,7 +275,7 @@ resource azurerm_kubernetes_cluster" "aks" {
 #     -g <resource-group> \
 #     --enable-apiserver-vnet-integration \
 #     --apiserver-subnet-id <apiserver-subnet-resource-id>
-# resource azapi_update_resource" "aks_api_vnet_integration" {
+# resource azapi_update_resource aks_api_vnet_integration {
 #   count       = var.enable_apiserver_vnet_integration ? 1 : 0
 #   type        = "Microsoft.ContainerService/managedClusters@2022-06-02-preview"
 #   resource_id = azurerm_kubernetes_cluster.aks.0.id

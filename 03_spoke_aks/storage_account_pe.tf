@@ -1,11 +1,11 @@
-resource azurerm_private_dns_zone" "private_dns_zone_storage" {
+resource "azurerm_private_dns_zone" "private_dns_zone_storage" {
   count               = var.enable_storage_account ? 1 : 0
   name                = "privatelink.blob.core.windows.net"
   resource_group_name = azurerm_resource_group.rg_spoke_aks.name
   tags                = var.tags
 }
 
-resource azurerm_private_dns_zone_virtual_network_link" "private_dns_zone_storage_link_hub" {
+resource "azurerm_private_dns_zone_virtual_network_link" "private_dns_zone_storage_link_hub" {
   count                 = var.enable_storage_account && var.enable_hub_spoke ? 1 : 0
   name                  = "private_dns_zone_storage_link_hub"
   resource_group_name   = azurerm_private_dns_zone.private_dns_zone_storage.0.resource_group_name
@@ -13,7 +13,7 @@ resource azurerm_private_dns_zone_virtual_network_link" "private_dns_zone_storag
   virtual_network_id    = data.terraform_remote_state.hub.0.outputs.vnet_hub_id # azurerm_virtual_network.vnet_hub.0.id
 }
 
-resource azurerm_private_endpoint" "pe_storage" {
+resource "azurerm_private_endpoint" "pe_storage" {
   count               = var.enable_storage_account ? 1 : 0
   name                = "private-endpoint-storage"
   resource_group_name = azurerm_resource_group.rg_spoke_aks.name

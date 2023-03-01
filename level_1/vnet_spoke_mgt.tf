@@ -1,4 +1,4 @@
-resource azurerm_virtual_network" "vnet_spoke_mgt" {
+resource azurerm_virtual_network vnet_spoke_mgt {
   count               = var.enable_vm_jumpbox_windows || var.enable_vm_jumpbox_linux ? 1 : 0
   name                = "vnet-spoke-mgt"
   location            = var.resources_location
@@ -8,7 +8,7 @@ resource azurerm_virtual_network" "vnet_spoke_mgt" {
   tags                = var.tags
 }
 
-resource azurerm_subnet" "subnet_mgt" {
+resource azurerm_subnet subnet_mgt {
   count                = var.enable_vm_jumpbox_windows || var.enable_vm_jumpbox_linux ? 1 : 0
   name                 = "subnet-mgt"
   virtual_network_name = azurerm_virtual_network.vnet_spoke_mgt.0.name
@@ -16,13 +16,13 @@ resource azurerm_subnet" "subnet_mgt" {
   address_prefixes     = var.cidr_subnet_mgt
 }
 
-# resource azurerm_subnet_route_table_association" "association_route_table_subnet_mgt" {
+# resource azurerm_subnet_route_table_association association_route_table_subnet_mgt {
 #   count          = var.enable_vm_jumpbox_windows || var.enable_vm_jumpbox_linux ? 1 : 0
 #   subnet_id      = azurerm_subnet.subnet_mgt.0.id
 #   route_table_id = azurerm_route_table.route_table_to_firewall.id
 # }
 
-# resource azurerm_network_security_group" "nsg_subnet_mgt" {
+# resource azurerm_network_security_group nsg_subnet_mgt {
 #   count               = var.enable_vm_jumpbox_windows || var.enable_vm_jumpbox_linux ? 1 : 0
 #   name                = "nsg_subnet_mgt"
 #   location            = var.resources_location
@@ -30,7 +30,7 @@ resource azurerm_subnet" "subnet_mgt" {
 #   tags                = var.tags
 # }
 
-# resource azurerm_subnet_network_security_group_association" "association_nsg_subnet_mgt" {
+# resource azurerm_subnet_network_security_group_association association_nsg_subnet_mgt {
 #   count                     = var.enable_vm_jumpbox_windows || var.enable_vm_jumpbox_linux ? 1 : 0
 #   subnet_id                 = azurerm_subnet.subnet_mgt.0.id
 #   network_security_group_id = azurerm_network_security_group.nsg_subnet_mgt.0.id

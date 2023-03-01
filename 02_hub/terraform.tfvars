@@ -1,8 +1,10 @@
 # prefix = "demo011"
-subscription_id_spoke                       = "82f6d75e-85f4-434a-ab74-5dddd9fa8910" # "17b12858-3960-4e6f-a663-a06fdae23428"
-subscription_id_hub                         = "82f6d75e-85f4-434a-ab74-5dddd9fa8910" # "17b12858-3960-4e6f-a663-a06fdae23428"
-tenant_id_hub                               = "16b3c013-d300-468d-ac64-7eda0820b6d3" # "558506eb-9459-4ef3-b920-ad55c555e729"
-tenant_id_spoke                             = "16b3c013-d300-468d-ac64-7eda0820b6d3" # "558506eb-9459-4ef3-b920-ad55c555e729"
+tenant_id_hub                               = "16b3c013-d300-468d-ac64-7eda0820b6d3"
+subscription_id_hub                         = "82f6d75e-85f4-434a-ab74-5dddd9fa8910"
+
+tenant_id_spoke                             = "558506eb-9459-4ef3-b920-ad55c555e729"
+subscription_id_spoke                       = "17b12858-3960-4e6f-a663-a06fdae23428"
+
 rg_hub                                      = "rg-hub"
 rg_spoke_app                                = "rg-spoke-app"
 rg_spoke_mgt                                = "rg-spoke-mgt"
@@ -29,7 +31,7 @@ cidr_subnet_apiserver_vnetint               = ["10.1.4.0/28"]
 cidr_subnet_pods                            = ["10.1.240.0/20"]
 cidr_vnet_spoke_mgt                         = ["10.2.0.0/16"]
 cidr_subnet_mgt                             = ["10.2.0.0/24"]
-cidr_vnet_spoke_appservice                           = ["10.3.0.0/16"]
+cidr_vnet_spoke_appservice                  = ["10.3.0.0/16"]
 cidr_vnet_spoke_shared                      = ["10.4.0.0/16"]
 cidr_subnet_shared                          = ["10.4.0.0/24"]
 cidr_aks_service                            = "10.0.0.0/16"
@@ -48,14 +50,11 @@ enable_aks_admin_rbac                       = true
 enable_private_acr                          = true
 enable_keyvault                             = true
 enable_private_keyvault                     = true
-enable_bastion                              = true
-enable_firewall                             = true
 enable_vm_jumpbox_windows                   = false
 enable_vm_jumpbox_linux                     = true
 enable_spoke_appservice                     = false
 enable_storage_account                      = true
 enable_vnet_peering                         = true
-enable_monitoring                           = true
 enable_nsg_flow_logs                        = true
 enable_diagnostic_settings                  = false
 enable_diagnostic_settings_output           = false
@@ -63,3 +62,7 @@ enable_fleet_manager                        = false
 enable_mysql_flexible_server                = false
 enable_spoke_serverless                     = false
 enable_grafana_prometheus                   = true
+
+enable_monitoring                           = true
+enable_bastion                              = true
+enable_firewall                             = true

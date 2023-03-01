@@ -1,17 +1,17 @@
-data "azurerm_client_config" "current" {}
+data azurerm_client_config current {}
 
-# data "azurerm_subscription" "subscription_hub" {
+# data azurerm_subscription subscription_hub {
 #   subscription_id = var.subscription_id_hub
 # }
 
-data "azurerm_subscription" "subscription_spoke" {
+data azurerm_subscription subscription_spoke {
   subscription_id = var.subscription_id_spoke
 }
 
 # current client
-data "azuread_client_config" "current" {}
+data azuread_client_config current {}
 
-data "http" "machine_ip" {
+data http machine_ip {
   url = "http://ifconfig.me"
 
   request_headers = {

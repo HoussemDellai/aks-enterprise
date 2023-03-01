@@ -2,7 +2,8 @@
 #   cidr_subnet_aks_nodes_pods = concat(azurerm_subnet.subnet_nodes.address_prefixes, azurerm_subnet.subnet_pods.address_prefixes)
 # }
 
-resource azurerm_firewall_policy" "firewall_policy" {
+resource "azurerm_firewall_policy" "firewall_policy" {
+  provider = azurerm.subscription_hub
   # count               = var.enable_firewall ? 1 : 0
   name                = "firewall-policy"
   resource_group_name = azurerm_resource_group.rg_hub.name
@@ -17,13 +18,14 @@ resource azurerm_firewall_policy" "firewall_policy" {
     for_each = var.enable_monitoring ? ["any_value"] : []
     content {
       enabled                            = true
-      default_log_analytics_workspace_id = azurerm_log_analytics_workspace.workspace.id
+      default_log_analytics_workspace_id = data.terraform_remote_state.management.0.outputs.log_analytics_workspace_id # azurerm_log_analytics_workspace.workspace.id
       retention_in_days                  = 7
     }
   }
 }
 
-resource azurerm_firewall_policy_rule_collection_group" "policy_group_deny" {
+resource "azurerm_firewall_policy_rule_collection_group" "policy_group_deny" {
+  provider = azurerm.subscription_hub
   count              = var.enable_firewall ? 1 : 0
   name               = "policy_group_deny"
   firewall_policy_id = azurerm_firewall_policy.firewall_policy.id
@@ -48,8 +50,4 @@ resource azurerm_firewall_policy_rule_collection_group" "policy_group_deny" {
       destination_fqdns = ["*.yahoo.com"]
     }
   }
-}
-
-output "firewall_policy_id" {
-  value = azurerm_firewall_policy.firewall_policy.id
 }

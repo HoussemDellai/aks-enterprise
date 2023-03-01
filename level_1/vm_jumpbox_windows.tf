@@ -1,4 +1,4 @@
-resource azurerm_network_interface" "nic_vm_jumpbox_windows" {
+resource azurerm_network_interface nic_vm_jumpbox_windows {
   count               = var.enable_vm_jumpbox_windows ? 1 : 0
   name                = "nic-vm-jumpbox-windows"
   location            = var.resources_location
@@ -12,7 +12,7 @@ resource azurerm_network_interface" "nic_vm_jumpbox_windows" {
   }
 }
 
-resource azurerm_windows_virtual_machine" "vm_jumpbox_windows" {
+resource azurerm_windows_virtual_machine vm_jumpbox_windows {
   count                 = var.enable_vm_jumpbox_windows ? 1 : 0
   name                  = "vm-jumpbox-win"
   resource_group_name   = azurerm_resource_group.rg_spoke_mgt.0.name
@@ -61,7 +61,7 @@ resource azurerm_windows_virtual_machine" "vm_jumpbox_windows" {
 #         "dataDisks": []
 #     },
 
-# resource azurerm_virtual_machine_extension" "vm_extension_windows" {
+# resource azurerm_virtual_machine_extension vm_extension_windows {
 #   count                = var.enable_vm_jumpbox_windows ? 1 : 0
 #   name                 = "vm-extension-windows"
 #   virtual_machine_id   = azurerm_windows_virtual_machine.vm_jumpbox_windows.0.id

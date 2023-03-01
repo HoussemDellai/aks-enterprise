@@ -1,4 +1,4 @@
-# resource azurerm_user_assigned_identity" "identity_azure_policy" {
+# resource azurerm_user_assigned_identity identity_azure_policy {
 #   count               = var.enable_monitoring ? 1 : 0
 #   name                = "identity-azure-policy"
 #   resource_group_name = azurerm_resource_group.rg_spoke_mgt.0.name #todo: change RG
@@ -6,7 +6,7 @@
 #   tags                = var.tags
 # }
 
-# resource azurerm_role_assignment" "role_contributor_azure_policy" {
+# resource azurerm_role_assignment role_contributor_azure_policy {
 #   count                            = var.enable_aks_cluster ? 1 : 0
 #   scope                            = data.azurerm_subscription.subscription_spoke.id
 #   role_definition_name             = "Contributor"
@@ -14,12 +14,12 @@
 #   skip_service_principal_aad_check = true
 # }
 
-# # data "azurerm_policy_definition" "policy_configure_traffic_analytics" {
+# # data azurerm_policy_definition policy_configure_traffic_analytics {
 # #   display_name = "Configure network security groups to use specific workspace, storage account and flowlog retention policy for traffic analytics"
 # # }
 
 # # /providers/Microsoft.Authorization/policyDefinitions/5e1cd26a-5090-4fdb-9d6a-84a90335e22d
-# resource azurerm_subscription_policy_assignment" "policy_configure_traffic_analytics" {
+# resource azurerm_subscription_policy_assignment policy_configure_traffic_analytics {
 #   name                 = "policy-configure-traffic-analytics"
 #   policy_definition_id = "/providers/Microsoft.Authorization/policyDefinitions/5e1cd26a-5090-4fdb-9d6a-84a90335e22d"
 #   subscription_id      = data.azurerm_subscription.subscription_spoke.id
@@ -71,7 +71,7 @@
 #   })
 # }
 
-# resource azurerm_subscription_policy_remediation" "remediation_configure_traffic_analytics" {
+# resource azurerm_subscription_policy_remediation remediation_configure_traffic_analytics {
 #   name                 = "remediation-configure-traffic-analytics"
 #   subscription_id      = data.azurerm_subscription.subscription_spoke.id
 #   policy_assignment_id = azurerm_subscription_policy_assignment.policy_configure_traffic_analytics.id

@@ -1,4 +1,4 @@
-data "terraform_remote_state" "level_1" {
+data terraform_remote_state level_1 {
   backend = "local" # "remote"
 
   config = {
@@ -6,19 +6,19 @@ data "terraform_remote_state" "level_1" {
   }
 }
 
-data "azurerm_resources" "vnet" {
+data azurerm_resources vnet {
   type          = "Microsoft.Network/virtualNetworks"
   required_tags = var.tags
 }
 
 # get more info about VNETs that with azurerm_resources
-data "azurerm_virtual_network" "vnet" {
+data azurerm_virtual_network vnet {
   count               = length(data.azurerm_resources.vnet.resources)
   name                = data.azurerm_resources.vnet.resources[count.index].name
   resource_group_name = split("/", data.azurerm_resources.vnet.resources[count.index].id)[4]
 }
 
-data "azurerm_subnet" "subnet" {
+data azurerm_subnet subnet {
   count                = length(local.subnets)
   name                 = local.subnets[count.index].subnet_name
   virtual_network_name = local.subnets[count.index].subnet_vnet
@@ -37,7 +37,7 @@ locals {
   ])
 }
 
-data "azurerm_resources" "public_ip" {
+data azurerm_resources public_ip {
   type          = "Microsoft.Network/publicIPAddresses"
   required_tags = var.tags
 }

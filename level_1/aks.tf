@@ -1,11 +1,11 @@
-resource azurerm_subnet" "subnet_nodes" {
+resource azurerm_subnet subnet_nodes {
   name                 = "subnet-nodes"
   virtual_network_name = azurerm_virtual_network.vnet_spoke_aks.name
   resource_group_name  = azurerm_virtual_network.vnet_spoke_aks.resource_group_name
   address_prefixes     = var.cidr_subnet_nodes
 }
 
-resource azurerm_subnet" "subnet_pods" {
+resource azurerm_subnet subnet_pods {
   name                 = "subnet-pods"
   virtual_network_name = azurerm_virtual_network.vnet_spoke_aks.name
   resource_group_name  = azurerm_virtual_network.vnet_spoke_aks.resource_group_name
@@ -23,7 +23,7 @@ resource azurerm_subnet" "subnet_pods" {
   }
 }
 
-resource azurerm_subnet" "subnet_apiserver" {
+resource azurerm_subnet subnet_apiserver {
   count                = var.enable_apiserver_vnet_integration ? 1 : 0
   name                 = "subnet-apiserver"
   virtual_network_name = azurerm_virtual_network.vnet_spoke_aks.name
@@ -41,7 +41,7 @@ resource azurerm_subnet" "subnet_apiserver" {
   }
 }
 
-resource azurerm_kubernetes_cluster" "aks" {
+resource azurerm_kubernetes_cluster aks {
   count                               = var.enable_aks_cluster ? 1 : 0
   name                                = "aks-cluster"
   resource_group_name                 = azurerm_resource_group.rg_spoke_aks.name
@@ -126,19 +126,19 @@ resource azurerm_kubernetes_cluster" "aks" {
   network_profile {
     # network_plugin_mode = "Overlay"
     # ebpf_data_plane     = "cilium"
-    # network_mode        = "bridge"               # "" "transparent"
+    # network_mode        = "bridge"               # " transparent"
     network_plugin     = var.aks_network_plugin # "kubenet", "azure", "none"
     network_policy     = "calico"               # "azure" 
     dns_service_ip     = var.aks_dns_service_ip
     docker_bridge_cidr = var.cidr_aks_docker_bridge
     service_cidr       = var.cidr_aks_service
-    outbound_type      = var.aks_outbound_type # "userAssignedNATGateway" "loadBalancer" # userDefinedRouting, managedNATGateway
+    outbound_type      = var.aks_outbound_type # "userAssignedNATGateway loadBalancer" # userDefinedRouting, managedNATGateway
     load_balancer_sku  = "standard"            # "basic"
     pod_cidr           = null                  # can only be set when network_plugin is set to kubenet
     # pod_cidr    = var.aks_network_plugin == "kubenet" ? var.cidr_subnet_pods : null # only set when network_plugin is set to kubenet
     ip_versions = ["IPv4"] # ["IPv4", "IPv6"]
 
-    dynamic "load_balancer_profile" {
+    dynamic load_balancer_profile {
       for_each = var.aks_outbound_type == "loadBalancer" ? ["any_value"] : []
       content {
         idle_timeout_in_minutes   = 30
@@ -146,7 +146,7 @@ resource azurerm_kubernetes_cluster" "aks" {
       }
     }
 
-    dynamic "nat_gateway_profile" {
+    dynamic nat_gateway_profile {
       for_each = var.aks_outbound_type == "userAssignedNATGateway" ? ["any_value"] : []
       # count = var.enable_monitoring ? 1 : 0 # count couldn't be used inside nested block
       content {
@@ -176,7 +176,7 @@ resource azurerm_kubernetes_cluster" "aks" {
     skip_nodes_with_system_pods      = true
   }
 
-  dynamic "ingress_application_gateway" {
+  dynamic ingress_application_gateway {
     for_each = var.enable_app_gateway ? ["any_value"] : []
     # count = var.enable_app_gateway ? 1 : 0 # count couldn't be used inside nested block
     content {
@@ -192,7 +192,7 @@ resource azurerm_kubernetes_cluster" "aks" {
   #   gateway_id = var.enable_app_gateway ? azurerm_application_gateway.appgw.0.id : null # doesn't work when resource disabled
   # }
 
-  dynamic "oms_agent" {
+  dynamic oms_agent {
     for_each = var.enable_monitoring ? ["any_value"] : []
     # count = var.enable_monitoring ? 1 : 0 # count couldn't be used inside nested block
     content {
@@ -275,7 +275,7 @@ resource azurerm_kubernetes_cluster" "aks" {
 #     -g <resource-group> \
 #     --enable-apiserver-vnet-integration \
 #     --apiserver-subnet-id <apiserver-subnet-resource-id>
-# resource azapi_update_resource" "aks_api_vnet_integration" {
+# resource azapi_update_resource aks_api_vnet_integration {
 #   count       = var.enable_apiserver_vnet_integration ? 1 : 0
 #   type        = "Microsoft.ContainerService/managedClusters@2022-06-02-preview"
 #   resource_id = azurerm_kubernetes_cluster.aks.0.id
@@ -300,10 +300,10 @@ resource azurerm_kubernetes_cluster" "aks" {
 #   depends_on = []
 # }
 
-data "azurerm_kubernetes_service_versions" "aks" {
+data azurerm_kubernetes_service_versions aks {
   location = var.resources_location
 }
 
-output "latest_version" {
+output latest_version {
   value = data.azurerm_kubernetes_service_versions.aks.latest_version
 }

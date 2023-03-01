@@ -1,4 +1,4 @@
-variable "nodepoolapps" {
+variable nodepoolapps {
   default = {
     "poolapps01" = {
       vm_size           = "Standard_D2pds_v5"
@@ -63,7 +63,7 @@ variable "nodepoolapps" {
   }
 }
 
-resource azurerm_subnet" "subnet_nodes_user_nodepool" {
+resource azurerm_subnet subnet_nodes_user_nodepool {
   for_each             = var.nodepoolapps
   name                 = "subnet-nodes-${each.key}"
   virtual_network_name = azurerm_virtual_network.vnet_spoke_aks.name
@@ -71,7 +71,7 @@ resource azurerm_subnet" "subnet_nodes_user_nodepool" {
   address_prefixes     = each.value.cidr_subnet_nodes
 }
 
-resource azurerm_subnet" "subnet_pods_user_nodepool" {
+resource azurerm_subnet subnet_pods_user_nodepool {
   for_each             = var.nodepoolapps
   name                 = "subnet-pods-${each.key}"
   virtual_network_name = azurerm_virtual_network.vnet_spoke_aks.name
@@ -90,7 +90,7 @@ resource azurerm_subnet" "subnet_pods_user_nodepool" {
   }
 }
 
-resource azurerm_kubernetes_cluster_node_pool" "poolapps" {
+resource azurerm_kubernetes_cluster_node_pool poolapps {
   for_each               = var.nodepoolapps
   name                   = each.key
   kubernetes_cluster_id  = azurerm_kubernetes_cluster.aks.0.id

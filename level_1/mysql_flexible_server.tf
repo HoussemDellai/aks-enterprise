@@ -1,4 +1,4 @@
-resource azurerm_subnet" "subnet_delegated_mysql_flex" {
+resource azurerm_subnet subnet_delegated_mysql_flex {
   count                = var.enable_mysql_flexible_server ? 1 : 0
   name                 = "subnet-shared"
   resource_group_name  = azurerm_resource_group.rg_spoke_shared.name
@@ -17,14 +17,14 @@ resource azurerm_subnet" "subnet_delegated_mysql_flex" {
   }
 }
 
-resource azurerm_private_dns_zone" "mysql_flexible_server" {
+resource azurerm_private_dns_zone mysql_flexible_server {
   count               = var.enable_mysql_flexible_server ? 1 : 0
   name                = "mysql.database.azure.com"
   resource_group_name = azurerm_resource_group.rg_spoke_shared.name
   tags                = var.tags
 }
 
-resource azurerm_private_dns_zone_virtual_network_link" "link_mysql_vnet_shared" {
+resource azurerm_private_dns_zone_virtual_network_link link_mysql_vnet_shared {
   count                 = var.enable_mysql_flexible_server ? 1 : 0
   name                  = "link_mysql_vnet_shared"
   private_dns_zone_name = azurerm_private_dns_zone.mysql_flexible_server.0.name
@@ -32,7 +32,7 @@ resource azurerm_private_dns_zone_virtual_network_link" "link_mysql_vnet_shared"
   resource_group_name   = azurerm_resource_group.rg_spoke_shared.name
 }
 
-resource azurerm_mysql_flexible_server" "mysql_flexible_server" {
+resource azurerm_mysql_flexible_server mysql_flexible_server {
   count                  = var.enable_mysql_flexible_server ? 1 : 0
   name                   = "mysql-flexible-server-01357"
   resource_group_name    = azurerm_resource_group.rg_spoke_shared.name
@@ -50,7 +50,7 @@ resource azurerm_mysql_flexible_server" "mysql_flexible_server" {
   depends_on = [azurerm_private_dns_zone_virtual_network_link.link_mysql_vnet_shared]
 }
 
-resource azurerm_mysql_flexible_database" "mysql_flexible_database" {
+resource azurerm_mysql_flexible_database mysql_flexible_database {
   count               = var.enable_mysql_flexible_server ? 1 : 0
   name                = "mysqldb"
   resource_group_name = azurerm_mysql_flexible_server.mysql_flexible_server.0.resource_group_name

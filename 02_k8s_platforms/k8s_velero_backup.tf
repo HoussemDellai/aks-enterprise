@@ -1,4 +1,4 @@
-# module "velero" {
+# module "velero {
 #   source = "./modules/velero"
 
 #   providers = {

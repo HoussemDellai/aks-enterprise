@@ -1,4 +1,4 @@
-resource azurerm_subnet" "subnet_appgw" {
+resource azurerm_subnet subnet_appgw {
   count                = var.enable_app_gateway ? 1 : 0
   name                 = "subnet-appgw"
   virtual_network_name = azurerm_virtual_network.vnet_spoke_aks.name
@@ -17,7 +17,7 @@ locals {
 }
 
 # Public Ip 
-resource azurerm_public_ip" "appgw_pip" {
+resource azurerm_public_ip appgw_pip {
   count               = var.enable_app_gateway ? 1 : 0
   name                = "public-ip-appgw"
   location            = var.resources_location
@@ -27,7 +27,7 @@ resource azurerm_public_ip" "appgw_pip" {
   tags                = var.tags
 }
 
-resource azurerm_application_gateway" "appgw" {
+resource azurerm_application_gateway appgw {
   count               = var.enable_app_gateway ? 1 : 0
   name                = "appgw-aks"
   resource_group_name = azurerm_resource_group.rg_spoke_aks.name
@@ -103,7 +103,7 @@ resource azurerm_application_gateway" "appgw" {
 }
 
 # AppGW (generated with addon) Identity needs also Contributor role over AKS/VNET RG
-resource azurerm_role_assignment" "role-contributor" {
+resource azurerm_role_assignment role-contributor {
   count                = var.enable_app_gateway ? 1 : 0
   scope                = azurerm_resource_group.rg_spoke_aks.id
   role_definition_name = "Contributor"

@@ -1,4 +1,4 @@
-resource kubernetes_namespace" "harbor" {
+resource kubernetes_namespace harbor {
   provider = kubernetes.aks-module
   metadata {
     name = "harbor"
@@ -6,7 +6,7 @@ resource kubernetes_namespace" "harbor" {
 }
 
 # https://github.com/goharbor/harbor-helm
-resource helm_release" "harbor" {
+resource helm_release harbor {
   provider   = helm.aks-module
   name       = "harbor"
   repository = "https://helm.goharbor.io"

@@ -1,4 +1,4 @@
-resource azuread_group" "aks_admins" {
+resource azuread_group aks_admins {
   count            = var.enable_aks_admin_group && var.enable_aks_cluster ? 1 : 0
   display_name     = var.aad_group_aks_admins
   security_enabled = true

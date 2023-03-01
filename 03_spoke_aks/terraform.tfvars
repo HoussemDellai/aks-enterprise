@@ -1,19 +1,20 @@
 # prefix = "demo011"
-subscription_id_spoke                       = "17b12858-3960-4e6f-a663-a06fdae23428"
-subscription_id_hub                         = "17b12858-3960-4e6f-a663-a06fdae23428"
-tenant_id_hub                               = "558506eb-9459-4ef3-b920-ad55c555e729"
-tenant_id_spoke                             = "558506eb-9459-4ef3-b920-ad55c555e729"
+tenant_id_hub                               = "16b3c013-d300-468d-ac64-7eda0820b6d3"
+subscription_id_hub                         = "82f6d75e-85f4-434a-ab74-5dddd9fa8910"
+
+tenant_id_spoke                             = "16b3c013-d300-468d-ac64-7eda0820b6d3" # "558506eb-9459-4ef3-b920-ad55c555e729"
+subscription_id_spoke                       = "82f6d75e-85f4-434a-ab74-5dddd9fa8910" # "17b12858-3960-4e6f-a663-a06fdae23428"
+
 rg_hub                                      = "rg-hub"
-rg_spoke_app                                = "rg-spoke-app"
 rg_spoke_mgt                                = "rg-spoke-mgt"
 rg_spoke_aks                                = "rg-spoke-aks"
 rg_spoke_aks_nodes                          = "rg-spoke-aks-nodes"
 rg_spoke_shared                             = "rg-spoke-shared"
 rg_network_watcher                          = "NetworkWatcherRG"
 resources_location                          = "westeurope" # "francecentral" # "westcentralus" # 
-acr_name                                    = "acrforakstf0135"
-keyvault_name                               = "kvforaks0135"
-storage_account_name                        = "storageforaks0135"
+acr_name                                    = "acrforakstf01357"
+keyvault_name                               = "kvforaks01357"
+storage_account_name                        = "storageforaks01357"
 log_analytics_workspace                     = "loganalyticsforaks011"
 kubernetes_version                          = "1.25.5" # "1.24.6" # 
 aks_network_plugin                          = "azure"  # "kubenet", "none"
@@ -62,6 +63,6 @@ enable_mysql_flexible_server                = false
 enable_spoke_serverless                     = false
 enable_grafana_prometheus                   = true
 
-enable_monitoring                           = true
-enable_hub_spoke                            = false
-enable_firewall                             = false
+enable_monitoring = false
+enable_hub_spoke  = false
+enable_firewall   = false
