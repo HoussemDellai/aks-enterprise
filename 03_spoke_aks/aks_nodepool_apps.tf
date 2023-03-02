@@ -5,11 +5,11 @@ variable "nodepoolapps" {
       cidr_subnet_nodes = ["10.1.5.0/24"]
       cidr_subnet_pods  = ["10.1.6.0/24"]
     },
-    # "poolapps02" = {
-    #   vm_size           = "Standard_D2pds_v5"
-    #   cidr_subnet_nodes = ["10.1.7.0/24"]
-    #   cidr_subnet_pods  = ["10.1.8.0/24"]
-    # },
+    "poolapps02" = {
+      vm_size           = "Standard_D2pds_v5"
+      cidr_subnet_nodes = ["10.1.7.0/24"]
+      cidr_subnet_pods  = ["10.1.8.0/24"]
+    },
     # "poolapps03" = {
     #   vm_size           = "Standard_D2pds_v5"
     #   cidr_subnet_nodes = ["10.1.9.0/24"]

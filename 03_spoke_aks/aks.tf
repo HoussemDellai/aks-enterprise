@@ -41,7 +41,7 @@ resource "azurerm_subnet" "subnet_apiserver" {
   }
 }
 
-resource azurerm_kubernetes_cluster aks {
+resource "azurerm_kubernetes_cluster" "aks" {
   # count                               = var.enable_aks_cluster ? 1 : 0
   name                                = "aks-cluster"
   resource_group_name                 = azurerm_resource_group.rg_spoke_aks.name

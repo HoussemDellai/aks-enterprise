@@ -1,9 +1,9 @@
 # prefix = "demo011"
-tenant_id_hub                               = "16b3c013-d300-468d-ac64-7eda0820b6d3"
-subscription_id_hub                         = "82f6d75e-85f4-434a-ab74-5dddd9fa8910"
+tenant_id_hub       = "16b3c013-d300-468d-ac64-7eda0820b6d3"
+subscription_id_hub = "82f6d75e-85f4-434a-ab74-5dddd9fa8910"
 
-tenant_id_spoke                             = "16b3c013-d300-468d-ac64-7eda0820b6d3" # "558506eb-9459-4ef3-b920-ad55c555e729"
-subscription_id_spoke                       = "82f6d75e-85f4-434a-ab74-5dddd9fa8910" # "17b12858-3960-4e6f-a663-a06fdae23428"
+tenant_id_spoke       = "16b3c013-d300-468d-ac64-7eda0820b6d3" # "558506eb-9459-4ef3-b920-ad55c555e729"
+subscription_id_spoke = "82f6d75e-85f4-434a-ab74-5dddd9fa8910" # "17b12858-3960-4e6f-a663-a06fdae23428"
 
 rg_hub                                      = "rg-hub"
 rg_spoke_mgt                                = "rg-spoke-mgt"
@@ -37,7 +37,7 @@ cidr_aks_service                            = "10.0.0.0/16"
 cidr_aks_docker_bridge                      = "172.17.0.1/16"
 aks_dns_service_ip                          = "10.0.0.10"
 aks_outbound_type                           = "loadBalancer" # "userAssignedNATGateway" # "loadBalancer" , userDefinedRouting, managedNATGateway
-enable_app_gateway                          = false
+enable_app_gateway                          = true
 enable_aks_cluster                          = true
 enable_private_cluster                      = false
 enable_apiserver_vnet_integration           = true
