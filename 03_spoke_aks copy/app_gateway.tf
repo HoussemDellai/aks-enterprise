@@ -37,7 +37,7 @@ resource "azurerm_application_gateway" "appgw" {
   sku {
     name     = "Standard_v2"
     tier     = "Standard_v2"
-    capacity = 1 # 2
+    capacity = 2
   }
   gateway_ip_configuration {
     name      = "appGatewayIpConfig"
@@ -102,10 +102,10 @@ resource "azurerm_application_gateway" "appgw" {
   ]
 }
 
-# # AppGW (generated with addon) Identity needs also Contributor role over AKS/VNET RG
-# resource "azurerm_role_assignment" "role-contributor" {
-#   count                = var.enable_app_gateway ? 1 : 0
-#   scope                = azurerm_resource_group.rg_spoke_aks.id
-#   role_definition_name = "Contributor"
-#   principal_id         = azurerm_kubernetes_cluster.aks.ingress_application_gateway.0.ingress_application_gateway_identity.0.object_id
-# }
+# AppGW (generated with addon) Identity needs also Contributor role over AKS/VNET RG
+resource "azurerm_role_assignment" "role-contributor" {
+  count                = var.enable_app_gateway ? 1 : 0
+  scope                = azurerm_resource_group.rg_spoke_aks.id
+  role_definition_name = "Contributor"
+  principal_id         = azurerm_kubernetes_cluster.aks.ingress_application_gateway.0.ingress_application_gateway_identity.0.object_id
+}

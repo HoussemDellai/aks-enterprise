@@ -5,9 +5,9 @@
 # # # }
 
 locals {
-  resource_types = [
-    "Microsoft.Network/networkSecurityGroups", 
-    "Microsoft.Network/virtualNetworks", 
+  resource_types = toset([
+    "Microsoft.Network/networkSecurityGroups",
+    "Microsoft.Network/virtualNetworks",
     "Microsoft.Network/applicationGateways",
     "Microsoft.Network/bastionHosts",
     "Microsoft.Network/networkInterfaces",
@@ -18,33 +18,37 @@ locals {
     "Microsoft.ContainerRegistry/registries",
     "Microsoft.ContainerService/managedClusters",
     "Microsoft.Network/publicIPAddresses"
-    ]
+  ])
 }
 
-data azurerm_resources resources_ds {
-  count         = length(local.resource_types)
-  type          = local.resource_types[count.index]
+data "azurerm_resources" "resources_ds" {
+  for_each      = local.resource_types
+  type          = each.key
   required_tags = var.tags
 }
 
-locals {
-  resources = { 
-    for rt in data.azurerm_resources.resources_ds :
-      for r in rt.resources
-        if r.tags["environment"] == var.environment
-  }
-
-  resource_ids = flatten([ for r in data.azurerm_resources.resources_ds : [ r.resources.*.id ] ])
-}
-
-# module "diagnostic_setting {
-#   count                      = var.enable_diagnostic_settings ? length(local.resource_ids) : 0
-#   source                     = "../modules/diagnostic_setting"
-#   log_analytics_workspace_id = data.azurerm_log_analytics_workspace.workspace.id
-#   target_resource_id         = local.resource_ids[count.index]
+# output "resources_ds" {
+#   value = data.azurerm_resources.resources_ds
 # }
 
-output resources_id {
+locals {
+  # resources = { 
+  #   for rt in data.azurerm_resources.resources_ds :
+  #     for r in rt.resources
+  #       if r.tags["environment"] == var.environment
+  # }
+
+  resource_ids = toset(flatten([for r in data.azurerm_resources.resources_ds : [r.resources.*.id]]))
+}
+
+module "diagnostic_setting" {
+  for_each                   = local.resource_ids
+  source                     = "../modules/diagnostic_setting"
+  target_resource_id         = each.key
+  log_analytics_workspace_id = data.terraform_remote_state.management.outputs.log_analytics_workspace_id
+}
+
+output "resources_id" {
   value = local.resource_ids
 }
 

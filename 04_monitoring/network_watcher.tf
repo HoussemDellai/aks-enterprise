@@ -44,7 +44,7 @@ output nsg {
   value = local.nsg
 }
 
-module "azurerm_network_watcher_flow_log {
+module azurerm_network_watcher_flow_log {
   for_each                  = local.nsg
   source                    = "../modules/azurerm_network_watcher_flow_log"
   nsg_name                  = each.value.name

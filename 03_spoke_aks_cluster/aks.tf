@@ -1,14 +1,14 @@
 resource "azurerm_subnet" "subnet_nodes" {
   name                 = "subnet-nodes"
-  virtual_network_name = azurerm_virtual_network.vnet_spoke_aks.name
-  resource_group_name  = azurerm_virtual_network.vnet_spoke_aks.resource_group_name
+  virtual_network_name = data.terraform_remote_state.spoke_aks.outputs.vnet_spoke_aks.virtual_network_name # azurerm_virtual_network.vnet_spoke_aks.name
+  resource_group_name  = data.terraform_remote_state.spoke_aks.outputs.vnet_spoke_aks.resource_group_name # azurerm_virtual_network.vnet_spoke_aks.resource_group_name
   address_prefixes     = var.cidr_subnet_nodes
 }
 
 resource "azurerm_subnet" "subnet_pods" {
   name                 = "subnet-pods"
-  virtual_network_name = azurerm_virtual_network.vnet_spoke_aks.name
-  resource_group_name  = azurerm_virtual_network.vnet_spoke_aks.resource_group_name
+  virtual_network_name = data.terraform_remote_state.spoke_aks.outputs.vnet_spoke_aks.virtual_network_name # azurerm_virtual_network.vnet_spoke_aks.name
+  resource_group_name  = data.terraform_remote_state.spoke_aks.outputs.vnet_spoke_aks.resource_group_name  # azurerm_virtual_network.vnet_spoke_aks.resource_group_name
   address_prefixes     = var.cidr_subnet_pods
 
   # src: https://github.com/hashicorp/terraform-provider-azurerm/blob/4ea5f92ccc27a75807d704f6d66d53a6c31459cb/internal/services/containers/kubernetes_cluster_node_pool_resource_test.go#L1433
@@ -26,8 +26,8 @@ resource "azurerm_subnet" "subnet_pods" {
 resource "azurerm_subnet" "subnet_apiserver" {
   count                = var.enable_apiserver_vnet_integration ? 1 : 0
   name                 = "subnet-apiserver"
-  virtual_network_name = azurerm_virtual_network.vnet_spoke_aks.name
-  resource_group_name  = azurerm_virtual_network.vnet_spoke_aks.resource_group_name
+  virtual_network_name = data.terraform_remote_state.spoke_aks.outputs.vnet_spoke_aks.virtual_network_name # azurerm_virtual_network.vnet_spoke_aks.name
+  resource_group_name  = data.terraform_remote_state.spoke_aks.outputs.vnet_spoke_aks.resource_group_name  # azurerm_virtual_network.vnet_spoke_aks.resource_group_name
   address_prefixes     = var.cidr_subnet_apiserver_vnetint
 
   delegation {
@@ -44,7 +44,7 @@ resource "azurerm_subnet" "subnet_apiserver" {
 resource "azurerm_kubernetes_cluster" "aks" {
   # count                               = var.enable_aks_cluster ? 1 : 0
   name                                = "aks-cluster"
-  resource_group_name                 = azurerm_resource_group.rg_spoke_aks.name
+  resource_group_name                 = azurerm_resource_group.rg_spoke_aks_cluster.name
   location                            = var.resources_location
   kubernetes_version                  = var.kubernetes_version
   sku_tier                            = "Free" # "Paid"
@@ -173,7 +173,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
     for_each = var.enable_app_gateway ? ["any_value"] : []
     # count = var.enable_app_gateway ? 1 : 0 # count couldn't be used inside nested block
     content {
-      gateway_id = azurerm_application_gateway.appgw.id
+      gateway_id = data.terraform_remote_state.spoke_aks.outputs.application_gateway.id # azurerm_application_gateway.appgw.0.id
       # other options if we want to allow the AGIC addon to create a new AppGW 
       # and not use an existing one
       # subnet_id    = # link AppGW to specific Subnet
@@ -212,7 +212,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
   }
 
   workload_autoscaler_profile {
-    keda_enabled = true
+    keda_enabled = false # true
   }
 
   # linux_profile {
@@ -240,8 +240,8 @@ resource "azurerm_kubernetes_cluster" "aks" {
   # }
 
   depends_on = [
-    azurerm_virtual_network.vnet_spoke_aks,
-    azurerm_application_gateway.appgw
+    # azurerm_virtual_network.vnet_spoke_aks,
+    # azurerm_application_gateway.appgw
   ]
 
   lifecycle {
@@ -299,6 +299,22 @@ resource "azurerm_kubernetes_cluster" "aks" {
 
 #   depends_on = []
 # }
+
+resource "azurerm_user_assigned_identity" "identity-kubelet" {
+  # count               = var.enable_aks_cluster ? 1 : 0
+  name                = "identity-kubelet"
+  resource_group_name = azurerm_resource_group.rg_spoke_aks_cluster.name
+  location            = var.resources_location
+  tags                = var.tags
+}
+
+resource "azurerm_role_assignment" "role_acrpull" {
+  # count                            = var.enable_aks_cluster ? 1 : 0
+  scope                            = data.terraform_remote_state.spoke_aks.outputs.acr.id # azurerm_container_registry.acr.id
+  role_definition_name             = "AcrPull"
+  principal_id                     = azurerm_user_assigned_identity.identity-kubelet.principal_id
+  skip_service_principal_aad_check = true
+}
 
 data "azurerm_kubernetes_service_versions" "aks" {
   location = var.resources_location

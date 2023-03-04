@@ -70,34 +70,34 @@ resource "azapi_resource" "monitor_workspace_aks" {
 #   })
 # }
 
-# resource "null_resource" "aks_enable_azuremonitormetrics" {
-#   count = var.enable_grafana_prometheus ? 1 : 0
-#   provisioner "local-exec" {
-#     interpreter = ["PowerShell", "-Command"]
-#     command     = <<-EOT
+resource "null_resource" "aks_enable_azuremonitormetrics" {
+  count = var.enable_grafana_prometheus ? 1 : 0
+  provisioner "local-exec" {
+    interpreter = ["PowerShell", "-Command"]
+    command     = <<-EOT
 
-#     az aks update --enable-azuremonitormetrics `
-#                   -g ${azurerm_kubernetes_cluster.aks.resource_group_name} `
-#                   -n ${azurerm_kubernetes_cluster.aks.name} `
-#                   --azure-monitor-workspace-resource-id ${azapi_resource.monitor_workspace_aks.0.id} `
-#                   --grafana-resource-id ${azurerm_dashboard_grafana.grafana_aks.0.id}
+    az aks update --enable-azuremonitormetrics `
+                  -g ${azurerm_kubernetes_cluster.aks.resource_group_name} `
+                  -n ${azurerm_kubernetes_cluster.aks.name} `
+                  --azure-monitor-workspace-resource-id ${azapi_resource.monitor_workspace_aks.0.id} `
+                  --grafana-resource-id ${azurerm_dashboard_grafana.grafana_aks.0.id}
 
-#     EOT
-#   }
+    EOT
+  }
 
-#   triggers = {
-#     "key" = "value1"
-#     # trigger = timestamp()
-#   }
+  triggers = {
+    "key" = "value1"
+    # trigger = timestamp()
+  }
 
-#   depends_on = [
-#     azurerm_kubernetes_cluster.aks,
-#     azurerm_dashboard_grafana.grafana_aks,
-#     azapi_resource.monitor_workspace_aks,
-#     azurerm_kubernetes_cluster_node_pool.poolapps[0],
-#     azurerm_kubernetes_cluster_node_pool.poolspot[0]
-#   ]
-# }
+  depends_on = [
+    azurerm_kubernetes_cluster.aks,
+    azurerm_dashboard_grafana.grafana_aks,
+    azapi_resource.monitor_workspace_aks,
+    azurerm_kubernetes_cluster_node_pool.poolapps[0],
+    azurerm_kubernetes_cluster_node_pool.poolspot[0]
+  ]
+}
 
 # resource azapi_resource grafana_aks {
 #   type        = "Microsoft.Dashboard/grafana@2022-08-01" 
@@ -121,3 +121,7 @@ resource "azapi_resource" "monitor_workspace_aks" {
 #     }
 #   })
 # }
+
+output "grafana_endpoint" {
+  value = var.enable_grafana_prometheus ? azurerm_dashboard_grafana.grafana_aks.0.endpoint : null
+}

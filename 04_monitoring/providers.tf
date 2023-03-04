@@ -11,12 +11,12 @@ terraform {
 
     azuread = {
       source  = "hashicorp/azuread"
-      version = "= 2.35.0"
+      version = ">= 2.33.0"
     }
 
     azapi = {
       source  = "Azure/azapi"
-      version = "1.4.0"
+      version = "1.2.0"
     }
 
     http = {
@@ -31,7 +31,7 @@ terraform {
   }
 }
 
-provider "azurerm" {
+provider azurerm {
   # alias           = "subscription_spoke" # default
   subscription_id = var.subscription_id_spoke
   tenant_id       = var.tenant_id_spoke
@@ -60,7 +60,7 @@ provider "azurerm" {
   }
 }
 
-provider "azurerm" {
+provider azurerm {
   alias           = "subscription_hub"
   subscription_id = var.subscription_id_hub
   tenant_id       = var.tenant_id_hub
@@ -89,7 +89,7 @@ provider "azurerm" {
 }
 
 # Configure the Azure Active Directory Provider
-provider "azuread" { # default takes current user/identity tenant
+provider azuread { # default takes current user/identity tenant
 }
 
 # provider azuread {
@@ -104,6 +104,6 @@ provider "azuread" { # default takes current user/identity tenant
 #   # use_cli = true
 # }
 
-provider "azapi" {
+provider azapi {
   # Configuration options
 }
