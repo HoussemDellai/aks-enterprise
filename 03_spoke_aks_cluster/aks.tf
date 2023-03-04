@@ -189,7 +189,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
     for_each = var.enable_monitoring ? ["any_value"] : []
     # count = var.enable_monitoring ? 1 : 0 # count couldn't be used inside nested block
     content {
-      log_analytics_workspace_id = data.terraform_remote_state.management.0.outputs.log_analytics_workspace_id # azurerm_log_analytics_workspace.workspace.id
+      log_analytics_workspace_id = data.terraform_remote_state.management.0.outputs.log_analytics_workspace.id # azurerm_log_analytics_workspace.workspace.id
     }
   }
   # oms_agent {

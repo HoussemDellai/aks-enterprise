@@ -18,7 +18,7 @@ resource "azurerm_firewall_policy" "firewall_policy" {
     for_each = var.enable_monitoring ? ["any_value"] : []
     content {
       enabled                            = true
-      default_log_analytics_workspace_id = data.terraform_remote_state.management.0.outputs.log_analytics_workspace_id # azurerm_log_analytics_workspace.workspace.id
+      default_log_analytics_workspace_id = data.terraform_remote_state.management.0.outputs.log_analytics_workspace.id # azurerm_log_analytics_workspace.workspace.id
       retention_in_days                  = 7
     }
   }
