@@ -19,6 +19,15 @@ output "application_gateway" {
   }
 }
 
-output "grafana_endpoint" {
-  value = var.enable_grafana_prometheus ? azurerm_dashboard_grafana.grafana_aks.0.endpoint : null
+output "grafana" {
+  value = {
+    id       = azurerm_dashboard_grafana.grafana_aks.0.id
+    endpoint = azurerm_dashboard_grafana.grafana_aks.0.endpoint
+  }
+}
+
+output "prometheus" {
+  value = {
+    id       = azapi_resource.monitor_workspace_aks.0.id
+  }
 }
