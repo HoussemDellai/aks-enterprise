@@ -3,9 +3,9 @@
 # }
 
 resource azurerm_firewall_policy_rule_collection_group policy_group_subnet_mgt {
-  count              = var.enable_firewall && (var.enable_vm_jumpbox_linux || var.enable_vm_jumpbox_windows) ? 1 : 0
+  count              = var.enable_firewall ? 1 : 0
   name               = "policy_group_subnet_mgt"
-  firewall_policy_id = data.terraform_remote_state.hub.0.outputs.firewall_policy_id # azurerm_firewall_policy.firewall_policy.id
+  firewall_policy_id = data.terraform_remote_state.hub.0.outputs.firewall.policy_id # azurerm_firewall_policy.firewall_policy.id
   priority           = 300
 
   application_rule_collection {

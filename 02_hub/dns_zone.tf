@@ -1,13 +1,13 @@
 data "azurerm_dns_zone" "dns_zone" {
   provider            = azurerm.subscription_hub
   name                = "houssem.cloud"
-  resource_group_name = "rg-dns-zone-houssem-cloud"
+  resource_group_name = "rg-azure-dns"
 }
 
 resource "azurerm_dns_zone" "dns_zone_apps" {
   provider            = azurerm.subscription_hub
-  name                = "apps.${data.azurerm_dns_zone.dns_zone.name}"
-  resource_group_name = data.azurerm_dns_zone.dns_zone.resource_group_name
+  name                = "aks-apps.${data.azurerm_dns_zone.dns_zone.name}"
+  resource_group_name = azurerm_resource_group.rg_hub.name # data.azurerm_dns_zone.dns_zone.resource_group_name
 }
 
 resource "azurerm_dns_a_record" "example" {

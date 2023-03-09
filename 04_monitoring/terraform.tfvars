@@ -54,11 +54,12 @@ enable_vm_jumpbox_linux           = true
 enable_spoke_appservice           = false
 enable_storage_account            = true
 enable_vnet_peering               = true
-enable_monitoring                 = true
-enable_nsg_flow_logs              = true
-enable_diagnostic_settings        = false
 enable_diagnostic_settings_output = false
 enable_fleet_manager              = false
 enable_mysql_flexible_server      = false
 enable_spoke_serverless           = false
 enable_grafana_prometheus         = false
+
+enable_monitoring                 = true
+enable_nsg_flow_logs              = true
+enable_diagnostic_settings        = true

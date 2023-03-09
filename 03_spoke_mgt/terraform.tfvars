@@ -49,17 +49,19 @@ enable_private_acr                          = true
 enable_keyvault                             = true
 enable_private_keyvault                     = true
 enable_bastion                              = true
-enable_firewall                             = true
-enable_vm_jumpbox_windows                   = false
-enable_vm_jumpbox_linux                     = true
 enable_spoke_appservice                     = false
 enable_storage_account                      = true
-enable_vnet_peering                         = true
-enable_monitoring                           = true
-enable_nsg_flow_logs                        = true
-enable_diagnostic_settings                  = false
 enable_diagnostic_settings_output           = false
 enable_fleet_manager                        = false
 enable_mysql_flexible_server                = false
 enable_spoke_serverless                     = false
 enable_grafana_prometheus                   = true
+
+
+enable_firewall                             = true
+enable_vnet_peering                         = true
+enable_vm_jumpbox_windows                   = false
+enable_vm_jumpbox_linux                     = true
+enable_monitoring                           = false
+enable_nsg_flow_logs                        = false
+enable_diagnostic_settings                  = false

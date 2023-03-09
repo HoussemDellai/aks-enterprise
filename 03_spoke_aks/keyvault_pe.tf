@@ -32,5 +32,5 @@ resource "azurerm_private_dns_zone_virtual_network_link" "link_private_dns_zone_
   name                  = "link_private_dns_zone_keyvault_to_vnet_hub"
   resource_group_name   = azurerm_private_dns_zone.private_dns_zone_keyvault.0.resource_group_name
   private_dns_zone_name = azurerm_private_dns_zone.private_dns_zone_keyvault.0.name
-  virtual_network_id    = data.terraform_remote_state.hub.0.outputs.vnet_hub_id # azurerm_virtual_network.vnet_hub.0.id
+  virtual_network_id    = data.terraform_remote_state.hub.0.outputs.vnet_hub.id # azurerm_virtual_network.vnet_hub.0.id
 }

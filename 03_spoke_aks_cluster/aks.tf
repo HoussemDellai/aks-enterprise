@@ -13,7 +13,7 @@ resource "azurerm_subnet" "subnet_pods" {
 
   # src: https://github.com/hashicorp/terraform-provider-azurerm/blob/4ea5f92ccc27a75807d704f6d66d53a6c31459cb/internal/services/containers/kubernetes_cluster_node_pool_resource_test.go#L1433
   delegation {
-    name = "aks-delegation"
+    name = "Microsoft.ContainerService.managedClusters"
     service_delegation {
       actions = [
         "Microsoft.Network/virtualNetworks/subnets/join/action",
@@ -31,7 +31,7 @@ resource "azurerm_subnet" "subnet_apiserver" {
   address_prefixes     = var.cidr_subnet_apiserver_vnetint
 
   delegation {
-    name = "aks-delegation"
+    name = "Microsoft.ContainerService.managedClusters"
     service_delegation {
       actions = [
         "Microsoft.Network/virtualNetworks/subnets/join/action",

@@ -1,7 +1,7 @@
-# reference to Azure Kubernetes Service AAD Server app in AAD
-data azuread_service_principal aks_aad_server {
-  display_name = "Azure Kubernetes Service AAD Server"
-}
+# # reference to Azure Kubernetes Service AAD Server app in AAD
+# data azuread_service_principal aks_aad_server {
+#   display_name = "Azure Kubernetes Service AAD Server"
+# }
 
 data azurerm_client_config current {}
 

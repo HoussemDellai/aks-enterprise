@@ -1,6 +1,5 @@
 resource "azurerm_virtual_network" "vnet_hub" {
-  provider = azurerm.subscription_hub
-  #   count               = var.enable_firewall || var.enable_bastion ? 1 : 0
+  provider            = azurerm.subscription_hub
   name                = "vnet-hub"
   resource_group_name = azurerm_resource_group.rg_hub.name
   location            = var.resources_location

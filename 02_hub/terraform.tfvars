@@ -1,9 +1,9 @@
 # prefix = "demo011"
-tenant_id_hub                               = "16b3c013-d300-468d-ac64-7eda0820b6d3"
-subscription_id_hub                         = "82f6d75e-85f4-434a-ab74-5dddd9fa8910"
+tenant_id_hub       = "16b3c013-d300-468d-ac64-7eda0820b6d3"
+subscription_id_hub = "82f6d75e-85f4-434a-ab74-5dddd9fa8910"
 
-tenant_id_spoke                             = "558506eb-9459-4ef3-b920-ad55c555e729"
-subscription_id_spoke                       = "17b12858-3960-4e6f-a663-a06fdae23428"
+tenant_id_spoke       = "558506eb-9459-4ef3-b920-ad55c555e729"
+subscription_id_spoke = "17b12858-3960-4e6f-a663-a06fdae23428"
 
 rg_hub                                      = "rg-hub"
 rg_spoke_app                                = "rg-spoke-app"
@@ -54,15 +54,16 @@ enable_vm_jumpbox_windows                   = false
 enable_vm_jumpbox_linux                     = true
 enable_spoke_appservice                     = false
 enable_storage_account                      = true
-enable_vnet_peering                         = true
-enable_nsg_flow_logs                        = true
-enable_diagnostic_settings                  = false
 enable_diagnostic_settings_output           = false
 enable_fleet_manager                        = false
 enable_mysql_flexible_server                = false
 enable_spoke_serverless                     = false
 enable_grafana_prometheus                   = true
 
-enable_monitoring                           = true
-enable_bastion                              = true
-enable_firewall                             = true
+
+enable_monitoring          = false
+enable_bastion             = false
+enable_firewall            = true
+enable_vnet_peering        = false
+enable_nsg_flow_logs       = false
+enable_diagnostic_settings = false
