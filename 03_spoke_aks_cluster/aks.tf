@@ -1,7 +1,7 @@
 resource "azurerm_subnet" "subnet_nodes" {
   name                 = "subnet-nodes"
   virtual_network_name = data.terraform_remote_state.spoke_aks.outputs.vnet_spoke_aks.virtual_network_name # azurerm_virtual_network.vnet_spoke_aks.name
-  resource_group_name  = data.terraform_remote_state.spoke_aks.outputs.vnet_spoke_aks.resource_group_name # azurerm_virtual_network.vnet_spoke_aks.resource_group_name
+  resource_group_name  = data.terraform_remote_state.spoke_aks.outputs.vnet_spoke_aks.resource_group_name  # azurerm_virtual_network.vnet_spoke_aks.resource_group_name
   address_prefixes     = var.cidr_subnet_nodes
 }
 
@@ -74,6 +74,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
 
   default_node_pool {
     name                         = "poolsystem"
+    temporary_name_for_rotation  = "poolsystem"
     node_count                   = 1
     enable_auto_scaling          = true
     min_count                    = 1
@@ -189,7 +190,8 @@ resource "azurerm_kubernetes_cluster" "aks" {
     for_each = var.enable_monitoring ? ["any_value"] : []
     # count = var.enable_monitoring ? 1 : 0 # count couldn't be used inside nested block
     content {
-      log_analytics_workspace_id = data.terraform_remote_state.management.0.outputs.log_analytics_workspace.id # azurerm_log_analytics_workspace.workspace.id
+      log_analytics_workspace_id      = data.terraform_remote_state.management.0.outputs.log_analytics_workspace.id # azurerm_log_analytics_workspace.workspace.id
+      msi_auth_for_monitoring_enabled = true
     }
   }
   # oms_agent {
@@ -212,7 +214,8 @@ resource "azurerm_kubernetes_cluster" "aks" {
   }
 
   workload_autoscaler_profile {
-    keda_enabled = false # true
+    keda_enabled                    = false # true
+    vertical_pod_autoscaler_enabled = true
   }
 
   # linux_profile {
