@@ -17,7 +17,12 @@ locals {
     "Microsoft.Storage/storageAccounts",
     "Microsoft.ContainerRegistry/registries",
     "Microsoft.ContainerService/managedClusters",
-    "Microsoft.Network/publicIPAddresses"
+    "Microsoft.Network/publicIPAddresses",
+    "Microsoft.OperationalInsights/workspaces",
+    "Microsoft.Network/loadBalancers",
+    "Microsoft.Network/expressRouteCircuits",
+    "Microsoft.Network/expressRouteGateways",
+    "Microsoft.Network/expressRoutePorts"
   ])
 }
 

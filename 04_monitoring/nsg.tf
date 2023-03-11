@@ -20,16 +20,7 @@ data "azurerm_virtual_network" "vnet" {
   resource_group_name = each.value.resource_group_name
 }
 
-# data "azurerm_subnet" "vnet_ski_01_subnets" {
-#   for_each             = data.azurerm_virtual_network.vnet.*.subnets
-#   name                 = each.value.name
-#   virtual_network_name = data.azurerm_virtual_network.vnet_ski_01.name
-#   resource_group_name  = data.azurerm_virtual_network.vnet_ski_01.resource_group_name
-# }
-
 locals {
-  # subnets = data.azurerm_virtual_network.vnet
-  #   subnets = toset([ for vnet in data.azurerm_virtual_network.vnet : vnet.id ])
   subnets = flatten([
     for vnet in data.azurerm_virtual_network.vnet : [
       for subnet in vnet.subnets : {
@@ -62,7 +53,7 @@ resource "azurerm_network_security_group" "nsg" {
 
 resource "azurerm_network_security_rule" "rule_shared" {
   for_each                    = azurerm_network_security_group.nsg
-  name                        = "test123"
+  name                        = "rule-shared"
   priority                    = 100
   direction                   = "Outbound"
   access                      = "Allow"
@@ -79,12 +70,4 @@ resource "azurerm_subnet_network_security_group_association" "subnet_nsg_associa
   for_each                  = local.subnets_map
   subnet_id                 = each.value.subnet_id                                        # azurerm_subnet.example.id
   network_security_group_id = azurerm_network_security_group.nsg[each.value.vnet_name].id # azurerm_network_security_group.example.id
-}
-
-# output "nsg" {
-#   value = data.azurerm_resources.vnet
-# }
-
-output "subnets" {
-  value = local.subnets_map
 }

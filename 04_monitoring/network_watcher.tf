@@ -1,5 +1,5 @@
 # Log collection components
-resource azurerm_storage_account network_log_data {
+resource "azurerm_storage_account" "network_log_data" {
   count                    = var.enable_nsg_flow_logs ? 1 : 0
   name                     = "storageforlogs011"
   resource_group_name      = var.rg_network_watcher
@@ -13,7 +13,7 @@ resource azurerm_storage_account network_log_data {
 
 # The Network Watcher Instance & network log flow
 # There can only be one Network Watcher per subscription and region
-data azurerm_network_watcher network_watcher_regional {
+data "azurerm_network_watcher" "network_watcher_regional" {
   name                = "NetworkWatcher_${var.resources_location}"
   resource_group_name = var.rg_network_watcher
 }
@@ -25,27 +25,23 @@ data azurerm_network_watcher network_watcher_regional {
 #   resource_group_name = azurerm_resource_group.rg_network_watcher.0.name
 # }
 
-data azurerm_resources nsg_flowlogs {
+data "azurerm_resources" "nsg_flowlogs" {
   type          = "Microsoft.Network/networkSecurityGroups"
   required_tags = var.tags
 }
 
 locals {
-  # resource_ids = flatten([ for r in data.azurerm_resources.resources_ds : [ r.resources.*.id ] ])
-  nsg = tomap({for nsg in data.azurerm_resources.nsg_flowlogs.resources : 
-    nsg.name => {
-      name = nsg.name
-      id   = nsg.id
-    }
+  nsg = tomap({
+    for nsg in data.azurerm_resources.nsg_flowlogs.resources :
+      nsg.name => {
+        name = nsg.name
+        id   = nsg.id
+      }
   })
 }
 
-output nsg {
-  value = local.nsg
-}
-
-module azurerm_network_watcher_flow_log {
-  for_each                  = local.nsg
+module "azurerm_network_watcher_flow_log" {
+  for_each                  = local.nsg # azurerm_network_security_group.nsg # 
   source                    = "../modules/azurerm_network_watcher_flow_log"
   nsg_name                  = each.value.name
   network_security_group_id = each.value.id
@@ -71,7 +67,3 @@ module azurerm_network_watcher_flow_log {
 #   workspace_region      = data.azurerm_log_analytics_workspace.workspace.location
 #   workspace_resource_id = data.azurerm_log_analytics_workspace.workspace.id
 # }
-
-output azurerm_resources_nsg_flowlogs {
-  value = data.azurerm_resources.nsg_flowlogs.resources[*].name
-}
