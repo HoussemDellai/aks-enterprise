@@ -1,8 +1,8 @@
 # import my existing custom domain name (houssem.cloud)
 data "azurerm_dns_zone" "dns_zone_parent" {
   provider            = azurerm.subscription_hub
-  name                = "houssem.cloud"
-  resource_group_name = "rg-azure-dns"
+  name                = "houssemd.com"
+  resource_group_name = "rg-dns"
 }
 
 # create sub-dns zone
@@ -24,11 +24,11 @@ resource "azurerm_dns_ns_record" "dns_ns_record" {
   records = azurerm_dns_zone.dns_zone_apps.name_servers
 }
 
-resource "azurerm_dns_a_record" "example" {
+resource "azurerm_dns_a_record" "a_record_test" {
   provider            = azurerm.subscription_hub
   name                = "test"
   zone_name           = azurerm_dns_zone.dns_zone_apps.name
   resource_group_name = azurerm_dns_zone.dns_zone_apps.resource_group_name
   ttl                 = 300
-  records             = ["10.0.180.17"]
+  records             = ["100.101.102.103"]
 }
