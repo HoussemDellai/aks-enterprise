@@ -12,6 +12,13 @@ output "firewall" {
   }
 }
 
+output "dns_zone" {
+  value = {
+    name                = azurerm_dns_zone.dns_zone_apps.name
+    resource_group_name = azurerm_dns_zone.dns_zone_apps.resource_group_name
+  }
+}
+
 # output "route_table_id" {
 #   value = azurerm_route_table.route_table_to_firewall.id
 # }

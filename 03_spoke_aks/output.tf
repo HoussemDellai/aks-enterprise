@@ -28,6 +28,12 @@ output "grafana" {
 
 output "prometheus" {
   value = {
-    id       = azapi_resource.monitor_workspace_aks.0.id
+    id = azapi_resource.monitor_workspace_aks.0.id
+  }
+}
+
+output "dns_zone_apps" {
+  value = {
+    fqdn = azurerm_dns_a_record.dns_record_appgw.fqdn
   }
 }

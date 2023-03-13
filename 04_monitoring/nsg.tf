@@ -68,6 +68,6 @@ resource "azurerm_network_security_rule" "rule_shared" {
 
 resource "azurerm_subnet_network_security_group_association" "subnet_nsg_association" {
   for_each                  = local.subnets_map
-  subnet_id                 = each.value.subnet_id                                        # azurerm_subnet.example.id
-  network_security_group_id = azurerm_network_security_group.nsg[each.value.vnet_name].id # azurerm_network_security_group.example.id
+  subnet_id                 = each.value.subnet_id
+  network_security_group_id = azurerm_network_security_group.nsg[each.value.vnet_name].id
 }
