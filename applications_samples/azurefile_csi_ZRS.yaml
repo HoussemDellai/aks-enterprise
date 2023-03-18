@@ -14,7 +14,6 @@ volumeBindingMode: WaitForFirstConsumer
 apiVersion: v1
 kind: Namespace
 metadata:
-  creationTimestamp: null
   name: csi-file-zrs
 ---
 kind: Pod
