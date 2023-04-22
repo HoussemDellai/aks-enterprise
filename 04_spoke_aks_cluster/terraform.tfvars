@@ -7,7 +7,7 @@ subscription_id_spoke = "82f6d75e-85f4-434a-ab74-5dddd9fa8910" # "17b12858-3960-
 
 resources_location = "westeurope" # "francecentral" # "westcentralus" # "northeurope" # 
 
-kubernetes_version   = "1.26.0"
+kubernetes_version   = "1.26.3" # "1.26.0"
 aad_group_aks_admins = "aad_group_aks_admins"
 
 cidr_subnet_nodes             = ["10.1.3.0/24"]
@@ -15,9 +15,8 @@ cidr_subnet_apiserver_vnetint = ["10.1.4.0/28"]
 cidr_subnet_pods              = ["10.1.240.0/20"]
 
 cidr_aks_service       = "10.0.0.0/16"
-cidr_aks_docker_bridge = "172.17.0.1/16"
 aks_dns_service_ip     = "10.0.0.10"
-aks_outbound_type      = "loadBalancer" # "userAssignedNATGateway" # "loadBalancer" , userDefinedRouting, managedNATGateway
+aks_outbound_type      = "userDefinedRouting" # "userAssignedNATGateway" # "loadBalancer" , userDefinedRouting, managedNATGateway
 enable_app_gateway     = true
 
 enable_private_cluster                      = false
@@ -32,6 +31,6 @@ enable_grafana_prometheus = true
 enable_monitoring         = true
 
 # integration with Hub network
-enable_hub_spoke    = false
-enable_firewall     = false
-enable_vnet_peering = false
+enable_hub_spoke    = true
+enable_firewall     = true
+enable_vnet_peering = true

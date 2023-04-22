@@ -1,6 +1,15 @@
 locals {
-  cidr_subnet_aks_nodes_pods = concat(azurerm_subnet.subnet_nodes.address_prefixes, azurerm_subnet.subnet_pods.address_prefixes)
+  cidr_subnet_aks_nodes_pods = data.terraform_remote_state.spoke_aks.outputs.vnet_spoke_aks.address_space
 }
+# locals {
+#   cidr_subnet_aks_nodes_pods = concat(
+#     azurerm_subnet.subnet_nodes.address_prefixes, 
+#     azurerm_subnet.subnet_pods.address_prefixes,
+#     # [for snet in azurerm_subnet.subnet_nodes_user_nodepool : snet.address_prefixes],
+#     # azurerm_subnet.subnet_nodes_user_nodepool.0.address_prefixes,
+#     # azurerm_subnet.subnet_pods_user_nodepool.0.address_prefixes
+#     )
+# }
 
 resource "azurerm_firewall_policy_rule_collection_group" "policy_group_aks" {
   count              = var.enable_firewall ? 1 : 0
@@ -18,6 +27,10 @@ resource "azurerm_firewall_policy_rule_collection_group" "policy_group_aks" {
       protocols {
         type = "Https"
         port = 443
+      }
+      protocols {
+        type = "Http"
+        port = 80
       }
       source_addresses      = local.cidr_subnet_aks_nodes_pods
       destination_fqdn_tags = ["AzureKubnernetesService"]

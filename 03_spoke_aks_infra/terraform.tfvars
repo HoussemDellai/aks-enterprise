@@ -14,18 +14,16 @@ cidr_vnet_spoke_aks                         = ["10.1.0.0/16"]
 cidr_subnet_appgateway                      = ["10.1.1.0/24"]
 cidr_subnet_spoke_aks_pe                    = ["10.1.2.0/28"]
 
-enable_private_acr                          = true
-enable_keyvault                             = true
-enable_private_keyvault                     = true
-
-enable_storage_account                      = true
 enable_grafana_prometheus                   = true
+enable_app_gateway  = true
+enable_keyvault                             = true
+enable_storage_account                      = true
+enable_private_keyvault                     = true
+enable_private_acr                          = true
 
 enable_monitoring   = true
 
-enable_app_gateway  = true
-
 # integration with Hub & Firewall
-enable_hub_spoke    = false
-enable_firewall     = false
-enable_vnet_peering = false
+enable_hub_spoke    = true
+enable_firewall     = true
+enable_vnet_peering = true

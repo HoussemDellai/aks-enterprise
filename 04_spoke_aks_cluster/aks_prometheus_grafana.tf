@@ -3,16 +3,28 @@ resource "null_resource" "aks_enable_azuremonitormetrics" {
   
   provisioner "local-exec" {
     interpreter = ["PowerShell", "-Command"]
+    on_failure   = continue # fail
+    when        = create
     command     = <<-EOT
 
-    az aks update --enable-azuremonitormetrics `
-                  -g ${azurerm_kubernetes_cluster.aks.resource_group_name} `
-                  -n ${azurerm_kubernetes_cluster.aks.name} `
-                  --azure-monitor-workspace-resource-id ${data.terraform_remote_state.spoke_aks.outputs.prometheus.id}
-                  # --grafana-resource-id ${data.terraform_remote_state.spoke_aks.outputs.grafana.id}
-
+      az aks update --enable-azuremonitormetrics `
+                    -g ${azurerm_kubernetes_cluster.aks.resource_group_name} `
+                    -n ${azurerm_kubernetes_cluster.aks.name} `
+                    --azure-monitor-workspace-resource-id ${data.terraform_remote_state.spoke_aks.outputs.prometheus.id}
     EOT
   }
+
+  # provisioner "local-exec" {
+  #   interpreter = ["PowerShell", "-Command"]
+  #   on_failure   = continue # fail
+  #   when        = destroy
+  #   command     = <<-EOT
+
+  #     az aks update --disable-azuremonitormetrics `
+  #                   -g ${azurerm_kubernetes_cluster.aks.resource_group_name} `
+  #                   -n ${azurerm_kubernetes_cluster.aks.name}
+  #   EOT
+  # }
 
   triggers = {
     "key" = "value1"

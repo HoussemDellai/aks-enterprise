@@ -42,8 +42,7 @@ resource "azurerm_subnet" "subnet_apiserver" {
 }
 
 resource "azurerm_kubernetes_cluster" "aks" {
-  # count                               = var.enable_aks_cluster ? 1 : 0
-  name                                = "aks-cluster"
+  name                                = "aks-cluster-test"
   resource_group_name                 = azurerm_resource_group.rg_spoke_aks_cluster.name
   location                            = var.resources_location
   kubernetes_version                  = var.kubernetes_version
@@ -125,9 +124,8 @@ resource "azurerm_kubernetes_cluster" "aks" {
     network_plugin     = "azure"  # "kubenet", "azure", "none"
     network_policy     = "calico" # "azure" 
     dns_service_ip     = var.aks_dns_service_ip
-    docker_bridge_cidr = var.cidr_aks_docker_bridge
     service_cidr       = var.cidr_aks_service
-    outbound_type      = var.aks_outbound_type # "userAssignedNATGateway loadBalancer" # userDefinedRouting, managedNATGateway
+    outbound_type      = var.aks_outbound_type # "userAssignedNATGateway" "loadBalancer" "userDefinedRouting" "managedNATGateway"
     load_balancer_sku  = "standard"            # "basic"
     pod_cidr           = null                  # can only be set when network_plugin is set to kubenet
     # pod_cidr    = var.aks_network_plugin == "kubenet" ? var.cidr_subnet_pods : null # only set when network_plugin is set to kubenet
@@ -231,19 +229,23 @@ resource "azurerm_kubernetes_cluster" "aks" {
   #   labels_allowed = []
   # }
 
-  # storage_profile { #todo
-  #   file_driver_enabled         = true
-  #   blob_driver_enabled         = true
-  #   disk_driver_enabled         = true
-  #   disk_driver_version         = "v2"
-  #   snapshot_controller_enabled = true
-  # }
+  storage_profile { #todo
+    file_driver_enabled         = true
+    blob_driver_enabled         = true
+    disk_driver_enabled         = true
+    # disk_driver_version         = "v2"
+    snapshot_controller_enabled = true
+  }
 
   # web_app_routing {
   #   dns_zone_id = null #TODO
   # }
 
   depends_on = [
+    azurerm_subnet_route_table_association.association_route_table_subnet_system_nodes,
+    azurerm_subnet_route_table_association.association_route_table_subnet_system_pods,
+    azurerm_subnet_route_table_association.association_route_table_subnet_nodes[0],
+    azurerm_subnet_route_table_association.association_route_table_subnet_pods[0]
     # azurerm_virtual_network.vnet_spoke_aks,
     # azurerm_application_gateway.appgw
   ]

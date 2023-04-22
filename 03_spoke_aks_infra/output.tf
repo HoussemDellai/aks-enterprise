@@ -3,6 +3,7 @@ output "vnet_spoke_aks" {
     virtual_network_name = azurerm_virtual_network.vnet_spoke_aks.name
     resource_group_name  = azurerm_virtual_network.vnet_spoke_aks.resource_group_name
     id                   = azurerm_virtual_network.vnet_spoke_aks.id
+    address_space        = azurerm_virtual_network.vnet_spoke_aks.address_space
   }
 }
 

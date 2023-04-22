@@ -49,11 +49,6 @@ variable "aks_dns_service_ip" {
   default     = "10.0.0.10"
 }
 
-variable "cidr_aks_docker_bridge" {
-  description = "CIDR notation IP for Docker bridge."
-  default     = "172.17.0.1/16"
-}
-
 variable "vm_user_name" {
   description = "User name for the VM"
   default     = "vmuser1"

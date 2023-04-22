@@ -42,6 +42,14 @@ resource "azurerm_role_assignment" "role_identity_aks_network_contributor_subnet
   skip_service_principal_aad_check = true
 }
 
+# Role Assignments for Control Plane MSI
+resource "azurerm_role_assignment" "role_identity_aks_contributor_routetable" {
+  count                = var.enable_firewall ? 1 : 0
+  scope                = azurerm_route.route_to_firewall.0.id
+  role_definition_name = "Contributor"
+  principal_id         = azurerm_user_assigned_identity.identity_aks.principal_id
+}
+
 # AppGW (generated with addon) Identity needs also Network Contributor role over AKS/VNET RG
 resource "azurerm_role_assignment" "role_appgw_network_contributor" {
   count                = var.enable_app_gateway ? 1 : 0

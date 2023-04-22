@@ -1,12 +1,12 @@
 variable "nodepoolapps" {
   default = {
-    # "poolappsarm" = {
-    #   vm_size           = "Standard_D2pds_v5" # arm
-    #   os_disk_type      = "Ephemeral" # "Managed"         # 
-    #   cidr_subnet_nodes = ["10.1.5.0/24"]
-    #   cidr_subnet_pods  = ["10.1.6.0/24"]
-    #   os_sku            = "Ubuntu"
-    # },
+    "poolappsarm" = {
+      vm_size           = "Standard_D2pds_v5" # arm
+      os_disk_type      = "Ephemeral" # "Managed"         # 
+      cidr_subnet_nodes = ["10.1.5.0/24"]
+      cidr_subnet_pods  = ["10.1.6.0/24"]
+      os_sku            = "Ubuntu"
+    },
     # "poolappsamd" = {
     #   vm_size           = "Standard_D2s_v5" # intel # Standard_D2s_v5 does not support Ephemeral OS disk
     #   os_disk_type      = "Managed"         # "Ephemeral" # 
