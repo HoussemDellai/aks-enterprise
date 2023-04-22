@@ -22,7 +22,6 @@ mountOptions:
 apiVersion: v1
 kind: Namespace
 metadata:
-  creationTimestamp: null
   name: file-lrs
 ---
 kind: Pod

@@ -14,7 +14,6 @@ allowVolumeExpansion: true
 apiVersion: v1
 kind: Namespace
 metadata:
-  creationTimestamp: null
   name: csi-disk-zrs
 ---
 kind: Pod
