@@ -14,10 +14,10 @@ cidr_subnet_nodes             = ["10.1.3.0/24"]
 cidr_subnet_apiserver_vnetint = ["10.1.4.0/28"]
 cidr_subnet_pods              = ["10.1.240.0/20"]
 
-cidr_aks_service       = "10.0.0.0/16"
-aks_dns_service_ip     = "10.0.0.10"
-aks_outbound_type      = "userDefinedRouting" # "userAssignedNATGateway" # "loadBalancer" , userDefinedRouting, managedNATGateway
-enable_app_gateway     = true
+cidr_aks_service   = "10.0.0.0/16"
+aks_dns_service_ip = "10.0.0.10"
+aks_outbound_type  = "userDefinedRouting" # "userAssignedNATGateway" # "loadBalancer" , userDefinedRouting, managedNATGateway
+enable_app_gateway = true
 
 enable_private_cluster                      = false
 enable_apiserver_vnet_integration           = true
