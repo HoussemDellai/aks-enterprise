@@ -25,6 +25,23 @@ module "vm_jumpbox" {
   #   admin_password      = "P@ssw0rd1234!"
 }
 
+module "vm_jumpbox_windows" {
+  source = "../modules/vm_windows"
+  providers = {
+    azurerm = azurerm.subscription_hub
+  }
+
+  resource_group_name = "rg-${var.prefix}-hub-vm-windows"
+  location            = azurerm_resource_group.rg_hub.location
+  subnet_id           = azurerm_subnet.subnet_vm.0.id
+  tags                = var.tags
+  subscription_id     = data.azurerm_subscription.subscription_hub.id
+  #   vm_name             = "vm-jumpbox"
+  #   vm_size             = "Standard_B2s"
+  #   admin_username      = "azureuser"
+  #   admin_password      = "P@ssw0rd1234!"
+}
+
 data "azurerm_subscription" "subscription_hub" {
   provider        = azurerm.subscription_hub
   subscription_id = var.subscription_id_hub

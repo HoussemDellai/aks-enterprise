@@ -30,8 +30,8 @@ resource azurerm_windows_virtual_machine vm_jumpbox_windows {
 
   source_image_reference {
     publisher = "MicrosoftWindowsDesktop"
-    offer     = "Windows-10"
-    sku       = "21h1-ent-g2"
+    offer     = "windows-11"
+    sku       = "win11-22h2-pro"
     version   = "latest"
   }
 
@@ -39,27 +39,6 @@ resource azurerm_windows_virtual_machine vm_jumpbox_windows {
     storage_account_uri = null
   }
 }
-
-# "properties": {
-#     "vmId": "f8180c1b-a91a-4f53-b90e-2e17709934ef",
-#     "hardwareProfile": {
-#         "vmSize": "Standard_D2ads_v5"
-#     },
-#     "storageProfile": {
-#         "osDisk": {
-#             "osType": "Windows",
-#             "name": "vm-devbox_OsDisk",
-#             "createOption": "Attach",
-#             "caching": "ReadWrite",
-#             "managedDisk": {
-#                 "storageAccountType": "StandardSSD_LRS",
-#                 "id": "/subscriptions/59d574d4-1c03-4092-ab22-312ed594eec9/resourceGroups/RG-DISK-OS-VM-DEVBOX/providers/Microsoft.Compute/disks/vm-devbox_OsDisk"
-#             },
-#             "deleteOption": "Detach",
-#             "diskSizeGB": 256
-#         },
-#         "dataDisks": []
-#     },
 
 # resource azurerm_virtual_machine_extension vm_extension_windows {
 #   count                = var.enable_vm_jumpbox_windows ? 1 : 0
