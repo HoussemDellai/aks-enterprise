@@ -1,5 +1,5 @@
 resource azurerm_virtual_network vnet_spoke_mgt {
-  name                = "vnet-spoke-mgt"
+  name                = "vnet-${var.prefix}-spoke-mgt"
   location            = var.resources_location
   resource_group_name = azurerm_resource_group.rg_spoke_mgt.name
   address_space       = var.cidr_vnet_spoke_mgt

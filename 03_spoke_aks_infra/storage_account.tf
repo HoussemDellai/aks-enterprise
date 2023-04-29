@@ -19,18 +19,18 @@ resource "azurerm_storage_account" "storage" {
   tags                          = var.tags
 }
 
-resource "azurerm_storage_container" "container" {
-  count                 = var.enable_storage_account ? 1 : 0
-  name                  = "my-files"
-  storage_account_name  = azurerm_storage_account.storage.0.name
-  container_access_type = "container" # "blob private"
-}
+# resource "azurerm_storage_container" "container" {
+#   count                 = var.enable_storage_account ? 1 : 0
+#   name                  = "my-files"
+#   storage_account_name  = azurerm_storage_account.storage.0.name
+#   container_access_type = "container" # "blob private"
+# }
 
-resource "azurerm_storage_blob" "blob" {
-  count                  = var.enable_storage_account ? 1 : 0
-  name                   = "storage_account.tf"
-  storage_account_name   = azurerm_storage_account.storage.0.name
-  storage_container_name = azurerm_storage_container.container.0.name
-  type                   = "Block"
-  source                 = "storage_account.tf" # "vm-install-cli-tools.sh"
-}
+# resource "azurerm_storage_blob" "blob" {
+#   count                  = var.enable_storage_account ? 1 : 0
+#   name                   = "storage_account.tf"
+#   storage_account_name   = azurerm_storage_account.storage.0.name
+#   storage_container_name = azurerm_storage_container.container.0.name
+#   type                   = "Block"
+#   source                 = "storage_account.tf" # "vm-install-cli-tools.sh"
+# }

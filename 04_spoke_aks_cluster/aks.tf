@@ -42,13 +42,13 @@ resource "azurerm_subnet" "subnet_apiserver" {
 }
 
 resource "azurerm_kubernetes_cluster" "aks" {
-  name                                = "aks-cluster-test"
+  name                                = "aks-${var.prefix}-cluster"
   resource_group_name                 = azurerm_resource_group.rg_spoke_aks_cluster.name
   location                            = var.resources_location
   kubernetes_version                  = var.kubernetes_version
   sku_tier                            = "Free" # "Paid"
   dns_prefix                          = "aks"
-  node_resource_group                 = "rg-spoke-aks-nodes"
+  node_resource_group                 = "rg-${var.prefix}-spoke-aks-nodes"
   private_cluster_enabled             = var.enable_private_cluster
   private_cluster_public_fqdn_enabled = false
   public_network_access_enabled       = true
@@ -88,7 +88,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
     zones                        = [1, 2, 3]                                       # []
     vnet_subnet_id               = azurerm_subnet.subnet_nodes.id
     pod_subnet_id                = azurerm_subnet.subnet_pods.id
-    scale_down_mode              = "Delete" # ScaleDownModeDeallocate
+    scale_down_mode              = "Deallocate" # "Delete" # Deallocate
     workload_runtime             = "OCIContainer"
     kubelet_disk_type            = "OS" # "Temporary" # 
     enable_node_public_ip        = false
@@ -236,6 +236,10 @@ resource "azurerm_kubernetes_cluster" "aks" {
     # disk_driver_version         = "v2"
     snapshot_controller_enabled = true
   }
+
+  # service_mesh_profile {
+  #   mode = "Istio"
+  # }
 
   # web_app_routing {
   #   dns_zone_id = null #TODO

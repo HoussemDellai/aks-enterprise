@@ -33,16 +33,17 @@ data "azurerm_resources" "nsg_flowlogs" {
 locals {
   nsg = tomap({
     for nsg in data.azurerm_resources.nsg_flowlogs.resources :
-      nsg.name => {
-        name = nsg.name
-        id   = nsg.id
-      }
+    nsg.name => {
+      name = nsg.name
+      id   = nsg.id
+    }
   })
 }
 
 module "azurerm_network_watcher_flow_log" {
-  for_each                  = local.nsg # azurerm_network_security_group.nsg # 
-  source                    = "../modules/azurerm_network_watcher_flow_log"
+  for_each = local.nsg # azurerm_network_security_group.nsg # 
+  source   = "../modules/azurerm_network_watcher_flow_log"
+
   nsg_name                  = each.value.name
   network_security_group_id = each.value.id
   network_watcher_name      = data.azurerm_network_watcher.network_watcher_regional.name

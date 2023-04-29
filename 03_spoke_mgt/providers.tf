@@ -6,22 +6,22 @@ terraform {
 
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = ">= 3.47.0"
+      version = "= 3.54.0"
     }
 
     azuread = {
       source  = "hashicorp/azuread"
-      version = ">= 2.34.1"
+      version = ">= 2.37.2"
     }
 
     azapi = {
       source  = "Azure/azapi"
-      version = "1.2.0"
+      version = "1.5.0"
     }
 
     http = {
       source  = "hashicorp/http"
-      version = "3.2.1"
+      version = "3.3.0"
     }
 
     time = {

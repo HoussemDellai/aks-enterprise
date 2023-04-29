@@ -1,4 +1,4 @@
-# prefix = "demo011"
+prefix              = "esp"
 tenant_id_hub       = "16b3c013-d300-468d-ac64-7eda0820b6d3"
 subscription_id_hub = "82f6d75e-85f4-434a-ab74-5dddd9fa8910"
 
@@ -10,6 +10,7 @@ resources_location = "westeurope" # "francecentral" # "westcentralus" #
 cidr_vnet_hub        = ["172.16.0.0/16"]
 cidr_subnet_firewall = ["172.16.0.0/26"]
 cidr_subnet_bastion  = ["172.16.1.0/27"]
+cidr_subnet_vm       = ["172.16.2.0/26"]
 
-enable_bastion  = false
+enable_bastion  = true
 enable_firewall = true

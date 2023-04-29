@@ -1,7 +1,7 @@
-# variable prefix {
-#   type        = string
-#   description = "A prefix used for all resources in this example"
-# }
+variable prefix {
+  type        = string
+  description = "A prefix used for all resources in this example"
+}
 
 variable "resources_location" {
   description = "Location of the resource group."

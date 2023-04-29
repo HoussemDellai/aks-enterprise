@@ -1,7 +1,7 @@
-# variable prefix {
-#   type        = string
-#   description = "A prefix used for all resources in this example"
-# }
+variable prefix {
+  type        = string
+  description = "A prefix used for all resources in this example"
+}
 
 variable "resources_location" {
   description = "Location of the resource group."
@@ -17,6 +17,10 @@ variable "cidr_subnet_bastion" {
 
 variable "cidr_subnet_firewall" {
   description = "CIDR for Firewall Subnet."
+}
+
+variable "cidr_subnet_vm" {
+  description = "CIDR for VM Subnet."
 }
 
 variable "enable_bastion" {

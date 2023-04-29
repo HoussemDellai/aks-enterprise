@@ -1,6 +1,6 @@
-locals {
-  cidr_subnet_aks_nodes_pods = data.terraform_remote_state.spoke_aks.outputs.vnet_spoke_aks.address_space
-}
+# locals {
+#   cidr_subnet_aks_nodes_pods = data.terraform_remote_state.spoke_aks.outputs.vnet_spoke_aks.address_space
+# }
 # locals {
 #   cidr_subnet_aks_nodes_pods = concat(
 #     azurerm_subnet.subnet_nodes.address_prefixes, 
@@ -14,7 +14,7 @@ locals {
 resource "azurerm_firewall_policy_rule_collection_group" "policy_group_aks" {
   count              = var.enable_firewall ? 1 : 0
   name               = "policy_group_aks"
-  firewall_policy_id = data.terraform_remote_state.hub.0.outputs.firewall.policy_id
+  firewall_policy_id = data.terraform_remote_state.hub.0.outputs.firewall.policy_id # azurerm_firewall_policy.firewall_policy.id
   priority           = 200
 
   application_rule_collection {
@@ -28,12 +28,28 @@ resource "azurerm_firewall_policy_rule_collection_group" "policy_group_aks" {
         type = "Https"
         port = 443
       }
+      source_addresses      = data.terraform_remote_state.spoke_aks.outputs.vnet_spoke_aks.address_space
+      destination_fqdn_tags = ["AzureKubnernetesService"]
+    }
+  }
+
+  application_rule_collection {
+    name     = "allow_debian_updates"
+    priority = 210
+    action   = "Allow"
+
+    rule {
+      name = "allow_deb_debian_org"
       protocols {
         type = "Http"
         port = 80
       }
-      source_addresses      = local.cidr_subnet_aks_nodes_pods
-      destination_fqdn_tags = ["AzureKubnernetesService"]
+    #   protocols {
+    #     type = "Https"
+    #     port = 443
+    #   }
+      source_addresses  = data.terraform_remote_state.spoke_aks.outputs.vnet_spoke_aks.address_space
+      destination_fqdns = ["deb.debian.org"]
     }
   }
 
@@ -44,35 +60,35 @@ resource "azurerm_firewall_policy_rule_collection_group" "policy_group_aks" {
     rule {
       name                  = "https"
       protocols             = ["TCP"]
-      source_addresses      = local.cidr_subnet_aks_nodes_pods
+      source_addresses      = data.terraform_remote_state.spoke_aks.outputs.vnet_spoke_aks.address_space
       destination_addresses = ["*"]
       destination_ports     = ["443"]
     }
     rule {
       name                  = "dns"
       protocols             = ["UDP"]
-      source_addresses      = local.cidr_subnet_aks_nodes_pods
+      source_addresses      = data.terraform_remote_state.spoke_aks.outputs.vnet_spoke_aks.address_space
       destination_addresses = ["*"]
       destination_ports     = ["53"]
     }
     rule {
       name                  = "time"
       protocols             = ["UDP"]
-      source_addresses      = local.cidr_subnet_aks_nodes_pods
+      source_addresses      = data.terraform_remote_state.spoke_aks.outputs.vnet_spoke_aks.address_space
       destination_addresses = ["*"]
       destination_ports     = ["123"]
     }
     rule {
       name                  = "tunnel_udp"
       protocols             = ["UDP"]
-      source_addresses      = local.cidr_subnet_aks_nodes_pods
+      source_addresses      = data.terraform_remote_state.spoke_aks.outputs.vnet_spoke_aks.address_space
       destination_addresses = ["*"]
       destination_ports     = ["1194"]
     }
     rule {
       name                  = "tunnel_tcp"
       protocols             = ["TCP"]
-      source_addresses      = local.cidr_subnet_aks_nodes_pods
+      source_addresses      = data.terraform_remote_state.spoke_aks.outputs.vnet_spoke_aks.address_space
       destination_addresses = ["*"]
       destination_ports     = ["9000"]
     }
