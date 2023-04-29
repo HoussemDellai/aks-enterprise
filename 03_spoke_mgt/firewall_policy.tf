@@ -4,12 +4,12 @@
 
 resource azurerm_firewall_policy_rule_collection_group policy_group_subnet_mgt {
   count              = var.enable_firewall ? 1 : 0
-  name               = "policy_group_subnet_mgt"
+  name               = "policy_group_subnet_vm"
   firewall_policy_id = data.terraform_remote_state.hub.0.outputs.firewall.policy_id # azurerm_firewall_policy.firewall_policy.id
   priority           = 300
 
   application_rule_collection {
-    name     = "app_rules_subnet_mgt"
+    name     = "app_rules_subnet_vm"
     priority = 305
     action   = "Allow"
     # rule {
@@ -52,7 +52,7 @@ resource azurerm_firewall_policy_rule_collection_group policy_group_subnet_mgt {
         type = "Https"
         port = 443
       }
-      source_addresses  = azurerm_subnet.subnet_mgt.address_prefixes
+      source_addresses  = azurerm_subnet.subnet_vm.address_prefixes
       destination_fqdns = ["*"]
     }
   }

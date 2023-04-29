@@ -17,22 +17,22 @@ resource azurerm_resource_group rg {
   tags     = var.tags
 }
 
-resource azurerm_user_assigned_identity identity_vm_linux {
-  name                = "identity-vm-linux"
+resource azurerm_user_assigned_identity identity_vm {
+  name                = "identity-vm"
   resource_group_name = azurerm_resource_group.rg.name
   location            = azurerm_resource_group.rg.location
   tags                = var.tags
 }
 
-resource azurerm_role_assignment role_identity_vm_linux_contributor {
+resource azurerm_role_assignment role_contributor {
   scope                            = var.subscription_id
   role_definition_name             = "Contributor"
-  principal_id                     = azurerm_user_assigned_identity.identity_vm_linux.principal_id
+  principal_id                     = azurerm_user_assigned_identity.identity_vm.principal_id
   skip_service_principal_aad_check = true
 }
 
-resource azurerm_network_interface nic_vm_jumpbox_linux {
-  name                = "nic-vm-jumpbox-linux"
+resource azurerm_network_interface nic_vm {
+  name                = "nic-vm"
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
   tags                = var.tags
@@ -44,15 +44,15 @@ resource azurerm_network_interface nic_vm_jumpbox_linux {
   }
 }
 
-resource azurerm_linux_virtual_machine vm_jumpbox_linux {
-  name                            = "vm-jumpbox-linux"
+resource azurerm_linux_virtual_machine vm {
+  name                            = var.vm_name
   resource_group_name             = azurerm_resource_group.rg.name
   location                        = azurerm_resource_group.rg.location
-  size                            = "Standard_B2s" # "Standard_D2s_v5" # "Standard_D2ads_v5"
+  size                            = var.vm_size
   disable_password_authentication = false
-  admin_username                  = "houssem"
-  admin_password                  = "@Aa123456789"
-  network_interface_ids           = [azurerm_network_interface.nic_vm_jumpbox_linux.id]
+  admin_username                  = var.admin_username
+  admin_password                  = var.admin_password
+  network_interface_ids           = [azurerm_network_interface.nic_vm.id]
   tags                            = var.tags
 
   os_disk {
@@ -73,7 +73,7 @@ resource azurerm_linux_virtual_machine vm_jumpbox_linux {
 
   identity {
     type         = "UserAssigned"
-    identity_ids = [azurerm_user_assigned_identity.identity_vm_linux.id]
+    identity_ids = [azurerm_user_assigned_identity.identity_vm.id]
   }
 
   # az vm image list --publisher Canonical --offer 0001-com-ubuntu-pro-jammy -s pro-22_04-lts-gen2 --all
@@ -87,7 +87,7 @@ resource azurerm_linux_virtual_machine vm_jumpbox_linux {
 
 resource azurerm_virtual_machine_extension vm_extension_linux {
   name                 = "vm-extension-linux"
-  virtual_machine_id   = azurerm_linux_virtual_machine.vm_jumpbox_linux.id
+  virtual_machine_id   = azurerm_linux_virtual_machine.vm.id
   publisher            = "Microsoft.Azure.Extensions"
   type                 = "CustomScript"
   type_handler_version = "2.1"

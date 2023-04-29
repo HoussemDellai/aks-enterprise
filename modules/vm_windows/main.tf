@@ -45,12 +45,12 @@ resource azurerm_network_interface nic_vm {
 }
 
 resource azurerm_windows_virtual_machine vm {
-  name                            = "vm-jumpbox-win"
+  name                            = var.vm_name
   resource_group_name             = azurerm_resource_group.rg.name
   location                        = azurerm_resource_group.rg.location
-  size                            = "Standard_B2s" # "Standard_D2s_v5" # "Standard_D2ads_v5"
-  admin_username                  = "houssem"
-  admin_password                  = "@Aa123456789"
+  size                            = var.vm_size
+  admin_username                  = var.admin_username
+  admin_password                  = var.admin_password
   network_interface_ids           = [azurerm_network_interface.nic_vm.id]
   tags                            = var.tags
 
