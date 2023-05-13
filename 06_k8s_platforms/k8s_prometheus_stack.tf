@@ -1,4 +1,4 @@
-resource kubernetes_namespace prometheus_stack {
+resource "kubernetes_namespace" "prometheus_stack" {
   provider = kubernetes.aks-module
   metadata {
     name = "monitoring"
@@ -9,12 +9,12 @@ resource kubernetes_namespace prometheus_stack {
 #   value = helm_release.prometheus_stack.manifest.values
 # }
 
-output prometheus_stack_manifest {
+output "prometheus_stack_manifest" {
   value = helm_release.prometheus_stack.manifest
 }
 
 # https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack
-resource helm_release prometheus_stack {
+resource "helm_release" "prometheus_stack" {
   provider   = helm.aks-module
   name       = "prom"
   repository = "https://prometheus-community.github.io/helm-charts"

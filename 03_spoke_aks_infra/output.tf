@@ -29,7 +29,7 @@ output "grafana" {
 
 output "prometheus" {
   value = {
-    id = azapi_resource.monitor_workspace_aks.0.id
+    id = azurerm_monitor_workspace.prometheus.0.id
   }
 }
 

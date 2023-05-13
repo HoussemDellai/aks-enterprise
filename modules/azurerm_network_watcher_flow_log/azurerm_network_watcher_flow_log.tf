@@ -1,4 +1,4 @@
-resource azurerm_network_watcher_flow_log network_flow_logs {
+resource "azurerm_network_watcher_flow_log" "network_flow_logs" {
   name                      = var.nsg_name
   network_watcher_name      = var.network_watcher_name
   resource_group_name       = var.resource_group_name

@@ -1,9 +1,9 @@
-resource azurerm_resource_group example {
+resource "azurerm_resource_group" "example" {
   name     = "example-resources"
   location = "West Europe"
 }
 
-resource azurerm_log_analytics_workspace example {
+resource "azurerm_log_analytics_workspace" "example" {
   name                = "acctest-01"
   location            = azurerm_resource_group.example.location
   resource_group_name = azurerm_resource_group.example.name
@@ -11,14 +11,14 @@ resource azurerm_log_analytics_workspace example {
   retention_in_days   = 30
 }
 
-resource azurerm_container_app_environment example {
+resource "azurerm_container_app_environment" "example" {
   name                       = "myEnvironment"
   location                   = azurerm_resource_group.example.location
   resource_group_name        = azurerm_resource_group.example.name
   log_analytics_workspace_id = azurerm_log_analytics_workspace.example.id
 }
 
-resource azurerm_storage_account example {
+resource "azurerm_storage_account" "example" {
   name                     = "storage1aca13579"
   resource_group_name      = azurerm_resource_group.example.name
   location                 = azurerm_resource_group.example.location
@@ -26,13 +26,13 @@ resource azurerm_storage_account example {
   account_replication_type = "LRS"
 }
 
-resource azurerm_storage_share example {
+resource "azurerm_storage_share" "example" {
   name                 = "sharename"
   storage_account_name = azurerm_storage_account.example.name
   quota                = 5
 }
 
-resource azurerm_container_app_environment_storage example {
+resource "azurerm_container_app_environment_storage" "example" {
   name                         = "mycontainerappstorage"
   container_app_environment_id = azurerm_container_app_environment.example.id
   account_name                 = azurerm_storage_account.example.name

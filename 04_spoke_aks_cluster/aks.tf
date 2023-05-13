@@ -121,13 +121,13 @@ resource "azurerm_kubernetes_cluster" "aks" {
     # network_plugin_mode = "Overlay" # When ebpf_data_plane is set to cilium, one of either network_plugin_mode = "Overlay" or pod_subnet_id must be specified.
 
     # network_mode        = "bridge"               # " transparent"
-    network_plugin     = "azure"  # "kubenet", "azure", "none"
-    network_policy     = "calico" # "azure" 
-    dns_service_ip     = var.aks_dns_service_ip
-    service_cidr       = var.cidr_aks_service
-    outbound_type      = var.aks_outbound_type # "userAssignedNATGateway" "loadBalancer" "userDefinedRouting" "managedNATGateway"
-    load_balancer_sku  = "standard"            # "basic"
-    pod_cidr           = null                  # can only be set when network_plugin is set to kubenet
+    network_plugin    = "azure"  # "kubenet", "azure", "none"
+    network_policy    = "calico" # "azure" 
+    dns_service_ip    = var.aks_dns_service_ip
+    service_cidr      = var.cidr_aks_service
+    outbound_type     = var.aks_outbound_type # "userAssignedNATGateway" "loadBalancer" "userDefinedRouting" "managedNATGateway"
+    load_balancer_sku = "standard"            # "basic"
+    pod_cidr          = null                  # can only be set when network_plugin is set to kubenet
     # pod_cidr    = var.aks_network_plugin == "kubenet" ? var.cidr_subnet_pods : null # only set when network_plugin is set to kubenet
     ip_versions = ["IPv4"] # ["IPv4", "IPv6"]
 
@@ -230,9 +230,9 @@ resource "azurerm_kubernetes_cluster" "aks" {
   # }
 
   storage_profile { #todo
-    file_driver_enabled         = true
-    blob_driver_enabled         = true
-    disk_driver_enabled         = true
+    file_driver_enabled = true
+    blob_driver_enabled = true
+    disk_driver_enabled = true
     # disk_driver_version         = "v2"
     snapshot_controller_enabled = true
   }

@@ -26,7 +26,7 @@ terraform {
   }
 }
 
-provider azurerm {
+provider "azurerm" {
   # alias           = "ms-internal"
   # subscription_id = "4b72ed90-7ca3-4e76-8d0f-31a2c0bee7a3" # "Microsoft Internal"
   # tenant_id       = "72f988bf-86f1-41af-91ab-2d7cd011db47"
@@ -37,7 +37,7 @@ provider azurerm {
   }
 }
 
-provider kubernetes {
+provider "kubernetes" {
   alias                  = "aks-module"
   host                   = data.azurerm_kubernetes_cluster.aks.0.kube_config.0.host
   cluster_ca_certificate = base64decode(data.azurerm_kubernetes_cluster.aks.0.kube_config.0.cluster_ca_certificate)
@@ -65,7 +65,7 @@ provider kubernetes {
   }
 }
 
-provider helm {
+provider "helm" {
   alias = "aks-module"
   kubernetes {
     # host                   = data.azurerm_kubernetes_cluster.aks_cluster.kube_config.0.host

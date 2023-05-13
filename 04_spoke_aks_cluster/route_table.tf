@@ -7,7 +7,7 @@ resource "azurerm_route_table" "route_table_spoke_aks" {
   tags                          = var.tags
 }
 
-resource azurerm_route route_to_firewall {
+resource "azurerm_route" "route_to_firewall" {
   # provider               = azurerm.subscription_hub
   count                  = var.enable_firewall ? 1 : 0
   name                   = "route-to-firewall"

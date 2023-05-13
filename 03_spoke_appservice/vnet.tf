@@ -1,4 +1,4 @@
-resource azurerm_virtual_network vnet_spoke_appservice {
+resource "azurerm_virtual_network" "vnet_spoke_appservice" {
   #   count               = var.enable_spoke_appservice ? 1 : 0
   name                = "vnet-spoke-appservice"
   location            = azurerm_resource_group.rg_spoke_aksservice.location

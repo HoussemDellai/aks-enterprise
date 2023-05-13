@@ -6,32 +6,32 @@ terraform {
 
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = ">= 3.54.0"
+      version = ">= 3.56.0"
     }
   }
 }
 
-resource azurerm_resource_group rg {
+resource "azurerm_resource_group" "rg" {
   name     = var.resource_group_name
   location = var.location
   tags     = var.tags
 }
 
-resource azurerm_user_assigned_identity identity_vm {
+resource "azurerm_user_assigned_identity" "identity_vm" {
   name                = "identity-vm"
   resource_group_name = azurerm_resource_group.rg.name
   location            = azurerm_resource_group.rg.location
   tags                = var.tags
 }
 
-resource azurerm_role_assignment role_contributor {
+resource "azurerm_role_assignment" "role_contributor" {
   scope                            = var.subscription_id
   role_definition_name             = "Contributor"
   principal_id                     = azurerm_user_assigned_identity.identity_vm.principal_id
   skip_service_principal_aad_check = true
 }
 
-resource azurerm_network_interface nic_vm {
+resource "azurerm_network_interface" "nic_vm" {
   name                = "nic-vm-jumpbox-windows"
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
@@ -44,15 +44,15 @@ resource azurerm_network_interface nic_vm {
   }
 }
 
-resource azurerm_windows_virtual_machine vm {
-  name                            = var.vm_name
-  resource_group_name             = azurerm_resource_group.rg.name
-  location                        = azurerm_resource_group.rg.location
-  size                            = var.vm_size
-  admin_username                  = var.admin_username
-  admin_password                  = var.admin_password
-  network_interface_ids           = [azurerm_network_interface.nic_vm.id]
-  tags                            = var.tags
+resource "azurerm_windows_virtual_machine" "vm" {
+  name                  = var.vm_name
+  resource_group_name   = azurerm_resource_group.rg.name
+  location              = azurerm_resource_group.rg.location
+  size                  = var.vm_size
+  admin_username        = var.admin_username
+  admin_password        = var.admin_password
+  network_interface_ids = [azurerm_network_interface.nic_vm.id]
+  tags                  = var.tags
 
   os_disk {
     caching              = "ReadWrite"

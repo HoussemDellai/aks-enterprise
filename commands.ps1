@@ -16,3 +16,7 @@ copy terraform.tfvars level_2
 terraform -chdir=level_2 init
 
 terraform plan -out tfplan -chdir=level_2
+
+# run terraform fmt command in all directories and subdirectories
+
+terraform fmt -recursive

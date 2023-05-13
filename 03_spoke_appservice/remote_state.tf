@@ -1,4 +1,4 @@
-data terraform_remote_state hub {
+data "terraform_remote_state" "hub" {
   backend = "local" # "remote"
 
   config = {

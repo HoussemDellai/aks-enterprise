@@ -1,4 +1,4 @@
-resource kubernetes_namespace keda {
+resource "kubernetes_namespace" "keda" {
   provider = kubernetes.aks-module
   metadata {
     name = "keda"
@@ -6,7 +6,7 @@ resource kubernetes_namespace keda {
 }
 
 # https://github.com/kedacore/charts
-resource helm_release keda {
+resource "helm_release" "keda" {
   provider   = helm.aks-module
   name       = "keda"
   repository = "https://kedacore.github.io/charts"

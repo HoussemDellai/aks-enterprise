@@ -1,9 +1,9 @@
 resource "null_resource" "aks_enable_azuremonitormetrics" {
   count = var.enable_grafana_prometheus ? 1 : 0
-  
+
   provisioner "local-exec" {
     interpreter = ["PowerShell", "-Command"]
-    on_failure   = continue # fail
+    on_failure  = continue # fail
     when        = create
     command     = <<-EOT
 

@@ -40,16 +40,16 @@ EOF
     # "initContainers[1].volumeMounts[0].mountPath"               = "/target"
     # "initContainers[1].volumeMounts[0].name"                    = "plugins"
     # "features"                                                  = "EnableCSI"
-    "image.repository"                                          = "velero/velero"
-    "image.tag"                                                 = "v1.8.1"
-    "image.pullPolicy"                                          = "IfNotPresent"
-    "tolerations[0].operator" = "Exists"
-    "tolerations[0].key" = "CriticalAddonsOnly"
+    "image.repository"               = "velero/velero"
+    "image.tag"                      = "v1.8.1"
+    "image.pullPolicy"               = "IfNotPresent"
+    "tolerations[0].operator"        = "Exists"
+    "tolerations[0].key"             = "CriticalAddonsOnly"
     "restic.tolerations[0].operator" = "Exists"
-    "restic.tolerations[0].key" = "CriticalAddonsOnly"
+    "restic.tolerations[0].key"      = "CriticalAddonsOnly"
   }
 
   velero_credentials = local.credentials
 
-  velero_values      = merge(local.velero_default_values, var.velero_values)
+  velero_values = merge(local.velero_default_values, var.velero_values)
 }

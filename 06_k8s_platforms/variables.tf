@@ -3,7 +3,7 @@
 #   description = "A prefix used for all resources in this example"
 # }
 
-variable resource_group_name {
+variable "resource_group_name" {
   default     = "rg-aks-cluster"
   description = "Name of the resource group."
 }
@@ -71,7 +71,7 @@ variable resource_group_name {
 #   description = "Name of ACR container registry"
 # }
 
-variable aks_name {
+variable "aks_name" {
   description = "AKS cluster name"
   default     = "aks-cluster"
 }
@@ -145,7 +145,7 @@ variable aks_name {
 #   description = "Name of Service Principal"
 # }
 
-variable aad_group_aks_admins {
+variable "aad_group_aks_admins" {
   type        = string
   description = "Name of AAD group for AKS admins"
 }
@@ -155,22 +155,22 @@ variable aad_group_aks_admins {
 #   description = "Enable installing Velero and creating backups for AKS"
 # }
 
-variable storage_account_name_backup {
+variable "storage_account_name_backup" {
   type        = string
   description = "Name of Storage Account for Backup"
 }
 
-variable backups_rg_name {
+variable "backups_rg_name" {
   type        = string
   description = "Name of Resource Group for AKS backups"
 }
 
-variable backups_region {
+variable "backups_region" {
   type        = string
   description = "Region for AKS backups"
 }
 
-variable velero_values {
+variable "velero_values" {
   description = <<EOVV
 Settings for Velero helm chart:
 ```
@@ -210,27 +210,27 @@ EOVV
   default     = {}
 }
 
-variable harbor_admin_password {
+variable "harbor_admin_password" {
   type        = string
   description = "Password for Harbor"
 }
 
-variable grafana_admin_user {
+variable "grafana_admin_user" {
   type        = string
   description = "Admin user for Grafana"
 }
 
-variable grafana_admin_password {
+variable "grafana_admin_password" {
   type        = string
   description = "Password for Grafana"
 }
 
-variable argocd_admin_password {
+variable "argocd_admin_password" {
   type        = string
   description = "Password for Argo CD, should be bcrypt"
 }
 
-variable tags {
+variable "tags" {
   type = map(string)
 
   default = {

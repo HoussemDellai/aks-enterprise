@@ -44,10 +44,10 @@ resource "azurerm_firewall_policy_rule_collection_group" "policy_group_aks" {
         type = "Http"
         port = 80
       }
-    #   protocols {
-    #     type = "Https"
-    #     port = 443
-    #   }
+      #   protocols {
+      #     type = "Https"
+      #     port = 443
+      #   }
       source_addresses  = data.terraform_remote_state.spoke_aks.outputs.vnet_spoke_aks.address_space
       destination_fqdns = ["deb.debian.org"]
     }

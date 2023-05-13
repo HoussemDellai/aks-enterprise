@@ -2,7 +2,7 @@
 #   cidr_subnet_aks_nodes_pods = concat(azurerm_subnet.subnet_nodes.address_prefixes, azurerm_subnet.subnet_pods.address_prefixes)
 # }
 
-resource azurerm_firewall_policy_rule_collection_group policy_group_subnet_mgt {
+resource "azurerm_firewall_policy_rule_collection_group" "policy_group_subnet_mgt" {
   count              = var.enable_firewall ? 1 : 0
   name               = "policy_group_subnet_vm"
   firewall_policy_id = data.terraform_remote_state.hub.0.outputs.firewall.policy_id # azurerm_firewall_policy.firewall_policy.id

@@ -10,7 +10,7 @@ resource "azurerm_dashboard_grafana" "grafana_aks" {
   zone_redundancy_enabled           = true
 
   azure_monitor_workspace_integrations {
-    resource_id = azapi_resource.monitor_workspace_aks.0.id
+    resource_id = azurerm_monitor_workspace.prometheus.0.id
   }
 
   identity {
@@ -30,7 +30,7 @@ resource "azurerm_role_assignment" "role_grafana_admin" {
 
 resource "azurerm_role_assignment" "role_monitoring_data_reader" {
   count                = var.enable_grafana_prometheus ? 1 : 0
-  scope                = azapi_resource.monitor_workspace_aks.0.id
+  scope                = azurerm_monitor_workspace.prometheus.0.id
   role_definition_name = "Monitoring Data Reader"
   principal_id         = azurerm_dashboard_grafana.grafana_aks.0.identity.0.principal_id
 }
@@ -43,3 +43,5 @@ resource "azurerm_role_assignment" "role_monitoring_reader" {
   role_definition_name = "Monitoring Reader"
   principal_id         = azurerm_dashboard_grafana.grafana_aks.0.identity.0.principal_id
 }
+
+# todo: add CNAME record to DNS zone for Grafana dashboard
