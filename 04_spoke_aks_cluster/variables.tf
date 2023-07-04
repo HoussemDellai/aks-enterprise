@@ -59,6 +59,16 @@ variable "public_ssh_key_path" {
   default     = "~/.ssh/id_rsa.pub"
 }
 
+variable "aks_network_plugin" {
+  description = "Network plugin to use for networking. Defaults to azure for Windows and kubenet for Linux."
+  default     = "azure"
+}
+
+variable "network_plugin_mode" {
+  description = "Network plugin mode for Kubernetes."
+  default     = "Overlay"
+}
+
 variable "aks_name" {
   description = "AKS instance name"
   default     = "aks-cluster"

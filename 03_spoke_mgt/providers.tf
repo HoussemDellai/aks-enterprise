@@ -6,7 +6,7 @@ terraform {
 
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = "= 3.56.0"
+      version = "= 3.63.0"
     }
 
     azuread = {
@@ -21,7 +21,7 @@ terraform {
 
     http = {
       source  = "hashicorp/http"
-      version = "3.3.0"
+      version = "3.4.0"
     }
 
     time = {

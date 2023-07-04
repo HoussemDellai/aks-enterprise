@@ -119,7 +119,7 @@ resource "azurerm_kubernetes_cluster_node_pool" "poolapps" {
   os_sku                 = each.value.os_sku       # "Ubuntu"    # "CBLMariner" #
   fips_enabled           = false
   vnet_subnet_id         = azurerm_subnet.subnet_nodes_user_nodepool[each.key].id
-  pod_subnet_id          = azurerm_subnet.subnet_pods_user_nodepool[each.key].id
+  pod_subnet_id          = var.aks_network_plugin == "kubenet" || var.network_plugin_mode == "overlay" ? null : azurerm_subnet.subnet_pods_user_nodepool[each.key].id
   scale_down_mode        = "Delete"       # ScaleDownModeDeallocate
   workload_runtime       = "OCIContainer" # WasmWasi
   message_of_the_day     = "Hello from Azure AKS cluster!"

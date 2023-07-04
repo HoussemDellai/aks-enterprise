@@ -59,10 +59,14 @@ resource "azurerm_kubernetes_cluster" "aks" {
   run_command_enabled                 = true
   oidc_issuer_enabled                 = true
   workload_identity_enabled           = true
+  http_application_routing_enabled    = false
   image_cleaner_enabled               = true
   image_cleaner_interval_hours        = 24 # in the range (24 - 2160)
   private_dns_zone_id                 = var.enable_private_cluster ? azurerm_private_dns_zone.private_dns_zone_aks.0.id : null
+  custom_ca_trust_certificates_base64 = null
+  api_server_authorized_ip_ranges     = null
   tags                                = var.tags
+  node_os_channel_upgrade             = "NodeImage"  # Unmanaged, SecurityPatch, NodeImage and None
   automatic_channel_upgrade           = "node-image" # none, patch, rapid, node-image, stable
 
   api_server_access_profile {
@@ -83,19 +87,20 @@ resource "azurerm_kubernetes_cluster" "aks" {
     os_disk_size_gb              = var.aks_agent_os_disk_size
     os_disk_type                 = "Managed" # "Ephemeral" # 
     ultra_ssd_enabled            = false
-    os_sku                       = "Ubuntu"                                        # Ubuntu, CBLMariner, Mariner, Windows2019, Windows2022
+    os_sku                       = "Ubuntu"                                        # Ubuntu, AzureLinux, Windows2019, Windows2022
     only_critical_addons_enabled = var.enable_system_nodepool_only_critical_addons # taint default node pool with CriticalAddonsOnly=true:NoSchedule
     zones                        = [1, 2, 3]                                       # []
     vnet_subnet_id               = azurerm_subnet.subnet_nodes.id
-    pod_subnet_id                = azurerm_subnet.subnet_pods.id
-    scale_down_mode              = "Deallocate" # "Delete" # Deallocate
-    workload_runtime             = "OCIContainer"
-    kubelet_disk_type            = "OS" # "Temporary" # 
-    enable_node_public_ip        = false
-    fips_enabled                 = false
-    custom_ca_trust_enabled      = false
-    message_of_the_day           = "Hello from Azure AKS cluster!"
-    tags                         = var.tags
+    # pod_subnet_id                = azurerm_subnet.subnet_pods.id
+    scale_down_mode         = "Deallocate" # "Delete" # Deallocate
+    workload_runtime        = "OCIContainer"
+    kubelet_disk_type       = "OS" # "Temporary" # 
+    enable_node_public_ip   = false
+    enable_host_encryption  = false
+    fips_enabled            = false
+    custom_ca_trust_enabled = false
+    message_of_the_day      = "Hello from Azure AKS cluster!"
+    tags                    = var.tags
   }
 
   identity {
@@ -118,18 +123,17 @@ resource "azurerm_kubernetes_cluster" "aks" {
 
   network_profile {
     # ebpf_data_plane     = "cilium"
-    # network_plugin_mode = "Overlay" # When ebpf_data_plane is set to cilium, one of either network_plugin_mode = "Overlay" or pod_subnet_id must be specified.
-
+    network_plugin_mode = var.network_plugin_mode # When ebpf_data_plane is set to cilium, one of either network_plugin_mode = "overlay" or pod_subnet_id must be specified.
     # network_mode        = "bridge"               # " transparent"
-    network_plugin    = "azure"  # "kubenet", "azure", "none"
-    network_policy    = "calico" # "azure" 
+    network_plugin    = var.aks_network_plugin # "kubenet", "azure", "none"
+    network_policy    = "calico"               # "azure" 
     dns_service_ip    = var.aks_dns_service_ip
     service_cidr      = var.cidr_aks_service
     outbound_type     = var.aks_outbound_type # "userAssignedNATGateway" "loadBalancer" "userDefinedRouting" "managedNATGateway"
     load_balancer_sku = "standard"            # "basic"
-    pod_cidr          = null                  # can only be set when network_plugin is set to kubenet
-    # pod_cidr    = var.aks_network_plugin == "kubenet" ? var.cidr_subnet_pods : null # only set when network_plugin is set to kubenet
-    ip_versions = ["IPv4"] # ["IPv4", "IPv6"]
+    # pod_cidr          = null                  # can only be set when network_plugin is set to kubenet
+    pod_cidr    = var.aks_network_plugin == "kubenet" || var.network_plugin_mode == "overlay" ? "10.10.240.0/20" : null # only set when network_plugin is set to kubenet
+    ip_versions = ["IPv4"]                                                                                              # ["IPv4", "IPv6"]
 
     dynamic "load_balancer_profile" {
       for_each = var.aks_outbound_type == "loadBalancer" ? ["any_value"] : []
@@ -209,6 +213,36 @@ resource "azurerm_kubernetes_cluster" "aks" {
     allowed {
       day   = "Saturday"
       hours = [2, 8]
+    }
+  }
+
+  maintenance_window_auto_upgrade {
+    frequency    = "Weekly" # AbsoluteMonthly, RelativeMonthly
+    interval     = 1
+    duration     = 9
+    day_of_week  = "Monday" # Tuesday, Wednesday, Thurday, Friday, Saturday and Sunday
+    day_of_month = null
+    start_time   = "02:00"
+    utc_offset   = "+01:00"
+    start_date   = "2023-07-06T00:00:00Z"
+    not_allowed {
+      end   = "2023-11-30T00:00:00Z"
+      start = "2023-11-26T00:00:00Z"
+    }
+  }
+
+  maintenance_window_node_os {
+    frequency    = "Weekly" # AbsoluteMonthly, RelativeMonthly
+    interval     = 1
+    duration     = 9
+    day_of_week  = "Monday" # Tuesday, Wednesday, Thurday, Friday, Saturday and Sunday
+    day_of_month = null
+    start_time   = "02:00"
+    utc_offset   = "+01:00"
+    start_date   = "2023-07-06T00:00:00Z"
+    not_allowed {
+      end   = "2023-11-30T00:00:00Z"
+      start = "2023-11-26T00:00:00Z"
     }
   }
 
