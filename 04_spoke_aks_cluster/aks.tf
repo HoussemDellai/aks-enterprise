@@ -224,7 +224,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
     day_of_month = null
     start_time   = "02:00"
     utc_offset   = "+01:00"
-    start_date   = "2023-07-06T00:00:00Z"
+    start_date   = "2023-07-26T00:00:00Z"
     not_allowed {
       end   = "2023-11-30T00:00:00Z"
       start = "2023-11-26T00:00:00Z"
@@ -239,7 +239,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
     day_of_month = null
     start_time   = "02:00"
     utc_offset   = "+01:00"
-    start_date   = "2023-07-06T00:00:00Z"
+    start_date   = "2023-07-26T00:00:00Z"
     not_allowed {
       end   = "2023-11-30T00:00:00Z"
       start = "2023-11-26T00:00:00Z"

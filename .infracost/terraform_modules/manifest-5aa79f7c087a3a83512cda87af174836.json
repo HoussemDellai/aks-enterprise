@@ -1,1 +1,1 @@
-{"Path":"d:\\AKS\\aks-appgateway\\02_hub","Version":"2.0","Modules":[{"Key":"vm_jumpbox_windows","Source":"../modules/vm_windows","Dir":"modules\\vm_windows"},{"Key":"vm_jumpbox","Source":"../modules/vm_linux","Dir":"modules\\vm_linux"}]}
+{"Path":"d:\\AKS\\aks-appgateway\\02_hub","Version":"2.0","Modules":[]}

@@ -37,6 +37,6 @@ module "diagnostic_setting" {
   log_analytics_workspace_id = data.terraform_remote_state.management.outputs.log_analytics_workspace.id
 }
 
-output "resources_id" {
-  value = local.resource_ids
-}
+# output "resources_id" {
+#   value = local.resource_ids
+# }

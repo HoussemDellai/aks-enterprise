@@ -14,6 +14,19 @@ resource "azurerm_container_registry" "acr" {
   network_rule_bypass_option    = "AzureServices"
   tags                          = var.tags
 
+  georeplications {
+    location                  = "East US"
+    zone_redundancy_enabled   = false
+    regional_endpoint_enabled = true
+    tags                      = {}
+  }
+  georeplications {
+    location                  = "North Europe"
+    zone_redundancy_enabled   = false
+    regional_endpoint_enabled = true
+    tags                      = {}
+  }
+
   dynamic "network_rule_set" {
     for_each = var.enable_private_acr ? ["any_value"] : []
     content {
