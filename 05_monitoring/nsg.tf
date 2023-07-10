@@ -32,7 +32,8 @@ locals {
   ])
 
   subnets_map = tomap({ for subnet in local.subnets :
-    subnet.subnet_name => subnet
+    subnet.subnet_id => subnet
+    # subnet.subnet_name => subnet
     if subnet.subnet_name != "AzureFirewallSubnet"
     && subnet.subnet_name != "AzureBastionSubnet"
     && subnet.subnet_name != "GatewaySubnet"

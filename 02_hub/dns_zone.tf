@@ -19,9 +19,8 @@ resource "azurerm_dns_ns_record" "dns_ns_record" {
   name                = "aks-apps" # only the flat name not the fqdn
   zone_name           = data.azurerm_dns_zone.dns_zone_parent.name
   resource_group_name = data.azurerm_dns_zone.dns_zone_parent.resource_group_name
-  ttl                 = 60
-
-  records = azurerm_dns_zone.dns_zone_apps.name_servers
+  ttl                 = 3600
+  records             = azurerm_dns_zone.dns_zone_apps.name_servers
 }
 
 resource "azurerm_dns_a_record" "a_record_test" {

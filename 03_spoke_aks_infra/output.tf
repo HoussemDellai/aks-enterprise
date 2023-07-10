@@ -24,6 +24,7 @@ output "grafana" {
   value = {
     id       = azurerm_dashboard_grafana.grafana_aks.0.id
     endpoint = azurerm_dashboard_grafana.grafana_aks.0.endpoint
+    dns_url  = azurerm_dns_cname_record.cname_record_grafana.0.record
   }
 }
 

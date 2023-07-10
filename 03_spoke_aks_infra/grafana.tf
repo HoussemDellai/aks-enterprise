@@ -43,5 +43,3 @@ resource "azurerm_role_assignment" "role_monitoring_reader" {
   role_definition_name = "Monitoring Reader"
   principal_id         = azurerm_dashboard_grafana.grafana_aks.0.identity.0.principal_id
 }
-
-# todo: add CNAME record to DNS zone for Grafana dashboard

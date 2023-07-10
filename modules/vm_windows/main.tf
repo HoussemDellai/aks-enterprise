@@ -6,7 +6,7 @@ terraform {
 
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = ">= 3.63.0"
+      version = ">= 3.64.0"
     }
   }
 }
@@ -74,6 +74,27 @@ resource "azurerm_windows_virtual_machine" "vm" {
     type         = "UserAssigned"
     identity_ids = [azurerm_user_assigned_identity.identity_vm.id]
   }
+}
+
+
+resource "azurerm_virtual_machine_extension" "vm_extension_windows" {
+  name                       = "vm-extension-windows"
+  virtual_machine_id         = azurerm_windows_virtual_machine.vm.id
+  publisher                  = "Microsoft.Compute"
+  type                       = "CustomScriptExtension"
+  type_handler_version       = "1.9"
+  auto_upgrade_minor_version = "true"
+  # publisher            = "Microsoft.Azure.Extensions"
+  # type                 = "CustomScript"
+  # type_handler_version = "2.1"
+  tags     = var.tags
+  settings = <<SETTINGS
+    {
+      "fileUris": ["https://raw.githubusercontent.com/HoussemDellai/private-aks/main/stage1/build-agent.ps1"],
+      "commandToExecute": "powershell -ExecutionPolicy Unrestricted -file build-agent.ps1"
+    }
+SETTINGS
+  # powershell -ExecutionPolicy Unrestricted -file build-agent.ps1
 }
 
 #todo : diag settings

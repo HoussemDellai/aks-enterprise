@@ -5,12 +5,12 @@
 resource "azurerm_firewall_policy_rule_collection_group" "policy_group_subnet_mgt" {
   provider           = azurerm.subscription_hub
   count              = var.enable_firewall ? 1 : 0
-  name               = "policy_group_subnet_vm"
+  name               = "firewall_policy_group_${var.prefix}"
   firewall_policy_id = data.terraform_remote_state.hub.0.outputs.firewall.policy_id # azurerm_firewall_policy.firewall_policy.id
   priority           = 300
 
   application_rule_collection {
-    name     = "app_rules_subnet_vm"
+    name     = "app_rules_${var.prefix}"
     priority = 305
     action   = "Allow"
     # rule {
