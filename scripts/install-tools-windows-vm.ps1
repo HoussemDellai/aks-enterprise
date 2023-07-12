@@ -1,3 +1,5 @@
+# The script will be downloaded into the VM: C:\Packages\Plugins\Microsoft.Compute.CustomScriptExtension\1.10.15\Downloads\0
+
 # Install chocolately
 Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
 
@@ -85,34 +87,36 @@ pwd
 
 "@
 
-$powershellProfile > $PROFILE.CurrentUserAllHosts
+$powershellProfile > $PSHOME\Profile.ps1 # $PROFILE.CurrentUserAllHosts
 
 # # Set up language preference
 # $LanguageList = Get-WinUserLanguageList
 # $LanguageList.Add("fr-FR")
 # Set-WinUserLanguageList $LanguageList
 
-# ## Restart Terminal
+## Restart Terminal
 
-# # Install Terraform extension in VS Code
-# code --install-extension hashicorp.terraform
+# Install Terraform extension in VS Code
+code --install-extension hashicorp.terraform
 
-# cd .\Desktop\
-# git clone https://github.com/HoussemDellai/aks-enterprise
-# cd aks-enterprise
-# Code .
+cd .\Desktop\
+git clone https://github.com/HoussemDellai/aks-enterprise
+cd aks-enterprise
+code .
 
-# az login --identity
-# az account set --subscription "Microsoft-Azure-NonProd"
-# az aks list -o table
-# az aks get-credentials -g rg-lzaks-spoke-weu-aks-cluster -n aks-cluster
+az login --identity
+az account set --subscription "Microsoft-Azure-NonProd"
+az aks list -o table
+az aks get-credentials -g rg-lzaks-spoke-weu-aks-cluster -n aks-cluster
 
-# kubelogin convert-kubeconfig -l azurecli
+kubelogin convert-kubeconfig -l azurecli
 
-# kubectl get nodes
-# kubectl get pods -A
-# kubectl run nginx --image=nginx
-# kubectl exec nginx -it -- ls
-# kubectl create deployment nginx --image=nginx --replicas=3
+kubectl get nodes
+kubectl get pods -A
+kubectl run nginx --image=nginx
+kubectl exec nginx -it -- ls
+kubectl create deployment nginx --image=nginx --replicas=3
 
-# #
+
+$ACR_NAME=$(az acr list --query [0].name -o tsv)
+docker login $ACR_NAME.azurecr.io -u $ACR_NAME -p Jeupzx3SNKThNY1Ysyr6zjhL2CZho9MYKZ/cZN/9KA+ACRB7pF5t
