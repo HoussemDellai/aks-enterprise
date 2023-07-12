@@ -12,7 +12,7 @@ cidr_vnet_spoke_mgt = ["10.2.0.0/16"]
 cidr_subnet_mgt     = ["10.2.0.0/24"]
 
 enable_vm_jumpbox_windows = true
-enable_vm_jumpbox_linux   = true
+enable_vm_jumpbox_linux   = false
 
 # integration with Hub & Firewall
 enable_firewall     = true

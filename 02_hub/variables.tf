@@ -49,6 +49,16 @@ variable "tenant_id_spoke" {
   description = "Azure AD tenant ID for Spoke"
 }
 
+variable "enable_vm_jumpbox_linux" {
+  type        = bool
+  description = "Creates a Linux VM Jumpbox."
+}
+
+variable "enable_vm_jumpbox_windows" {
+  type        = bool
+  description = "Creates a Windows VM Jumpbox."
+}
+
 variable "tags" {
   type = map(string)
 
