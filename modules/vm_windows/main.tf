@@ -90,11 +90,9 @@ resource "azurerm_virtual_machine_extension" "vm_extension_windows" {
   tags     = var.tags
   settings = <<SETTINGS
     {
-      "fileUris": ["https://raw.githubusercontent.com/HoussemDellai/private-aks/main/stage1/build-agent.ps1"],
-      "commandToExecute": "powershell -ExecutionPolicy Unrestricted -file build-agent.ps1"
+      "fileUris": ["https://raw.githubusercontent.com/HoussemDellai/aks-enterprise/main/scripts/install-tools-windows-vm.ps1"],
+      "commandToExecute": "powershell -ExecutionPolicy Unrestricted -file install-tools-windows-vm.ps1"
     }
 SETTINGS
   # powershell -ExecutionPolicy Unrestricted -file build-agent.ps1
 }
-
-#todo : diag settings

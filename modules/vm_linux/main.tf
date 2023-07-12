@@ -94,8 +94,8 @@ resource "azurerm_virtual_machine_extension" "vm_extension_linux" {
   tags                 = var.tags
   settings             = <<SETTINGS
     {
-      "fileUris": ["https://raw.githubusercontent.com/HoussemDellai/aks-appgateway/network-flow-logs/level_1/vm-install-cli-tools.sh"],
-      "commandToExecute": "./vm-install-cli-tools.sh"
+      "fileUris": ["https://raw.githubusercontent.com/HoussemDellai/aks-enterprise/main/scripts/install-tools-linux-vm.sh"],
+      "commandToExecute": "./install-tools-linux-vm.sh"
     }
 SETTINGS
   # settings = <<SETTINGS
