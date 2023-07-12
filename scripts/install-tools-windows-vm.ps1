@@ -48,8 +48,8 @@ choco install python -y
 Set-Alias -Name k -Value kubectl
 
 # # (Optional) Install Docker for Desktop
-# choco install docker-desktop -y
-# choco install docker-cli -y
+choco install docker-desktop -y
+choco install docker-cli -y
 
 # Configure Auto-Complete
 Set-ExecutionPolicy RemoteSigned
