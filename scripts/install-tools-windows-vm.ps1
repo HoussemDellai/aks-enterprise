@@ -119,4 +119,5 @@ kubectl create deployment nginx --image=nginx --replicas=3
 
 
 $ACR_NAME=$(az acr list --query [0].name -o tsv)
-docker login $ACR_NAME.azurecr.io -u $ACR_NAME -p Jeupzx3SNKThNY1Ysyr6zjhL2CZho9MYKZ/cZN/9KA+ACRB7pF5t
+$ACR_TOKEN=$(az acr login --name $ACR_NAME --expose-token --output tsv --query accessToken)
+docker login $ACR_NAME.azurecr.io -u $ACR_NAME -p $ACR_TOKEN
