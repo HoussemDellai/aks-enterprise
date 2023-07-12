@@ -32,7 +32,7 @@ resource "azurerm_role_assignment" "role_contributor" {
 }
 
 resource "azurerm_network_interface" "nic_vm" {
-  name                = "nic-vm-jumpbox-windows"
+  name                = "nic-vm"
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
   tags                = var.tags

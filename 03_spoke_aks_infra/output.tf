@@ -16,7 +16,7 @@ output "acr" {
 output "application_gateway" {
   value = {
     enabled = var.enable_app_gateway
-    id      = azurerm_application_gateway.appgw.0.id
+    id      = var.enable_app_gateway ? azurerm_application_gateway.appgw.0.id : null
   }
 }
 
@@ -36,6 +36,6 @@ output "prometheus" {
 
 output "dns_zone_apps" {
   value = {
-    fqdn = var.enable_hub_spoke ? azurerm_dns_a_record.dns_record_appgw.0.fqdn : null
+    fqdn = var.enable_hub_spoke && var.enable_app_gateway ? azurerm_dns_a_record.dns_record_appgw.0.fqdn : null
   }
 }

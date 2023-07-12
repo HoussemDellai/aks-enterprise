@@ -16,7 +16,7 @@ cidr_subnet_appgateway   = ["10.1.1.0/24"]
 cidr_subnet_spoke_aks_pe = ["10.1.2.0/28"]
 
 enable_grafana_prometheus = true
-enable_app_gateway        = true
+enable_app_gateway        = false
 enable_keyvault           = true
 enable_storage_account    = true
 enable_private_keyvault   = true
