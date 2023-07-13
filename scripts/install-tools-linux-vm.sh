@@ -18,6 +18,9 @@ sudo echo "This is [$HOSTNAME] virtual machine" > /var/www/html/index.html
 # Install curl and traceroute
 sudo apt-get install -y curl traceroute
 
+# install jq
+apt install jq -y
+
 # install Docker
 curl -fsSL https://get.docker.com -o get-docker.sh
 sudo sh get-docker.sh
@@ -89,12 +92,13 @@ brew install Azure/kubelogin/kubelogin
 brew update
 brew upgrade Azure/kubelogin/kubelogin
 
-# install jq
-apt install jq -y
+# change command line colors
+PS1="\[\e]0;\u@\h: \w\a\]${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ "
+
+
 
 az login --identity
 sudo -i
-PS1="\[\e]0;\u@\h: \w\a\]${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ "
 az acr login -n acrforakstf011
 
 # check installs

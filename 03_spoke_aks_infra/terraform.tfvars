@@ -8,7 +8,7 @@ subscription_id_spoke = "82f6d75e-85f4-434a-ab74-5dddd9fa8910" # "17b12858-3960-
 
 resources_location   = "westeurope" # "francecentral" # "westcentralus" # 
 acr_name             = "acrforakstf01357"
-keyvault_name        = "kvforakslz01357"
+keyvault_name        = "kvforakslz1357"
 storage_account_name = "storageforaks01357"
 
 cidr_vnet_spoke_aks      = ["10.1.0.0/16"]

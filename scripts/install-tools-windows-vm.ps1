@@ -104,20 +104,20 @@ git clone https://github.com/HoussemDellai/aks-enterprise
 cd aks-enterprise
 code .
 
-az login --identity
-az account set --subscription "Microsoft-Azure-NonProd"
-az aks list -o table
-az aks get-credentials -g rg-lzaks-spoke-weu-aks-cluster -n aks-cluster
+# az login --identity
+# az account set --subscription "Microsoft-Azure-NonProd"
+# az aks list -o table
+# az aks get-credentials -g rg-lzaks-spoke-weu-aks-cluster -n aks-cluster
 
-kubelogin convert-kubeconfig -l azurecli
+# kubelogin convert-kubeconfig -l azurecli
 
-kubectl get nodes
-kubectl get pods -A
-kubectl run nginx --image=nginx
-kubectl exec nginx -it -- ls
-kubectl create deployment nginx --image=nginx --replicas=3
+# kubectl get nodes
+# kubectl get pods -A
+# kubectl run nginx --image=nginx
+# kubectl exec nginx -it -- ls
+# kubectl create deployment nginx --image=nginx --replicas=3
 
 
-$ACR_NAME=$(az acr list --query [0].name -o tsv)
-$ACR_TOKEN=$(az acr login --name $ACR_NAME --expose-token --output tsv --query accessToken)
-docker login $ACR_NAME.azurecr.io -u $ACR_NAME -p $ACR_TOKEN
+# $ACR_NAME=$(az acr list --query [0].name -o tsv)
+# $ACR_TOKEN=$(az acr login --name $ACR_NAME --expose-token --output tsv --query accessToken)
+# docker login $ACR_NAME.azurecr.io -u $ACR_NAME -p $ACR_TOKEN
