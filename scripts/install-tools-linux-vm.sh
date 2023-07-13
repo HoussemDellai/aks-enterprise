@@ -1,5 +1,12 @@
 #!/bin/bash
 
+# For other unhealthy statuses, review the Log Analytics agent for Linux VM extension logs files in 
+# /var/log/azure/Microsoft.EnterpriseCloud.Monitoring.OmsAgentForLinux/*/extension.log 
+# and 
+# /var/log/azure/Microsoft.EnterpriseCloud.Monitoring.OmsAgentForLinux/*/CommandExecution.log.
+# If the extension status is healthy but data isn't being uploaded, review the Log Analytics agent for Linux log files in 
+# /var/opt/microsoft/omsagent/log/omsagent.log.
+
 # Eliminate debconf: warnings
 echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
 

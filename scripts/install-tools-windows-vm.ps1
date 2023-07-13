@@ -96,13 +96,13 @@ $powershellProfile > $PSHOME\Profile.ps1 # $PROFILE.CurrentUserAllHosts
 
 ## Restart Terminal
 
-# Install Terraform extension in VS Code
-code --install-extension hashicorp.terraform
+# # Install Terraform extension in VS Code
+# code --install-extension hashicorp.terraform
 
-cd .\Desktop\
-git clone https://github.com/HoussemDellai/aks-enterprise
-cd aks-enterprise
-code .
+# cd .\Desktop\
+# git clone https://github.com/HoussemDellai/aks-enterprise
+# cd aks-enterprise
+# code .
 
 # az login --identity
 # az account set --subscription "Microsoft-Azure-NonProd"
