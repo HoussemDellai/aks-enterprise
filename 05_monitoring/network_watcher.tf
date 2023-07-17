@@ -50,7 +50,7 @@ module "azurerm_network_watcher_flow_log" {
   resource_group_name       = data.azurerm_network_watcher.network_watcher_regional.resource_group_name
   storage_account_id        = azurerm_storage_account.network_log_data.0.id
 
-  workspace_id          = data.terraform_remote_state.management.outputs.log_analytics_workspace.workspace_id
-  workspace_region      = data.terraform_remote_state.management.outputs.log_analytics_workspace.location
-  workspace_resource_id = data.terraform_remote_state.management.outputs.log_analytics_workspace.id
+  workspace_id          = data.terraform_remote_state.management.0.outputs.log_analytics_workspace.workspace_id
+  workspace_region      = data.terraform_remote_state.management.0.outputs.log_analytics_workspace.location
+  workspace_resource_id = data.terraform_remote_state.management.0.outputs.log_analytics_workspace.id
 }

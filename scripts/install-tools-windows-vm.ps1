@@ -121,3 +121,8 @@ $powershellProfile > $PSHOME\Profile.ps1 # $PROFILE.CurrentUserAllHosts
 # $ACR_NAME=$(az acr list --query [0].name -o tsv)
 # $ACR_TOKEN=$(az acr login --name $ACR_NAME --expose-token --output tsv --query accessToken)
 # docker login $ACR_NAME.azurecr.io -u $ACR_NAME -p $ACR_TOKEN
+
+# docker pull $ACR_NAME.azurecr.io/hello-world:latest
+
+# # IMDS
+# Invoke-RestMethod -Headers @{"Metadata"="true"} -Method GET -NoProxy -Uri "http://169.254.169.254/metadata/instance?api-version=2021-02-01" | ConvertTo-Json -Depth 64

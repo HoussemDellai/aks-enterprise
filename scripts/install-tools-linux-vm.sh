@@ -106,7 +106,21 @@ PS1="\[\e]0;\u@\h: \w\a\]${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\
 
 az login --identity
 sudo -i
-az acr login -n acrforakstf011
+
+# login to ACR
+ACR_NAME=$(az acr list --query [0].name -o tsv)
+# enable admin mode for ACR
+az acr update -n $ACR_NAME --admin-enabled true
+# ACR_TOKEN=$(az acr login --name $ACR_NAME --expose-token --output tsv --query accessToken)
+ACR_PASSWORD=$(az acr credential show -n $ACR_NAME --query 'passwords[0].value' -o tsv)
+docker login $ACR_NAME.azurecr.io -u $ACR_NAME -p $ACR_PASSWORD
+
+# az acr login -n $ACR_NAME
+
+docker pull $ACR_NAME.azurecr.io/hello-world:latest
+
+# IMDS
+curl -s -H Metadata:true --noproxy "*" "http://169.254.169.254/metadata/instance?api-version=2021-02-01" | jq
 
 # check installs
 az version

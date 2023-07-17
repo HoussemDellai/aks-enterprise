@@ -31,13 +31,13 @@ resource "azurerm_subnet_route_table_association" "association_route_table_subne
 }
 
 resource "azurerm_subnet_route_table_association" "association_route_table_subnet_nodes" {
-  for_each       = azurerm_subnet.subnet_nodes_user_nodepool
+  for_each       = var.enable_firewall ? azurerm_subnet.subnet_nodes_user_nodepool : {}
   subnet_id      = each.value.id
   route_table_id = azurerm_route_table.route_table_spoke_aks.0.id
 }
 
 resource "azurerm_subnet_route_table_association" "association_route_table_subnet_pods" {
-  for_each       = azurerm_subnet.subnet_pods_user_nodepool
+  for_each       = var.enable_firewall ? azurerm_subnet.subnet_pods_user_nodepool : {}
   subnet_id      = each.value.id
   route_table_id = azurerm_route_table.route_table_spoke_aks.0.id
 }

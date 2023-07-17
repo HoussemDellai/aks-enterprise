@@ -1,5 +1,5 @@
 data "terraform_remote_state" "management" {
-  # count   = var.enable_monitoring ? 1 : 0
+  count   = var.enable_monitoring ? 1 : 0
   backend = "local" # "remote"
 
   config = {

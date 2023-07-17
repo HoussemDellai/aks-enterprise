@@ -3,7 +3,7 @@
 resource "azurerm_container_registry" "acr" {
   # count                         = var.enable_aks_cluster ? 1 : 0
   name                          = var.acr_name
-  resource_group_name           = azurerm_resource_group.rg_spoke_aks.name
+  resource_group_name           = azurerm_resource_group.rg.name
   location                      = var.resources_location
   sku                           = var.enable_private_acr ? "Premium" : "Standard"
   admin_enabled                 = false

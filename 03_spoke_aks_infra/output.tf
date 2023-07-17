@@ -22,15 +22,17 @@ output "application_gateway" {
 
 output "grafana" {
   value = {
-    id       = azurerm_dashboard_grafana.grafana_aks.0.id
-    endpoint = azurerm_dashboard_grafana.grafana_aks.0.endpoint
-    dns_url  = azurerm_dns_cname_record.cname_record_grafana.0.record
+    id       = azurerm_dashboard_grafana.grafana.0.id
+    endpoint = azurerm_dashboard_grafana.grafana.0.endpoint
+    dns_url  = try(azurerm_dns_cname_record.cname_record_grafana.0.record, null)
   }
 }
 
 output "prometheus" {
   value = {
-    id = azurerm_monitor_workspace.prometheus.0.id
+    id                          = azurerm_monitor_workspace.prometheus.0.id
+    data_collection_rule_id     = azurerm_monitor_data_collection_rule.data_collection_rule.0.id
+    data_collection_endpoint_id = azurerm_monitor_data_collection_endpoint.data_collection_endpoint.0.id
   }
 }
 

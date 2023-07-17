@@ -16,5 +16,5 @@ cidr_subnet_vm       = ["172.16.2.0/26"]
 enable_bastion  = true
 enable_firewall = true
 
-enable_vm_jumpbox_linux = false
-enable_vm_jumpbox_windows = true
+enable_vm_jumpbox_linux = true
+enable_vm_jumpbox_windows = false

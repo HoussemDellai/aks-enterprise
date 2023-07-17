@@ -197,9 +197,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
       msi_auth_for_monitoring_enabled = true
     }
   }
-  # oms_agent {
-  #   log_analytics_workspace_id = var.enable_monitoring ? azurerm_log_analytics_workspace.workspace.0.id : null # doesn't work when resource disabled
-  # }
+
   # microsoft_defender {
   #   log_analytics_workspace_id = ""
   # }
@@ -258,10 +256,10 @@ resource "azurerm_kubernetes_cluster" "aks" {
   #   }
   # }
 
-  # monitor_metrics {
-  #   annotations_allowed = []
-  #   labels_allowed = []
-  # }
+  monitor_metrics {
+    #   annotations_allowed = []
+    #   labels_allowed = []
+  }
 
   storage_profile { #todo
     file_driver_enabled = true
@@ -314,35 +312,6 @@ resource "azurerm_kubernetes_cluster" "aks" {
     # }
   }
 }
-
-# az aks update -n <cluster-name> \
-#     -g <resource-group> \
-#     --enable-apiserver-vnet-integration \
-#     --apiserver-subnet-id <apiserver-subnet-resource-id>
-# resource azapi_update_resource aks_api_vnet_integration {
-#   count       = var.enable_apiserver_vnet_integration ? 1 : 0
-#   type        = "Microsoft.ContainerService/managedClusters@2022-06-02-preview"
-#   resource_id = azurerm_kubernetes_cluster.aks.0.id
-
-#   # "properties": {
-#   #   "apiServerAccessProfile": {
-#   #       "enablePrivateCluster": false,
-#   #       "enableVnetIntegration": true,
-#   #       "subnetId": "[concat(parameters('virtualNetworks_vnet_spoke_aks_externalid'), '/subnets/subnet-apiserver')]"
-#   #   },
-#   # }
-#   body = jsonencode({
-#     properties = {
-#       apiServerAccessProfile = {
-#         enablePrivateCluster  = var.enable_private_cluster,
-#         enableVnetIntegration = var.enable_apiserver_vnet_integration,
-#         subnetId              = azurerm_subnet.subnet_apiserver.0.id
-#       },
-#     }
-#   })
-
-#   depends_on = []
-# }
 
 resource "azurerm_user_assigned_identity" "identity-kubelet" {
   # count               = var.enable_aks_cluster ? 1 : 0

@@ -1,5 +1,5 @@
-resource "azurerm_resource_group" "rg_spoke_aks" {
-  name     = "rg-${var.prefix}-spoke-aks-infra"
+resource "azurerm_resource_group" "rg" {
+  name     = "rg-${var.prefix}"
   location = var.resources_location
   tags     = var.tags
 }

@@ -34,7 +34,7 @@ module "diagnostic_setting" {
   for_each                   = local.resource_ids
   source                     = "../modules/diagnostic_setting"
   target_resource_id         = each.key
-  log_analytics_workspace_id = data.terraform_remote_state.management.outputs.log_analytics_workspace.id
+  log_analytics_workspace_id = data.terraform_remote_state.management.0.outputs.log_analytics_workspace.id
 }
 
 # output "resources_id" {

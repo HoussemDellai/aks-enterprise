@@ -10,7 +10,7 @@ resource "azurerm_storage_account_network_rules" "rules_storage" {
 resource "azurerm_storage_account" "storage" {
   count                         = var.enable_storage_account ? 1 : 0
   name                          = var.storage_account_name
-  resource_group_name           = azurerm_resource_group.rg_spoke_aks.name
+  resource_group_name           = azurerm_resource_group.rg.name
   location                      = var.resources_location
   account_kind                  = "StorageV2"
   account_tier                  = "Standard"

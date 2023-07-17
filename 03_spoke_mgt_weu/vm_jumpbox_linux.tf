@@ -7,7 +7,7 @@ module "vm_jumpbox_linux" {
   }
 
   vm_name             = "vm-jumpbox-linux"
-  resource_group_name = "rg-${var.prefix}-spoke-mgt-vm-linux"
+  resource_group_name = "rg-${var.prefix}-vm-linux"
   location            = azurerm_resource_group.rg.location
   subnet_id           = azurerm_subnet.subnet_vm.id
   tags                = var.tags

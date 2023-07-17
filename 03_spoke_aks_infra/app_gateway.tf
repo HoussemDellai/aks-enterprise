@@ -21,7 +21,7 @@ resource "azurerm_public_ip" "appgw_pip" {
   count               = var.enable_app_gateway ? 1 : 0
   name                = "public-ip-appgw"
   location            = var.resources_location
-  resource_group_name = azurerm_resource_group.rg_spoke_aks.name
+  resource_group_name = azurerm_resource_group.rg.name
   allocation_method   = "Static"
   sku                 = "Standard"
   tags                = var.tags
@@ -30,7 +30,7 @@ resource "azurerm_public_ip" "appgw_pip" {
 resource "azurerm_application_gateway" "appgw" {
   count               = var.enable_app_gateway ? 1 : 0
   name                = "appgw-aks"
-  resource_group_name = azurerm_resource_group.rg_spoke_aks.name
+  resource_group_name = azurerm_resource_group.rg.name
   location            = var.resources_location
   tags                = var.tags
 

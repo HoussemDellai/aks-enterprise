@@ -13,15 +13,6 @@ resource "azurerm_firewall_policy" "firewall_policy" {
     proxy_enabled = true
     servers       = ["168.63.129.16"]
   }
-
-  # dynamic "insights" {
-  #   for_each = var.enable_monitoring ? ["any_value"] : []
-  #   content {
-  #     enabled                            = true
-  #     default_log_analytics_workspace_id = data.terraform_remote_state.management.0.outputs.log_analytics_workspace.id # azurerm_log_analytics_workspace.workspace.id
-  #     retention_in_days                  = 7
-  #   }
-  # }
 }
 
 resource "azurerm_firewall_policy_rule_collection_group" "policy_group_deny" {

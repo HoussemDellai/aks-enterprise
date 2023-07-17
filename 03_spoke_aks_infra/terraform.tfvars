@@ -1,4 +1,4 @@
-prefix = "lzaks"
+prefix = "lzaks-spoke-aks-infra"
 
 tenant_id_hub       = "16b3c013-d300-468d-ac64-7eda0820b6d3"
 subscription_id_hub = "82f6d75e-85f4-434a-ab74-5dddd9fa8910"
@@ -22,9 +22,9 @@ enable_storage_account    = true
 enable_private_keyvault   = true
 enable_private_acr        = true
 
-enable_monitoring = true
+enable_monitoring = false
 
 # integration with Hub & Firewall
-enable_hub_spoke    = true
-enable_firewall     = true
-enable_vnet_peering = true
+enable_hub_spoke    = false
+enable_firewall     = false
+enable_vnet_peering = false
