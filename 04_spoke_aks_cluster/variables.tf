@@ -118,12 +118,7 @@ variable "enable_system_nodepool_only_critical_addons" {
   description = "Enable system nodepool only for critical addons"
 }
 
-variable "enable_vnet_peering" {
-  type        = bool
-  description = "Enable VNET peering between AKS VNET and Jumpbox VNET"
-}
-
-variable "enable_firewall" {
+variable "enable_firewall_as_dns_server" {
   type = bool
 }
 
@@ -144,6 +139,11 @@ variable "enable_grafana_prometheus" {
 variable "aks_outbound_type" {
   type        = string
   description = "userAssignedNATGateway, loadBalancer, userDefinedRouting, managedNATGateway"
+}
+
+variable "enable_maintenance_window" {
+  type        = bool
+  description = "Enable maintenance window for AKS"
 }
 
 variable "subscription_id_hub" {

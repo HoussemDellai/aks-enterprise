@@ -72,3 +72,18 @@ resource "azurerm_subnet_network_security_group_association" "subnet_nsg_associa
   subnet_id                 = each.value.subnet_id
   network_security_group_id = azurerm_network_security_group.nsg[each.value.vnet_name].id
 }
+
+
+# locals {
+  
+#   functions = {
+#     function1 = {
+#       function_name = "function1"
+#       storage_account_name = "storage1"
+#     },
+#     function2 = {
+#       function_name = "function1"
+#       storage_account_name = "storage2"
+#     }
+#   }
+# }

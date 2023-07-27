@@ -62,17 +62,17 @@ variable "enable_grafana_prometheus" {
   type = bool
 }
 
-variable "enable_monitoring" {
+# variable "enable_monitoring" {
+#   type = bool
+# }
+
+variable "enable_firewall_as_dns_server" {
   type = bool
 }
 
-variable "enable_firewall" {
-  type = bool
-}
-
-variable "enable_vnet_peering" {
-  type = bool
-}
+# variable "enable_vnet_peering" {
+#   type = bool
+# }
 
 variable "subscription_id_hub" {
   description = "Subscription ID for Hub"

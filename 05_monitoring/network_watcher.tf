@@ -8,6 +8,7 @@
 # The Network Watcher Instance & network log flow
 # There can only be one Network Watcher per subscription and region
 data "azurerm_network_watcher" "network_watcher_regional" {
+  count               = var.enable_nsg_flow_logs ? 1 : 0
   name                = "NetworkWatcher_${var.resources_location}"
   resource_group_name = "NetworkWatcherRG"
 }
@@ -16,7 +17,7 @@ data "azurerm_network_watcher" "network_watcher_regional" {
 resource "azurerm_storage_account" "network_log_data" {
   count                    = var.enable_nsg_flow_logs ? 1 : 0
   name                     = "storageforlogs011"
-  resource_group_name      = data.azurerm_network_watcher.network_watcher_regional.resource_group_name
+  resource_group_name      = data.azurerm_network_watcher.network_watcher_regional.0.resource_group_name
   location                 = var.resources_location
   account_kind             = "StorageV2"
   account_tier             = "Standard"
@@ -26,13 +27,14 @@ resource "azurerm_storage_account" "network_log_data" {
 }
 
 data "azurerm_resources" "nsg_flowlogs" {
+  count         = var.enable_nsg_flow_logs ? 1 : 0
   type          = "Microsoft.Network/networkSecurityGroups"
   required_tags = var.tags
 }
 
 locals {
   nsg = tomap({
-    for nsg in data.azurerm_resources.nsg_flowlogs.resources :
+    for nsg in data.azurerm_resources.nsg_flowlogs.0.resources :
     nsg.name => {
       name = nsg.name
       id   = nsg.id
@@ -46,8 +48,8 @@ module "azurerm_network_watcher_flow_log" {
 
   nsg_name                  = each.value.name
   network_security_group_id = each.value.id
-  network_watcher_name      = data.azurerm_network_watcher.network_watcher_regional.name
-  resource_group_name       = data.azurerm_network_watcher.network_watcher_regional.resource_group_name
+  network_watcher_name      = data.azurerm_network_watcher.network_watcher_regional.0.name
+  resource_group_name       = data.azurerm_network_watcher.network_watcher_regional.0.resource_group_name
   storage_account_id        = azurerm_storage_account.network_log_data.0.id
 
   workspace_id          = data.terraform_remote_state.management.0.outputs.log_analytics_workspace.workspace_id

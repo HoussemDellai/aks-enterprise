@@ -11,9 +11,9 @@ resources_location = "westeurope" # "francecentral" # "westcentralus" #
 cidr_vnet_spoke_mgt = ["10.2.0.0/16"]
 cidr_subnet_mgt     = ["10.2.0.0/24"]
 
-enable_vm_jumpbox_windows = true
+enable_vm_jumpbox_windows = false
 enable_vm_jumpbox_linux   = true
 
 # integration with Hub & Firewall
-enable_firewall     = true
-enable_vnet_peering = true
+enable_firewall_as_dns_server  = true
+enable_hub_spoke = true

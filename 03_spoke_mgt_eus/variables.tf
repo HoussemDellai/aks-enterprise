@@ -15,14 +15,14 @@ variable "cidr_subnet_mgt" {
   description = "CIDR for Management/Jumpbox VM Subnet."
 }
 
-variable "enable_vnet_peering" {
+variable "enable_hub_spoke" {
   type        = bool
   description = "Enable VNET peering between AKS VNET and Jumpbox VNET"
 }
 
-variable "enable_firewall" {
+variable "enable_firewall_as_dns_server" {
   type        = bool
-  description = "Creates an Azure Firewall."
+  description = "Configures Firewall as DNS Server in Spoke network."
 }
 
 variable "enable_vm_jumpbox_windows" {

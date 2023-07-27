@@ -25,7 +25,7 @@ resource "null_resource" "grafana_import_dashboard" {
 
   provisioner "local-exec" {
     interpreter = ["PowerShell", "-Command"]
-    command = <<-EOT
+    command     = <<-EOT
       az grafana dashboard import `
         --name ${azurerm_dashboard_grafana.grafana.0.name} `
         --resource-group ${azurerm_resource_group.rg.name} `

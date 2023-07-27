@@ -27,6 +27,10 @@ variable "enable_nsg_flow_logs" {
   type = bool
 }
 
+variable "enable_monitoring" {
+  type = bool
+}
+
 variable "tags" {
   type = map(string)
 

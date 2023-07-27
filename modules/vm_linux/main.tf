@@ -6,7 +6,7 @@ terraform {
 
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = ">= 3.65.0"
+      version = ">= 3.66.0"
     }
   }
 }
@@ -31,6 +31,15 @@ resource "azurerm_role_assignment" "role_contributor" {
   skip_service_principal_aad_check = true
 }
 
+resource "azurerm_public_ip" "pip_vm" {
+  count               = var.enable_public_ip ? 1 : 0
+  name                = "pip-vm"
+  location            = azurerm_resource_group.rg.location
+  resource_group_name = azurerm_resource_group.rg.name
+  allocation_method   = "Dynamic"
+  tags                = var.tags
+}
+
 resource "azurerm_network_interface" "nic_vm" {
   name                = "nic-vm"
   location            = azurerm_resource_group.rg.location
@@ -41,6 +50,7 @@ resource "azurerm_network_interface" "nic_vm" {
     name                          = "internal"
     subnet_id                     = var.subnet_id
     private_ip_address_allocation = "Dynamic"
+    public_ip_address_id          = var.enable_public_ip ? azurerm_public_ip.pip_vm.0.id : null
   }
 }
 

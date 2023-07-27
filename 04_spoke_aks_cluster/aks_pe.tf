@@ -15,7 +15,7 @@ resource "azurerm_role_assignment" "role_private_dns_zone_aks_contributor" {
 
 # Needed for Jumpbox to resolve cluster URL using a private endpoint and private dns zone
 resource "azurerm_private_dns_zone_virtual_network_link" "link_private_dns_zone_aks_to_vnet_hub" {
-  count                 = var.enable_vnet_peering && var.enable_private_cluster ? 1 : 0
+  count                 = var.enable_hub_spoke && var.enable_private_cluster ? 1 : 0
   name                  = "link_private_dns_zone_aks_to_vnet_hub"
   resource_group_name   = azurerm_private_dns_zone.private_dns_zone_aks.0.resource_group_name
   private_dns_zone_name = azurerm_private_dns_zone.private_dns_zone_aks.0.name

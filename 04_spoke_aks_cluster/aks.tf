@@ -42,13 +42,13 @@ resource "azurerm_subnet" "subnet_apiserver" {
 }
 
 resource "azurerm_kubernetes_cluster" "aks" {
-  name                                = "aks-${var.prefix}-cluster"
+  name                                = "aks-cluster"
   resource_group_name                 = azurerm_resource_group.rg_spoke_aks_cluster.name
   location                            = var.resources_location
   kubernetes_version                  = var.kubernetes_version
   sku_tier                            = "Free" # "Paid"
   dns_prefix                          = "aks"
-  node_resource_group                 = "rg-${var.prefix}-spoke-aks-nodes"
+  node_resource_group                 = "rg-${var.prefix}-nodes"
   private_cluster_enabled             = var.enable_private_cluster
   private_cluster_public_fqdn_enabled = false
   public_network_access_enabled       = true
@@ -91,16 +91,16 @@ resource "azurerm_kubernetes_cluster" "aks" {
     only_critical_addons_enabled = var.enable_system_nodepool_only_critical_addons # taint default node pool with CriticalAddonsOnly=true:NoSchedule
     zones                        = [1, 2, 3]                                       # []
     vnet_subnet_id               = azurerm_subnet.subnet_nodes.id
-    # pod_subnet_id                = azurerm_subnet.subnet_pods.id
-    scale_down_mode         = "Deallocate" # "Delete" # Deallocate
-    workload_runtime        = "OCIContainer"
-    kubelet_disk_type       = "OS" # "Temporary" # 
-    enable_node_public_ip   = false
-    enable_host_encryption  = false
-    fips_enabled            = false
-    custom_ca_trust_enabled = false
-    message_of_the_day      = "Hello from Azure AKS cluster!"
-    tags                    = var.tags
+    pod_subnet_id                = var.aks_network_plugin == "kubenet" || var.network_plugin_mode == "overlay" ? null : azurerm_subnet.subnet_pods.id
+    scale_down_mode              = "Deallocate" # "Delete" # Deallocate
+    workload_runtime             = "OCIContainer"
+    kubelet_disk_type            = "OS" # "Temporary" # 
+    enable_node_public_ip        = false
+    enable_host_encryption       = false
+    fips_enabled                 = false
+    custom_ca_trust_enabled      = false
+    message_of_the_day           = "Hello from Azure AKS cluster!"
+    tags                         = var.tags
   }
 
   identity {
@@ -123,7 +123,8 @@ resource "azurerm_kubernetes_cluster" "aks" {
 
   network_profile {
     # ebpf_data_plane     = "cilium"
-    network_plugin_mode = var.network_plugin_mode # When ebpf_data_plane is set to cilium, one of either network_plugin_mode = "overlay" or pod_subnet_id must be specified.
+    # network_plugin_mode = var.network_plugin_mode # When ebpf_data_plane is set to cilium, one of either network_plugin_mode = "overlay" or pod_subnet_id must be specified.
+    # network_plugin_mode = var.network_plugin_mode # use it when using CNI
     # network_mode        = "bridge"               # " transparent"
     network_plugin    = var.aks_network_plugin # "kubenet", "azure", "none"
     network_policy    = "calico"               # "azure" 
@@ -132,8 +133,8 @@ resource "azurerm_kubernetes_cluster" "aks" {
     outbound_type     = var.aks_outbound_type # "userAssignedNATGateway" "loadBalancer" "userDefinedRouting" "managedNATGateway"
     load_balancer_sku = "standard"            # "basic"
     # pod_cidr          = null                  # can only be set when network_plugin is set to kubenet
-    pod_cidr    = var.aks_network_plugin == "kubenet" || var.network_plugin_mode == "overlay" ? "10.10.240.0/20" : null # only set when network_plugin is set to kubenet
-    ip_versions = ["IPv4"]                                                                                              # ["IPv4", "IPv6"]
+    # pod_cidr    = var.aks_network_plugin == "kubenet" || var.network_plugin_mode == "overlay" ? "10.10.240.0/20" : null # only set when network_plugin is set to kubenet
+    ip_versions = ["IPv4"] # ["IPv4", "IPv6"]
 
     dynamic "load_balancer_profile" {
       for_each = var.aks_outbound_type == "loadBalancer" ? ["any_value"] : []
@@ -207,40 +208,49 @@ resource "azurerm_kubernetes_cluster" "aks" {
     secret_rotation_interval = "2m"
   }
 
-  maintenance_window {
-    allowed {
-      day   = "Saturday"
-      hours = [2, 8]
+  dynamic "maintenance_window" {
+    for_each = var.enable_maintenance_window ? ["any_value"] : []
+    content {
+      allowed {
+        day   = "Saturday"
+        hours = [2, 8]
+      }
     }
   }
 
-  maintenance_window_auto_upgrade {
-    frequency    = "Weekly" # AbsoluteMonthly, RelativeMonthly
-    interval     = 1
-    duration     = 9
-    day_of_week  = "Monday" # Tuesday, Wednesday, Thurday, Friday, Saturday and Sunday
-    day_of_month = null
-    start_time   = "02:00"
-    utc_offset   = "+01:00"
-    start_date   = "2023-07-26T00:00:00Z"
-    not_allowed {
-      end   = "2023-11-30T00:00:00Z"
-      start = "2023-11-26T00:00:00Z"
+  dynamic "maintenance_window_auto_upgrade" {
+    for_each = var.enable_maintenance_window ? ["any_value"] : []
+    content {
+      frequency    = "Weekly" # AbsoluteMonthly, RelativeMonthly
+      interval     = 1
+      duration     = 9
+      day_of_week  = "Monday" # Tuesday, Wednesday, Thurday, Friday, Saturday and Sunday
+      day_of_month = null
+      start_time   = "02:00"
+      utc_offset   = "+01:00"
+      start_date   = "2023-08-26T00:00:00Z"
+      not_allowed {
+        end   = "2023-11-30T00:00:00Z"
+        start = "2023-11-26T00:00:00Z"
+      }
     }
   }
 
-  maintenance_window_node_os {
-    frequency    = "Weekly" # AbsoluteMonthly, RelativeMonthly
-    interval     = 1
-    duration     = 9
-    day_of_week  = "Monday" # Tuesday, Wednesday, Thurday, Friday, Saturday and Sunday
-    day_of_month = null
-    start_time   = "02:00"
-    utc_offset   = "+01:00"
-    start_date   = "2023-07-26T00:00:00Z"
-    not_allowed {
-      end   = "2023-11-30T00:00:00Z"
-      start = "2023-11-26T00:00:00Z"
+  dynamic "maintenance_window_node_os" {
+    for_each = var.enable_maintenance_window ? ["any_value"] : []
+    content {
+      frequency    = "Weekly" # AbsoluteMonthly, RelativeMonthly
+      interval     = 1
+      duration     = 9
+      day_of_week  = "Monday" # Tuesday, Wednesday, Thurday, Friday, Saturday and Sunday
+      day_of_month = null
+      start_time   = "02:00"
+      utc_offset   = "+01:00"
+      start_date   = "2023-08-26T00:00:00Z"
+      not_allowed {
+        end   = "2023-11-30T00:00:00Z"
+        start = "2023-11-26T00:00:00Z"
+      }
     }
   }
 

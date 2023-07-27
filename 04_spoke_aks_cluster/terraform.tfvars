@@ -1,4 +1,4 @@
-prefix = "lzaks"
+prefix = "lzaks-spoke-aks"
 
 tenant_id_hub       = "16b3c013-d300-468d-ac64-7eda0820b6d3"
 subscription_id_hub = "82f6d75e-85f4-434a-ab74-5dddd9fa8910"
@@ -20,10 +20,10 @@ aks_dns_service_ip = "10.0.0.10"
 aks_outbound_type  = "loadBalancer" # "userDefinedRouting" # "userAssignedNATGateway" # "loadBalancer" , userDefinedRouting, managedNATGateway
 
 aks_network_plugin  = "azure" # "kubenet", "none"
-network_plugin_mode = "overlay"
+network_plugin_mode = null    # "overlay"
 
-enable_app_gateway = false # true
-
+# AKS configuration
+enable_app_gateway                          = false
 enable_private_cluster                      = false
 enable_apiserver_vnet_integration           = true
 enable_nodepool_apps                        = true
@@ -31,11 +31,12 @@ enable_nodepool_spot                        = false
 enable_system_nodepool_only_critical_addons = false
 enable_aks_admin_group                      = false
 enable_aks_admin_rbac                       = true
+enable_maintenance_window                   = false
 
+# monitoring
 enable_grafana_prometheus = true
 enable_monitoring         = false
 
 # integration with Hub network
-enable_hub_spoke    = false
-enable_firewall     = false
-enable_vnet_peering = false
+enable_hub_spoke              = false
+enable_firewall_as_dns_server = false

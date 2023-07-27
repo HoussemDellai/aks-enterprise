@@ -4,7 +4,7 @@
 
 resource "azurerm_firewall_policy_rule_collection_group" "policy_group_subnet_mgt" {
   provider           = azurerm.subscription_hub
-  count              = var.enable_firewall ? 1 : 0
+  count              = var.enable_firewall_as_dns_server ? 1 : 0
   name               = "policy_group_subnet_vm"
   firewall_policy_id = data.terraform_remote_state.hub.0.outputs.firewall.policy_id # azurerm_firewall_policy.firewall_policy.id
   priority           = 300

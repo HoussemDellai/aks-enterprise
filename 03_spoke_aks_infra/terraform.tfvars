@@ -22,9 +22,9 @@ enable_storage_account    = true
 enable_private_keyvault   = true
 enable_private_acr        = true
 
-enable_monitoring = false
+# enable_monitoring = false
 
 # integration with Hub & Firewall
-enable_hub_spoke    = false
-enable_firewall     = false
-enable_vnet_peering = false
+enable_hub_spoke              = false
+enable_firewall_as_dns_server = false
+# enable_vnet_peering           = true

@@ -8,7 +8,7 @@ resource azurerm_virtual_network vnet_spoke_shared {
 }
 
 module "virtual_network_peering_hub_and_spoke_shared {
-  count         = var.enable_vnet_peering && var.enable_mysql_flexible_server ? 1 : 0
+  count         = var.enable_hub_spoke && var.enable_mysql_flexible_server ? 1 : 0
   source        = "../modules/azurerm_virtual_network_peering"
   vnet_hub_id   = data.terraform_remote_state.hub.0.outputs.vnet_hub_id
   vnet_spoke_id = azurerm_virtual_network.vnet_spoke_shared.0.id

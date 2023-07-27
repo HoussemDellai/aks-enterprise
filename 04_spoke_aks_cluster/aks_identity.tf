@@ -44,7 +44,7 @@ resource "azurerm_role_assignment" "role_identity_aks_network_contributor_subnet
 
 # Role Assignments for Control Plane MSI
 resource "azurerm_role_assignment" "role_identity_aks_contributor_routetable" {
-  count                = var.enable_firewall ? 1 : 0
+  count                = var.enable_firewall_as_dns_server ? 1 : 0
   scope                = azurerm_route.route_to_firewall.0.id
   role_definition_name = "Contributor"
   principal_id         = azurerm_user_assigned_identity.identity_aks.principal_id
