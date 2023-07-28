@@ -55,8 +55,8 @@ resource "azurerm_monitor_data_collection_rule_association" "dce_to_aks" {
 
 resource "azurerm_monitor_alert_prometheus_rule_group" "example_node" {
   name                = "NodeRecordingRulesRuleGroup"
-  resource_group_name = azurerm_resource_group.rg_spoke_aks_cluster.name
-  location            = azurerm_resource_group.rg_spoke_aks_cluster.location
+  resource_group_name = azurerm_resource_group.rg.name
+  location            = azurerm_resource_group.rg.location
   cluster_name        = azurerm_kubernetes_cluster.aks.name
   rule_group_enabled  = true
   interval            = "PT1M"
@@ -120,8 +120,8 @@ resource "azurerm_monitor_alert_prometheus_rule_group" "example_node" {
 
 resource "azurerm_monitor_alert_prometheus_rule_group" "example_k8s" {
   name                = "KubernetesRecordingRulesRuleGroup"
-  resource_group_name = azurerm_resource_group.rg_spoke_aks_cluster.name
-  location            = azurerm_resource_group.rg_spoke_aks_cluster.location
+  resource_group_name = azurerm_resource_group.rg.name
+  location            = azurerm_resource_group.rg.location
   cluster_name        = azurerm_kubernetes_cluster.aks.name
   rule_group_enabled  = true
   interval            = "PT1M"

@@ -1,8 +1,8 @@
 resource "azurerm_route_table" "route_table_spoke_aks" {
   count                         = var.enable_firewall_as_dns_server ? 1 : 0
   name                          = "route-table-spoke-aks"
-  location                      = azurerm_resource_group.rg_spoke_aks_cluster.location
-  resource_group_name           = azurerm_resource_group.rg_spoke_aks_cluster.name
+  location                      = azurerm_resource_group.rg.location
+  resource_group_name           = azurerm_resource_group.rg.name
   disable_bgp_route_propagation = true
   tags                          = var.tags
 }

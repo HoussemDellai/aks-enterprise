@@ -1,7 +1,7 @@
 resource "azurerm_user_assigned_identity" "identity_aks" {
   # count               = var.enable_aks_cluster ? 1 : 0
   name                = "identity-aks"
-  resource_group_name = azurerm_resource_group.rg_spoke_aks_cluster.name
+  resource_group_name = azurerm_resource_group.rg.name
   location            = var.resources_location
   tags                = var.tags
 }
@@ -24,7 +24,7 @@ resource "azurerm_role_assignment" "role_identity_aks_mi_operator" {
 
 resource "azurerm_role_assignment" "role_identity_aks_contributor" {
   # count                            = var.enable_aks_cluster ? 1 : 0
-  scope                            = azurerm_resource_group.rg_spoke_aks_cluster.id
+  scope                            = azurerm_resource_group.rg.id
   role_definition_name             = "Contributor"
   principal_id                     = azurerm_user_assigned_identity.identity_aks.principal_id
   skip_service_principal_aad_check = true

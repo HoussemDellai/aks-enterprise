@@ -43,7 +43,7 @@ resource "azurerm_subnet" "subnet_apiserver" {
 
 resource "azurerm_kubernetes_cluster" "aks" {
   name                                = "aks-cluster"
-  resource_group_name                 = azurerm_resource_group.rg_spoke_aks_cluster.name
+  resource_group_name                 = azurerm_resource_group.rg.name
   location                            = var.resources_location
   kubernetes_version                  = var.kubernetes_version
   dns_prefix                          = "aks"
@@ -78,9 +78,9 @@ resource "azurerm_kubernetes_cluster" "aks" {
   default_node_pool {
     name                         = "systempool"
     temporary_name_for_rotation  = "systempool"
-    node_count                   = 1
     vm_size                      = "Standard_D2s_v5" # "Standard_D2pds_v5" # "Standard_D2ds_v5" # "standard_d2pds_v5"
     enable_auto_scaling          = true
+    node_count                   = 2
     min_count                    = 1
     max_count                    = 3
     max_pods                     = 110
@@ -325,7 +325,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
 
 # resource "azurerm_kubernetes_cluster" "aks" {
 #   name                                = "aks-cluster"
-#   resource_group_name                 = azurerm_resource_group.rg_spoke_aks_cluster.name
+#   resource_group_name                 = azurerm_resource_group.rg.name
 #   location                            = var.resources_location
 #   kubernetes_version                  = var.kubernetes_version
 #   sku_tier                            = "Free" # "Paid"
@@ -608,7 +608,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
 resource "azurerm_user_assigned_identity" "identity-kubelet" {
   # count               = var.enable_aks_cluster ? 1 : 0
   name                = "identity-kubelet"
-  resource_group_name = azurerm_resource_group.rg_spoke_aks_cluster.name
+  resource_group_name = azurerm_resource_group.rg.name
   location            = var.resources_location
   tags                = var.tags
 }
