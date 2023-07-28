@@ -25,7 +25,7 @@ network_plugin_mode = null    # "overlay"
 # AKS configuration
 enable_app_gateway                          = false
 enable_private_cluster                      = false
-enable_apiserver_vnet_integration           = true
+enable_apiserver_vnet_integration           = false
 enable_nodepool_apps                        = true
 enable_nodepool_spot                        = false
 enable_system_nodepool_only_critical_addons = false

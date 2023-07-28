@@ -71,7 +71,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
 
   api_server_access_profile {
     authorized_ip_ranges     = var.enable_private_cluster ? null : ["0.0.0.0/0"] # when private cluster, this should not be enabled
-    subnet_id                = azurerm_subnet.subnet_apiserver.0.id
+    subnet_id                = var.enable_apiserver_vnet_integration ? azurerm_subnet.subnet_apiserver.0.id : null
     vnet_integration_enabled = var.enable_apiserver_vnet_integration
   }
 
@@ -271,12 +271,12 @@ resource "azurerm_kubernetes_cluster" "aks" {
     #   labels_allowed = []
   }
 
-  storage_profile { #todo
-    file_driver_enabled = true
-    blob_driver_enabled = true
-    disk_driver_enabled = true
-    # disk_driver_version         = "v2"
+  storage_profile {
+    file_driver_enabled         = true
+    blob_driver_enabled         = true
+    disk_driver_enabled         = true
     snapshot_controller_enabled = true
+    # disk_driver_version         = "v2" # not yet available
   }
 
   # service_mesh_profile {

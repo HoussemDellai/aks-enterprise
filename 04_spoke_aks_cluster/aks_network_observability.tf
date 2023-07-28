@@ -11,6 +11,12 @@ resource "azapi_update_resource" "aks_enable_network_observability" {
       }
     }
   })
+
+  depends_on = [
+    azurerm_kubernetes_cluster.aks,
+    azurerm_kubernetes_cluster_node_pool.poolapps,
+    azurerm_kubernetes_cluster_node_pool.poolspot
+  ]
 }
 
 # resource "null_resource" "aks_enable_network_observability" {

@@ -7,12 +7,14 @@
 # }
 
 resource "azurerm_kubernetes_cluster_extension" "extension_flux" {
+  count          = 0
   name           = "extension-flux"
   cluster_id     = azurerm_kubernetes_cluster.aks.id
   extension_type = "microsoft.flux"
 }
 
 resource "azurerm_kubernetes_flux_configuration" "flux_config" {
+  count      = 0
   name       = "flux-config"
   cluster_id = azurerm_kubernetes_cluster.aks.id
   namespace  = "flux"
@@ -28,6 +30,6 @@ resource "azurerm_kubernetes_flux_configuration" "flux_config" {
   }
 
   depends_on = [
-    azurerm_kubernetes_cluster_extension.extension_flux
+    azurerm_kubernetes_cluster_extension.extension_flux[0]
   ]
 }
