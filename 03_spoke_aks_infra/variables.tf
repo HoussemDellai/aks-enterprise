@@ -70,6 +70,10 @@ variable "enable_firewall_as_dns_server" {
   type = bool
 }
 
+variable "enable_appgateway_containers" {
+  type = bool
+}
+
 # variable "enable_vnet_peering" {
 #   type = bool
 # }

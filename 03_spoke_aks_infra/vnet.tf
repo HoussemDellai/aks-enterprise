@@ -14,3 +14,18 @@ resource "azurerm_subnet" "subnet_spoke_aks_pe" {
   resource_group_name  = azurerm_virtual_network.vnet_spoke_aks.resource_group_name
   address_prefixes     = var.cidr_subnet_spoke_aks_pe
 }
+
+resource "azurerm_subnet" "subnet_agc" {
+  count                = var.enable_appgateway_containers ? 1 : 0
+  name                 = "subnet-agc"
+  virtual_network_name = azurerm_virtual_network.vnet_spoke_aks.name
+  resource_group_name  = azurerm_virtual_network.vnet_spoke_aks.resource_group_name
+  address_prefixes     = ["10.1.200.0/24"] # var.cidr_subnet_spoke_aks_pe
+  delegation {
+    name = "delegation"
+    service_delegation {
+      name    = "Microsoft.ServiceNetworking/trafficControllers"
+      actions = ["Microsoft.Network/virtualNetworks/subnets/join/action"]
+    }
+  }
+}
