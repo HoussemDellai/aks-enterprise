@@ -26,3 +26,13 @@ resource "azurerm_dns_txt_record" "txt_record" {
     value = azurerm_container_app.aca_frontend.custom_domain_verification_id
   }
 }
+
+# todo create ACA app binding
+
+# 6. Add the domain to your container app
+
+# az containerapp hostname add --hostname "$SUBDOMAIN_NAME.$DOMAIN_NAME" -g $RG -n $ACA_APP
+
+# Configure the managed certificate and bind the domain to your container app
+
+# az containerapp hostname bind --hostname "$SUBDOMAIN_NAME.$DOMAIN_NAME" -g $RG -n $ACA_APP --environment $ACA_ENVIRONMENT --validation-method CNAME
