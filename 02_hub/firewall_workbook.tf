@@ -5,7 +5,7 @@
 # resource "azurerm_resource_group_template_deployment" "firewall_workbook" {
 #   provider            = azurerm.subscription_hub
 #   name                = "firewall-workbook"
-#   resource_group_name = azurerm_resource_group.rg_hub.name
+#   resource_group_name = azurerm_resource_group.rg.name
 #   deployment_mode     = "Incremental"
 #   # parameters_content = jsonencode({
 #   #   "vnetName" = {
@@ -19,7 +19,7 @@ resource "null_resource" "firewall_monitor_workbook" {
   provisioner "local-exec" {
     interpreter = ["PowerShell", "-Command"]
     command     = <<-EOT
-      az deployment group create -g ${azurerm_resource_group.rg_hub.name} -n firewall-workbook --template-uri "https://raw.githubusercontent.com/Azure/Azure-Network-Security/master/Azure%20Firewall/Workbook%20-%20Azure%20Firewall%20Monitor%20Workbook/Azure%20Firewall_ResourceSpecific_ARM.json"
+      az deployment group create -g ${azurerm_resource_group.rg.name} -n firewall-workbook --template-uri "https://raw.githubusercontent.com/Azure/Azure-Network-Security/master/Azure%20Firewall/Workbook%20-%20Azure%20Firewall%20Monitor%20Workbook/Azure%20Firewall_ResourceSpecific_ARM.json"
     EOT
   }
 }

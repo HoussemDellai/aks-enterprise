@@ -63,3 +63,5 @@ enable_fleet_manager                        = false
 enable_mysql_flexible_server                = true
 enable_spoke_serverless                     = false
 enable_grafana_prometheus                   = true
+
+enable_firewall_as_dns_server = false

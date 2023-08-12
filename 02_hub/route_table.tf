@@ -2,7 +2,7 @@ resource "azurerm_route_table" "route_table_to_firewall" {
   provider                      = azurerm.subscription_hub
   name                          = "route-table-to-firewall"
   location                      = var.resources_location
-  resource_group_name           = azurerm_resource_group.rg_hub.name
+  resource_group_name           = azurerm_resource_group.rg.name
   disable_bgp_route_propagation = true
   tags                          = var.tags
 }
@@ -11,7 +11,7 @@ resource "azurerm_route" "route_to_firewall" {
   provider               = azurerm.subscription_hub
   count                  = var.enable_firewall ? 1 : 0
   name                   = "route-to-firewall"
-  resource_group_name    = azurerm_resource_group.rg_hub.name
+  resource_group_name    = azurerm_resource_group.rg.name
   route_table_name       = azurerm_route_table.route_table_to_firewall.name
   address_prefix         = "0.0.0.0/0"
   next_hop_type          = "VirtualAppliance" # "VirtualNetworkGateway"

@@ -6,7 +6,7 @@ resource "azurerm_firewall_policy" "firewall_policy" {
   provider            = azurerm.subscription_hub
   count               = var.enable_firewall ? 1 : 0
   name                = "firewall-policy"
-  resource_group_name = azurerm_resource_group.rg_hub.name
+  resource_group_name = azurerm_resource_group.rg.name
   location            = var.resources_location
 
   dns {

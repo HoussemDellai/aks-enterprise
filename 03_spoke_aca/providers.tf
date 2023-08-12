@@ -6,27 +6,11 @@ terraform {
 
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = ">= 3.44.1"
+      version = ">= 3.69.0"
     }
-
-    azuread = {
-      source  = "hashicorp/azuread"
-      version = ">= 2.34.1"
-    }
-
-    azapi = {
-      source  = "Azure/azapi"
-      version = "1.2.0"
-    }
-
-    http = {
-      source  = "hashicorp/http"
-      version = "3.2.1"
-    }
-
-    time = {
-      source  = "hashicorp/time"
-      version = "0.9.1"
+    tls = {
+      source = "hashicorp/tls"
+      version = "4.0.4"
     }
   }
 }
@@ -92,18 +76,6 @@ provider "azurerm" {
 provider "azuread" { # default takes current user/identity tenant
 }
 
-# provider azuread {
-#   alias     = "tenant_hub"
-#   tenant_id = "72f988bf-86f1-41af-91ab-2d7cd011db47"
-#   # use_cli = true
-# }
-
-# provider azuread {
-#   alias     = "tenant_spoke"
-#   tenant_id = "558506eb-9459-4ef3-b920-ad55c555e729"
-#   # use_cli = true
-# }
-
-provider "azapi" {
+provider "tls" {
   # Configuration options
 }

@@ -325,6 +325,11 @@ variable "tenant_id_spoke" {
   description = "Azure AD tenant ID for Spoke"
 }
 
+variable "enable_firewall_as_dns_server" {
+  type        = bool
+  description = "Enable Azure Firewall as DNS server"
+}
+
 variable "tags" {
   type = map(string)
 

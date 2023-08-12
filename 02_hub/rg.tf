@@ -1,4 +1,4 @@
-resource "azurerm_resource_group" "rg_hub" {
+resource "azurerm_resource_group" "rg" {
   provider = azurerm.subscription_hub
   name     = "rg-${var.prefix}"
   location = var.resources_location

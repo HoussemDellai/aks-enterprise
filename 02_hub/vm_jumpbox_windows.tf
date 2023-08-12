@@ -7,7 +7,7 @@ module "vm_jumpbox_windows" {
 
   vm_name             = "vm-jumpbox-win"
   resource_group_name = "rg-${var.prefix}-vm-windows"
-  location            = azurerm_resource_group.rg_hub.location
+  location            = azurerm_resource_group.rg.location
   subnet_id           = azurerm_subnet.subnet_vm.0.id
   tags                = var.tags
   subscription_id     = data.azurerm_subscription.subscription_hub.id

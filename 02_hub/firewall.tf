@@ -14,7 +14,7 @@ resource "azurerm_public_ip" "public_ip_firewall" {
   provider            = azurerm.subscription_hub
   name                = "public-ip-firewall"
   location            = var.resources_location
-  resource_group_name = azurerm_resource_group.rg_hub.name
+  resource_group_name = azurerm_resource_group.rg.name
   allocation_method   = "Static"
   sku                 = "Standard"
   zones               = ["1"]
@@ -26,7 +26,7 @@ resource "azurerm_firewall" "firewall" {
   provider            = azurerm.subscription_hub
   name                = "firewall-hub"
   location            = var.resources_location
-  resource_group_name = azurerm_resource_group.rg_hub.name
+  resource_group_name = azurerm_resource_group.rg.name
   sku_name            = "AZFW_VNet" # AZFW_Hub
   sku_tier            = "Standard"  # Premium  # "Basic" # 
   firewall_policy_id  = azurerm_firewall_policy.firewall_policy.0.id

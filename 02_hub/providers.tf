@@ -6,7 +6,11 @@ terraform {
 
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = "= 3.67.0"
+      version = "= 3.69.0"
+    }
+    azapi = {
+      source  = "Azure/azapi"
+      version = "1.8.0"
     }
   }
 }
@@ -38,4 +42,10 @@ provider "azurerm" {
       skip_shutdown_and_force_delete = false
     }
   }
+}
+
+provider "azapi" {
+  alias           = "subscription_hub"
+  subscription_id = var.subscription_id_hub
+  tenant_id       = var.tenant_id_hub
 }

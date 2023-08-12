@@ -12,7 +12,7 @@ output "firewall" {
   }
 }
 
-output "dns_zone" {
+output "dns_zone_apps" {
   value = {
     name                = azurerm_dns_zone.dns_zone_apps.name
     resource_group_name = azurerm_dns_zone.dns_zone_apps.resource_group_name
