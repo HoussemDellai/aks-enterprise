@@ -71,5 +71,18 @@ resource "azurerm_container_app" "aca_frontend" {
       latest_revision = true
       percentage      = 100
     }
+
+    custom_domain {
+      certificate_binding_type = "SniEnabled"                                                 # "SniEnabled" (Optional) Defaults to Disabled
+      certificate_id           = azurerm_container_app_environment_certificate.certificate.id # (Required) The ID of the Container App Environment Certificate
+      name                     = "aca-app.apps.houssem15.com"                                 # (Required) The hostname of the Certificate. Must be the CN or a named SAN in the certificate.
+    }
   }
+}
+
+resource "azurerm_container_app_environment_certificate" "certificate" {
+  name                         = "aca-certificate"
+  container_app_environment_id = azurerm_container_app_environment.aca_environment.id
+  certificate_blob_base64      = acme_certificate.certificate.certificate_p12 # tls_self_signed_cert.tls_cert.cert_pem # filebase64("path/to/certificate_file.pfx")
+  certificate_password         = "@Aa123456789"                               # (Required) The password for the Certificate. Changing this forces a new resource to be created.
 }

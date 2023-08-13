@@ -9,8 +9,12 @@ terraform {
       version = ">= 3.69.0"
     }
     tls = {
-      source = "hashicorp/tls"
+      source  = "hashicorp/tls"
       version = "4.0.4"
+    }
+    acme = {
+      source  = "vancluever/acme"
+      version = "2.16.1"
     }
   }
 }
@@ -78,4 +82,8 @@ provider "azuread" { # default takes current user/identity tenant
 
 provider "tls" {
   # Configuration options
+}
+
+provider "acme" {
+  server_url = "https://acme-staging-v02.api.letsencrypt.org/directory"
 }
