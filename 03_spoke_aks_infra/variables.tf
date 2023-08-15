@@ -62,9 +62,13 @@ variable "enable_grafana_prometheus" {
   type = bool
 }
 
-# variable "enable_monitoring" {
-#   type = bool
-# }
+variable "enable_route_traffic_to_firewall" {
+  type = bool
+  # validation { # The condition for variable "enable_route_traffic_to_firewall" can only refer to the variable itself
+  #   condition = (var.enable_route_traffic_to_firewall == true && var.enable_hub_spoke == true) || (var.enable_route_traffic_to_firewall == false && var.enable_hub_spoke == false)
+  #   error_message = "You can't enable route traffic to firewall if firewall is not enabled"
+  # }
+}
 
 variable "enable_firewall_as_dns_server" {
   type = bool

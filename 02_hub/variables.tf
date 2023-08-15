@@ -23,6 +23,10 @@ variable "cidr_subnet_vm" {
   description = "CIDR for VM Subnet."
 }
 
+variable "cidr_subnet_firewall_mgmt" {
+  description = "CIDR for Firewall Management Subnet."
+}
+
 variable "enable_bastion" {
   type        = bool
   description = "Creates a Bastion Host."
@@ -90,6 +94,18 @@ variable "contact" {
       postalCode = string
     })
   })
+}
+
+variable "enable_firewall_as_dns_server" {
+  type = bool
+}
+
+variable "firewall_sku_tier" {
+  type = string
+  validation {
+    condition     = var.firewall_sku_tier == "Standard" || var.firewall_sku_tier == "Premium" || var.firewall_sku_tier == "Basic"
+    error_message = "Available tiers are: Standard, Premium, and Basic"
+  }
 }
 
 variable "tags" {

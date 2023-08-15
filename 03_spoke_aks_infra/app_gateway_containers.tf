@@ -50,13 +50,6 @@ resource "azapi_resource" "agc" {
   name      = "app-gateway-containers"
   parent_id = azurerm_resource_group.rg.id
   location  = azurerm_resource_group.rg.location
-
-  #   body = jsonencode({
-  #     properties = {
-  #       frontends = []
-  #       associations = []
-  #     }
-  #   })
   #   response_export_values = ["id"]
 }
 
@@ -66,13 +59,6 @@ resource "azapi_resource" "agc_frontend" {
   name      = "frontend-app"
   parent_id = azapi_resource.agc.0.id
   location  = azurerm_resource_group.rg.location
-
-  #   body = jsonencode({
-  #     properties = {
-  #       frontends = []
-  #       associations = []
-  #     }
-  #   })
 }
 
 resource "azapi_resource" "agc_association" {

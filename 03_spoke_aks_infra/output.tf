@@ -41,3 +41,9 @@ output "dns_zone_apps" {
     fqdn = var.enable_hub_spoke && var.enable_app_gateway ? azurerm_dns_a_record.dns_record_appgw.0.fqdn : null
   }
 }
+
+output "route_table" {
+  value = {
+    id = azurerm_route_table.route_table_to_firewall.id
+  }
+}

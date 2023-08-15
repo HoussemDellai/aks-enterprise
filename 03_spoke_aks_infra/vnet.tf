@@ -7,9 +7,9 @@ resource "azurerm_virtual_network" "vnet_spoke_aks" {
   tags                = var.tags
 }
 
-resource "azurerm_subnet" "subnet_spoke_aks_pe" {
+resource "azurerm_subnet" "subnet_pe" {
   count                = var.enable_private_acr || var.enable_private_keyvault ? 1 : 0
-  name                 = "subnet-spoke-aks-pe"
+  name                 = "subnet-pe"
   virtual_network_name = azurerm_virtual_network.vnet_spoke_aks.name
   resource_group_name  = azurerm_virtual_network.vnet_spoke_aks.resource_group_name
   address_prefixes     = var.cidr_subnet_spoke_aks_pe
@@ -20,7 +20,7 @@ resource "azurerm_subnet" "subnet_agc" {
   name                 = "subnet-agc"
   virtual_network_name = azurerm_virtual_network.vnet_spoke_aks.name
   resource_group_name  = azurerm_virtual_network.vnet_spoke_aks.resource_group_name
-  address_prefixes     = ["10.1.200.0/24"] # var.cidr_subnet_spoke_aks_pe
+  address_prefixes     = ["10.1.200.0/24"] # todo
   delegation {
     name = "delegation"
     service_delegation {

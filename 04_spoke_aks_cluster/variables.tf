@@ -7,11 +7,11 @@ variable "resources_location" {
   description = "Location of the resource group."
 }
 
-variable "cidr_subnet_nodes" {
+variable "cidr_subnet_system_nodes" {
   description = "Subnet address prefix."
 }
 
-variable "cidr_subnet_pods" {
+variable "cidr_subnet_system_pods" {
   description = "Subnet address prefix."
 }
 
@@ -36,7 +36,6 @@ variable "aks_agent_os_disk_size" {
 
 variable "kubernetes_version" {
   description = "Kubernetes version"
-  default     = "1.24.6"
 }
 
 variable "cidr_aks_service" {
@@ -119,6 +118,10 @@ variable "enable_system_nodepool_only_critical_addons" {
 }
 
 variable "enable_firewall_as_dns_server" {
+  type = bool
+}
+
+variable "enable_route_traffic_to_firewall" {
   type = bool
 }
 

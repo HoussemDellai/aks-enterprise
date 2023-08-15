@@ -1,15 +1,15 @@
-resource "azurerm_subnet" "subnet_nodes" {
+resource "azurerm_subnet" "subnet_system_nodes" {
   name                 = "subnet-nodes"
   virtual_network_name = data.terraform_remote_state.spoke_aks.outputs.vnet_spoke_aks.virtual_network_name # azurerm_virtual_network.vnet_spoke_aks.name
   resource_group_name  = data.terraform_remote_state.spoke_aks.outputs.vnet_spoke_aks.resource_group_name  # azurerm_virtual_network.vnet_spoke_aks.resource_group_name
-  address_prefixes     = var.cidr_subnet_nodes
+  address_prefixes     = var.cidr_subnet_system_nodes
 }
 
-resource "azurerm_subnet" "subnet_pods" {
+resource "azurerm_subnet" "subnet_system_pods" {
   name                 = "subnet-pods"
   virtual_network_name = data.terraform_remote_state.spoke_aks.outputs.vnet_spoke_aks.virtual_network_name # azurerm_virtual_network.vnet_spoke_aks.name
   resource_group_name  = data.terraform_remote_state.spoke_aks.outputs.vnet_spoke_aks.resource_group_name  # azurerm_virtual_network.vnet_spoke_aks.resource_group_name
-  address_prefixes     = var.cidr_subnet_pods
+  address_prefixes     = var.cidr_subnet_system_pods
 
   # src: https://github.com/hashicorp/terraform-provider-azurerm/blob/4ea5f92ccc27a75807d704f6d66d53a6c31459cb/internal/services/containers/kubernetes_cluster_node_pool_resource_test.go#L1433
   delegation {
@@ -90,8 +90,8 @@ resource "azurerm_kubernetes_cluster" "aks" {
     os_sku                       = "Ubuntu"                                        # Ubuntu, AzureLinux, Windows2019, Windows2022
     only_critical_addons_enabled = var.enable_system_nodepool_only_critical_addons # taint default node pool with CriticalAddonsOnly=true:NoSchedule
     zones                        = [1, 2, 3]                                       # []
-    vnet_subnet_id               = azurerm_subnet.subnet_nodes.id
-    pod_subnet_id                = var.aks_network_plugin == "kubenet" || var.network_plugin_mode == "overlay" ? null : azurerm_subnet.subnet_pods.id
+    vnet_subnet_id               = azurerm_subnet.subnet_system_nodes.id
+    pod_subnet_id                = var.aks_network_plugin == "kubenet" || var.network_plugin_mode == "overlay" ? null : azurerm_subnet.subnet_system_pods.id
     scale_down_mode              = "Deallocate" # "Delete" # Deallocate
     workload_runtime             = "OCIContainer"
     kubelet_disk_type            = "OS" # "Temporary" # 
@@ -288,10 +288,10 @@ resource "azurerm_kubernetes_cluster" "aks" {
   # }
 
   depends_on = [
-    azurerm_subnet_route_table_association.association_route_table_subnet_system_nodes,
-    azurerm_subnet_route_table_association.association_route_table_subnet_system_pods,
-    azurerm_subnet_route_table_association.association_route_table_subnet_nodes[0],
-    azurerm_subnet_route_table_association.association_route_table_subnet_pods[0]
+    azurerm_subnet_route_table_association.association_rt_subnet_system_nodes,
+    azurerm_subnet_route_table_association.association_rt_subnet_system_pods,
+    azurerm_subnet_route_table_association.association_rt_subnet_user_nodes[0],
+    azurerm_subnet_route_table_association.association_rt_subnet_user_pods[0]
     # azurerm_virtual_network.vnet_spoke_aks,
     # azurerm_application_gateway.appgw
   ]
@@ -372,8 +372,8 @@ resource "azurerm_kubernetes_cluster" "aks" {
 #     os_sku                       = "Ubuntu"                                        # Ubuntu, AzureLinux, Windows2019, Windows2022
 #     only_critical_addons_enabled = var.enable_system_nodepool_only_critical_addons # taint default node pool with CriticalAddonsOnly=true:NoSchedule
 #     zones                        = [1, 2, 3]                                       # []
-#     vnet_subnet_id               = azurerm_subnet.subnet_nodes.id
-#     pod_subnet_id                = var.aks_network_plugin == "kubenet" || var.network_plugin_mode == "overlay" ? null : azurerm_subnet.subnet_pods.id
+#     vnet_subnet_id               = azurerm_subnet.subnet_system_nodes.id
+#     pod_subnet_id                = var.aks_network_plugin == "kubenet" || var.network_plugin_mode == "overlay" ? null : azurerm_subnet.subnet_system_pods.id
 #     scale_down_mode              = "Deallocate" # "Delete" # Deallocate
 #     workload_runtime             = "OCIContainer"
 #     kubelet_disk_type            = "OS" # "Temporary" # 
@@ -572,8 +572,8 @@ resource "azurerm_kubernetes_cluster" "aks" {
 #   depends_on = [
 #     azurerm_subnet_route_table_association.association_route_table_subnet_system_nodes,
 #     azurerm_subnet_route_table_association.association_route_table_subnet_system_pods,
-#     azurerm_subnet_route_table_association.association_route_table_subnet_nodes[0],
-#     azurerm_subnet_route_table_association.association_route_table_subnet_pods[0]
+#     azurerm_subnet_route_table_association.association_route_table_subnet_system_nodes[0],
+#     azurerm_subnet_route_table_association.association_route_table_subnet_system_pods[0]
 #     # azurerm_virtual_network.vnet_spoke_aks,
 #     # azurerm_application_gateway.appgw
 #   ]

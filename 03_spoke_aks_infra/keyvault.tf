@@ -22,7 +22,7 @@ resource "azurerm_key_vault" "kv" {
 
 resource "azurerm_key_vault_secret" "secret" {
   count        = var.enable_keyvault ? 1 : 0
-  name         = "database-password"
+  name         = "db-password"
   value        = "@Aa123456789"
   key_vault_id = azurerm_key_vault.kv.0.id
   tags         = var.tags

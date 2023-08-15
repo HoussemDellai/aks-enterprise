@@ -18,15 +18,16 @@ resource "azurerm_private_endpoint" "pe_storage" {
   name                = "private-endpoint-storage"
   resource_group_name = azurerm_resource_group.rg.name
   location            = var.resources_location
-  subnet_id           = azurerm_subnet.subnet_spoke_aks_pe.0.id
+  subnet_id           = azurerm_subnet.subnet_pe.0.id
   tags                = var.tags
 
   private_service_connection {
-    name                           = "connection_storage"
+    name                           = "connection-storage"
     private_connection_resource_id = azurerm_storage_account.storage.0.id
     is_manual_connection           = false
     subresource_names              = ["blob"]
   }
+
   private_dns_zone_group {
     name                 = "private-dns-zone-group"
     private_dns_zone_ids = [azurerm_private_dns_zone.private_dns_zone_storage.0.id]

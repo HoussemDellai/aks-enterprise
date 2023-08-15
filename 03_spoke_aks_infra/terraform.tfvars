@@ -26,6 +26,7 @@ enable_private_acr           = true
 # enable_monitoring = false
 
 # integration with Hub & Firewall
-enable_hub_spoke              = false
-enable_firewall_as_dns_server = false
+enable_hub_spoke                 = true
+enable_route_traffic_to_firewall = true
+enable_firewall_as_dns_server    = false
 # enable_vnet_peering           = true

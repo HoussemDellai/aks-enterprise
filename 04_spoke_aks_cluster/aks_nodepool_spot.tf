@@ -1,4 +1,29 @@
-# todo: add subnet for pods and nodes for spot nodepool
+resource "azurerm_subnet" "subnet_nodes_user_nodepool_spot" {
+  count                = var.enable_nodepool_spot ? 1 : 0
+  name                 = "subnet-nodes-spot"
+  virtual_network_name = data.terraform_remote_state.spoke_aks.outputs.vnet_spoke_aks.virtual_network_name # azurerm_virtual_network.vnet_spoke_aks.name
+  resource_group_name  = data.terraform_remote_state.spoke_aks.outputs.vnet_spoke_aks.resource_group_name  # azurerm_virtual_network.vnet_spoke_aks.resource_group_name
+  address_prefixes     = ["10.1.20.0/24"]
+}
+
+resource "azurerm_subnet" "subnet_pods_user_nodepool_spot" {
+  count                = var.enable_nodepool_spot ? 1 : 0
+  name                 = "subnet-pods-spot"
+  virtual_network_name = data.terraform_remote_state.spoke_aks.outputs.vnet_spoke_aks.virtual_network_name # azurerm_virtual_network.vnet_spoke_aks.name
+  resource_group_name  = data.terraform_remote_state.spoke_aks.outputs.vnet_spoke_aks.resource_group_name  # azurerm_virtual_network.vnet_spoke_aks.resource_group_name
+  address_prefixes     = ["10.1.21.0/24"]
+
+  # src: https://github.com/hashicorp/terraform-provider-azurerm/blob/4ea5f92ccc27a75807d704f6d66d53a6c31459cb/internal/services/containers/kubernetes_cluster_node_pool_resource_test.go#L1433
+  delegation {
+    name = "Microsoft.ContainerService.managedClusters"
+    service_delegation {
+      actions = [
+        "Microsoft.Network/virtualNetworks/subnets/join/action",
+      ]
+      name = "Microsoft.ContainerService/managedClusters"
+    }
+  }
+}
 
 resource "azurerm_kubernetes_cluster_node_pool" "poolspot" {
   count                  = var.enable_nodepool_spot ? 1 : 0
@@ -17,8 +42,8 @@ resource "azurerm_kubernetes_cluster_node_pool" "poolspot" {
   max_count              = 1 # 3
   min_count              = 0 # 1
   fips_enabled           = false
-  vnet_subnet_id         = azurerm_subnet.subnet_nodes.id
-  pod_subnet_id          = var.aks_network_plugin == "kubenet" || var.network_plugin_mode == "overlay" ? null : azurerm_subnet.subnet_pods.id
+  vnet_subnet_id         = azurerm_subnet.subnet_nodes_user_nodepool_spot.0.id
+  pod_subnet_id          = var.aks_network_plugin == "kubenet" || var.network_plugin_mode == "overlay" ? null : azurerm_subnet.subnet_pods_user_nodepool_spot.0.id
   enable_host_encryption = false
   enable_node_public_ip  = false
   max_pods               = 110

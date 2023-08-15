@@ -4,7 +4,7 @@ resource "azurerm_private_endpoint" "pe_keyvault" {
   name                = "private-endpoint-keyvault"
   location            = var.resources_location
   resource_group_name = azurerm_resource_group.rg.name
-  subnet_id           = azurerm_subnet.subnet_spoke_aks_pe.0.id
+  subnet_id           = azurerm_subnet.subnet_pe.0.id
   tags                = var.tags
 
   private_service_connection {

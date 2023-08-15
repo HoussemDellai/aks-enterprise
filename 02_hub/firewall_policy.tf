@@ -8,10 +8,14 @@ resource "azurerm_firewall_policy" "firewall_policy" {
   name                = "firewall-policy"
   resource_group_name = azurerm_resource_group.rg.name
   location            = var.resources_location
+  sku                 = var.firewall_sku_tier # "Basic" # "Standard" # "Premium" #
 
-  dns {
-    proxy_enabled = true
-    servers       = ["168.63.129.16"]
+  dynamic "dns" {
+    for_each = var.enable_firewall && var.firewall_sku_tier != "Basic" ? ["any_value"] : []
+    content {
+      proxy_enabled = true
+      servers       = ["168.63.129.16"]
+    }
   }
 }
 
