@@ -51,7 +51,6 @@ resource "azurerm_kubernetes_cluster" "aks" {
   node_resource_group                 = "rg-${var.prefix}-nodes"
   private_cluster_enabled             = var.enable_private_cluster
   private_cluster_public_fqdn_enabled = false
-  public_network_access_enabled       = true
   role_based_access_control_enabled   = true
   azure_policy_enabled                = true
   open_service_mesh_enabled           = true
@@ -68,6 +67,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
   tags                                = var.tags
   node_os_channel_upgrade             = "NodeImage"  # Unmanaged, SecurityPatch, NodeImage and None
   automatic_channel_upgrade           = "node-image" # none, patch, rapid, node-image, stable
+  # public_network_access_enabled       = true # deprecated
 
   api_server_access_profile {
     authorized_ip_ranges     = var.enable_private_cluster ? null : ["0.0.0.0/0"] # when private cluster, this should not be enabled

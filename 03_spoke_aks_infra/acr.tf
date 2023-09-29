@@ -34,7 +34,7 @@ resource "azurerm_container_registry" "acr" {
 
       ip_rule {
         action   = "Allow"
-        ip_range = "${data.http.machine_ip.response_body}/32"
+        ip_range = local.machine_ip
       }
     }
   }

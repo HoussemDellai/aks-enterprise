@@ -15,5 +15,5 @@ enable_vm_jumpbox_windows = false
 enable_vm_jumpbox_linux   = true
 
 # integration with Hub & Firewall
-enable_firewall_as_dns_server = false
+enable_firewall_as_dns_server = true
 enable_hub_spoke              = true

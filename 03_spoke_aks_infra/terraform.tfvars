@@ -18,9 +18,9 @@ cidr_subnet_spoke_aks_pe = ["10.1.2.0/28"]
 enable_grafana_prometheus    = true
 enable_app_gateway           = false
 enable_appgateway_containers = true
-enable_keyvault              = true
-enable_storage_account       = true
-enable_private_keyvault      = true
+enable_keyvault              = false
+enable_storage_account       = false
+enable_private_keyvault      = false
 enable_private_acr           = true
 
 # enable_monitoring = false
@@ -28,5 +28,5 @@ enable_private_acr           = true
 # integration with Hub & Firewall
 enable_hub_spoke                 = true
 enable_route_traffic_to_firewall = true
-enable_firewall_as_dns_server    = false
+enable_firewall_as_dns_server    = true
 # enable_vnet_peering           = true

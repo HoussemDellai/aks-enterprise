@@ -3,7 +3,7 @@ resource "azurerm_storage_account_network_rules" "rules_storage" {
   storage_account_id         = azurerm_storage_account.storage.0.id
   default_action             = "Deny"
   bypass                     = ["Metrics", "Logging", "AzureServices"]
-  ip_rules                   = [data.http.machine_ip.response_body]
+  ip_rules                   = [local.machine_ip]
   virtual_network_subnet_ids = null # [azurerm_subnet.subnet_mgt.0.id]
 }
 

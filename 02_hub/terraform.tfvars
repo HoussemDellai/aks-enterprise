@@ -16,11 +16,11 @@ cidr_subnet_vm            = ["172.16.2.0/26"]
 
 enable_bastion                = true
 enable_firewall               = true
-enable_firewall_as_dns_server = false
-firewall_sku_tier             = "Basic" # "Standard" # "Premium" #
+enable_firewall_as_dns_server = true
+firewall_sku_tier             = "Standard" # "Basic" # "Standard" # "Premium" #
 
 enable_vm_jumpbox_linux   = true
-enable_vm_jumpbox_windows = false
+enable_vm_jumpbox_windows = true
 
 domain_name       = "houssem15.com"
 AgreedBy_IP_v6    = "2a04:cec0:11d9:24c8:8898:3820:8631:d83"

@@ -15,4 +15,5 @@ module "vm_jumpbox_linux" {
   vm_size             = "Standard_B2s"
   admin_username      = "houssem"
   admin_password      = "@Aa123456789"
+  enable_public_ip    = false
 }

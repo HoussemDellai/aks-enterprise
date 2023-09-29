@@ -17,7 +17,8 @@ data "azurerm_subscription" "subscription_spoke" {
 data "azuread_client_config" "current" {}
 
 data "http" "machine_ip" {
-  url = "http://ifconfig.me"
+  url = "https://ipv4.icanhazip.com"
+  # url = "http://ifconfig.me"
 
   request_headers = {
     Accept = "application/json"
@@ -29,4 +30,8 @@ data "http" "machine_ip" {
   #     error_message = "Status code invalid"
   #   }
   # }
+}
+
+locals {
+  machine_ip = replace(data.http.machine_ip.response_body, "\n", "")
 }

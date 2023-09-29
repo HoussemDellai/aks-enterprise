@@ -45,4 +45,25 @@ resource "azurerm_firewall_policy_rule_collection_group" "policy_group_deny" {
       destination_fqdns = ["*.yahoo.com"]
     }
   }
+
+  # allow raw.githubusercontent.com, to get the custom scripts to install to VMs
+  application_rule_collection {
+    name     = "app_rules_allow_githubusercontent_any_source"
+    priority = 101
+    action   = "Allow"
+
+    rule {
+      name = "allow_githubusercontent_com"
+      protocols {
+        type = "Http"
+        port = 80
+      }
+      protocols {
+        type = "Https"
+        port = 443
+      }
+      source_addresses  = ["*"] # local.cidr_subnet_aks_nodes_pods # azurerm_subnet.subnet_mgt.address_prefixes
+      destination_fqdns = ["raw.githubusercontent.com"]
+    }
+  }
 }

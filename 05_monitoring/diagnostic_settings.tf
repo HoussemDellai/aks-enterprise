@@ -21,7 +21,8 @@ locals {
 }
 
 data "azurerm_resources" "resources_ds" {
-  for_each      = local.resource_types
+  for_each = local.resource_types
+
   type          = each.key
   required_tags = var.tags
 }
@@ -31,7 +32,8 @@ locals {
 }
 
 module "diagnostic_setting" {
-  for_each                   = local.resource_ids
+  for_each = local.resource_ids
+
   source                     = "../modules/diagnostic_setting"
   target_resource_id         = each.key
   log_analytics_workspace_id = data.terraform_remote_state.management.0.outputs.log_analytics_workspace.id

@@ -15,5 +15,4 @@ module "vm_jumpbox_windows" {
   vm_size             = "Standard_B2s" # "Standard_D2s_v3" # "Standard_D4s_v5" # 
   admin_username      = "houssem"
   admin_password      = "@Aa123456789"
-  enable_public_ip    = false
 }
