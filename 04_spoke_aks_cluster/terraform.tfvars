@@ -35,7 +35,7 @@ enable_maintenance_window                   = false
 
 # monitoring
 enable_grafana_prometheus = true
-enable_monitoring         = false
+enable_monitoring         = true
 
 # integration with Hub network
 enable_hub_spoke                 = true
