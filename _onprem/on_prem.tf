@@ -35,7 +35,7 @@
 #   location              = azurerm_resource_group.rg.location
 #   resource_group_name   = azurerm_resource_group.rg.name
 #   network_interface_ids = [azurerm_network_interface.nic_onprem.id]
-#   vm_size               = "Standard_B2s"
+#   vm_size               = "Standard_B2ats_v2"
 
 #   storage_image_reference {
 #     publisher = "Canonical"
@@ -53,7 +53,7 @@
 
 #   os_profile {
 #     computer_name  = "vm-onprem"
-#     admin_username = "houssem"
+#     admin_username = "azureuser"
 #     admin_password = "@Aa123456789"
 #   }
 

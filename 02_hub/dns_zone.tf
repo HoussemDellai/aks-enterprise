@@ -26,7 +26,7 @@ resource "azurerm_dns_a_record" "dns_a_record" {
 resource "azurerm_dns_zone" "dns_zone_apps" {
   provider            = azurerm.subscription_hub
   name                = "apps.${azurerm_dns_zone.dns_zone_parent.name}" # "aks-apps.${data.azurerm_dns_zone.dns_zone_parent.name}"
-  resource_group_name = azurerm_resource_group.rg.name                      # data.azurerm_dns_zone.dns_zone.resource_group_name
+  resource_group_name = azurerm_resource_group.rg.name                  # data.azurerm_dns_zone.dns_zone.resource_group_name
 }
 
 # create ns record for sub-zone in parent zone

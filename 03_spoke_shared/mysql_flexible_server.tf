@@ -37,7 +37,7 @@ resource "azurerm_mysql_flexible_server" "mysql_flexible_server" {
   name                   = "mysql-flexible-server-01357"
   resource_group_name    = azurerm_resource_group.rg_spoke_shared.name
   location               = azurerm_resource_group.rg_spoke_shared.location
-  administrator_login    = "houssem"
+  administrator_login    = "azureuser"
   administrator_password = "@Aa123456789"
   backup_retention_days  = 7
   delegated_subnet_id    = azurerm_subnet.subnet_delegated_mysql_flex.0.id

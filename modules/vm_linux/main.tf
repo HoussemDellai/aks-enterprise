@@ -1,16 +1,3 @@
-terraform {
-
-  required_version = ">= 1.2.8"
-
-  required_providers {
-
-    azurerm = {
-      source  = "hashicorp/azurerm"
-      version = ">= 3.69.0"
-    }
-  }
-}
-
 resource "azurerm_resource_group" "rg" {
   name     = var.resource_group_name
   location = var.location
@@ -63,17 +50,22 @@ resource "azurerm_linux_virtual_machine" "vm" {
   admin_username                  = var.admin_username
   admin_password                  = var.admin_password
   network_interface_ids           = [azurerm_network_interface.nic_vm.id]
+  priority                        = "Spot"
+  eviction_policy                 = "Deallocate"
   tags                            = var.tags
 
+  custom_data = filebase64("../scripts/install-tools-linux-vm.ps1")
+
   os_disk {
+    name                 = "disk-os${var.vm_name}"
     caching              = "ReadWrite"
-    storage_account_type = "StandardSSD_LRS"
+    storage_account_type = "Standard_LRS"
   }
 
   source_image_reference {
-    publisher = "Canonical"
-    offer     = "UbuntuServer" # "0001-com-ubuntu-server-jammy" # "0001-com-ubuntu-minimal-jammy"
-    sku       = "18.04-LTS"    # "22_04-lts-gen2" # "minimal-22_04-lts-gen2"
+    publisher = "canonical"
+    offer     = "0001-com-ubuntu-server-jammy"
+    sku       = "22_04-lts-gen2"
     version   = "latest"
   }
 
@@ -95,25 +87,25 @@ resource "azurerm_linux_virtual_machine" "vm" {
   # }
 }
 
-resource "azurerm_virtual_machine_extension" "vm_extension_linux" {
-  name                 = "vm-extension-linux"
-  virtual_machine_id   = azurerm_linux_virtual_machine.vm.id
-  publisher            = "Microsoft.Azure.Extensions"
-  type                 = "CustomScript"
-  type_handler_version = "2.1"
-  tags                 = var.tags
-  settings             = <<SETTINGS
-    {
-      "fileUris": ["https://raw.githubusercontent.com/HoussemDellai/aks-enterprise/main/scripts/install-tools-linux-vm.sh"],
-      "commandToExecute": "./install-tools-linux-vm.sh"
-    }
-SETTINGS
-  # settings = <<SETTINGS
-  # {
-  #   "fileUris": ["https://${azurerm_storage_account.storage.0.name}.blob.core.windows.net/${azurerm_storage_container.container.0.name}/vm-install-cli-tools.sh"],
-  #   "commandToExecute": "./install-cli-tools.sh"
-  # }
-  # SETTINGS
-}
+# resource "azurerm_virtual_machine_extension" "vm_extension_linux" {
+#   name                 = "vm-extension-linux"
+#   virtual_machine_id   = azurerm_linux_virtual_machine.vm.id
+#   publisher            = "Microsoft.Azure.Extensions"
+#   type                 = "CustomScript"
+#   type_handler_version = "2.1"
+#   tags                 = var.tags
+#   settings             = <<SETTINGS
+#     {
+#       "fileUris": ["https://raw.githubusercontent.com/HoussemDellai/aks-enterprise/main/scripts/install-tools-linux-vm.sh"],
+#       "commandToExecute": "./install-tools-linux-vm.sh"
+#     }
+# SETTINGS
+#   # settings = <<SETTINGS
+#   # {
+#   #   "fileUris": ["https://${azurerm_storage_account.storage.0.name}.blob.core.windows.net/${azurerm_storage_container.container.0.name}/vm-install-cli-tools.sh"],
+#   #   "commandToExecute": "./install-cli-tools.sh"
+#   # }
+#   # SETTINGS
+# }
 
 #todo : diag settings

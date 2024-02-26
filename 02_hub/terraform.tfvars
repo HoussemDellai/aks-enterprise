@@ -1,12 +1,12 @@
 prefix = "lzaks-hub-weu"
 
-tenant_id_hub       = "16b3c013-d300-468d-ac64-7eda0820b6d3"
-subscription_id_hub = "82f6d75e-85f4-434a-ab74-5dddd9fa8910"
+tenant_id_hub       = "a8f7faa1-3e2e-4d84-a6cb-daf7eb97d6e4"
+subscription_id_hub = "38977b70-47bf-4da5-a492-88712fce8725"
 
 tenant_id_spoke       = "558506eb-9459-4ef3-b920-ad55c555e729"
 subscription_id_spoke = "17b12858-3960-4e6f-a663-a06fdae23428"
 
-resources_location = "westeurope" # "francecentral" # "westcentralus" # 
+resources_location = "swedencentral" # "francecentral" # "westcentralus" # 
 
 cidr_vnet_hub             = ["172.16.0.0/16"]
 cidr_subnet_firewall      = ["172.16.0.0/26"]
@@ -19,15 +19,15 @@ enable_firewall               = true
 enable_firewall_as_dns_server = true
 firewall_sku_tier             = "Standard" # "Basic" # "Standard" # "Premium" #
 
-enable_vm_jumpbox_linux   = true
-enable_vm_jumpbox_windows = true
+enable_vm_jumpbox_linux   = false
+enable_vm_jumpbox_windows = false
 
 domain_name       = "houssem17.com"
 AgreedBy_IP_v6    = "2a04:cec0:11d9:24c8:8898:3820:8631:d83"
 AgreedAt_DateTime = "2023-08-13T15:06:59.264Z"
 
 contact = {
-  nameFirst = "Houssem"
+  nameFirst = "azureuser"
   nameLast  = "Dellai"
   email     = "houssem.dellai@live.com" # you'll get verification email
   phone     = "+33.762954328"

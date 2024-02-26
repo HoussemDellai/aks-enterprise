@@ -1,12 +1,12 @@
 prefix = "lzaks-spoke-aks"
 
-tenant_id_hub       = "16b3c013-d300-468d-ac64-7eda0820b6d3"
-subscription_id_hub = "82f6d75e-85f4-434a-ab74-5dddd9fa8910"
+tenant_id_hub       = "a8f7faa1-3e2e-4d84-a6cb-daf7eb97d6e4"
+subscription_id_hub = "38977b70-47bf-4da5-a492-88712fce8725"
 
-tenant_id_spoke       = "16b3c013-d300-468d-ac64-7eda0820b6d3" # "558506eb-9459-4ef3-b920-ad55c555e729"
-subscription_id_spoke = "82f6d75e-85f4-434a-ab74-5dddd9fa8910" # "17b12858-3960-4e6f-a663-a06fdae23428"
+tenant_id_spoke       = "a8f7faa1-3e2e-4d84-a6cb-daf7eb97d6e4" # "558506eb-9459-4ef3-b920-ad55c555e729"
+subscription_id_spoke = "38977b70-47bf-4da5-a492-88712fce8725" # "17b12858-3960-4e6f-a663-a06fdae23428"
 
-resources_location = "westeurope" # "francecentral" # "westcentralus" # "northeurope" # 
+resources_location = "swedencentral" # "francecentral" # "westcentralus" # "northeurope" # 
 
 kubernetes_version   = "1.27.3" # "1.26.3" # "1.26.0"
 aad_group_aks_admins = "aad_group_aks_admins"

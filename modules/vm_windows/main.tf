@@ -1,16 +1,3 @@
-terraform {
-
-  required_version = ">= 1.2.8"
-
-  required_providers {
-
-    azurerm = {
-      source  = "hashicorp/azurerm"
-      version = ">= 3.69.0"
-    }
-  }
-}
-
 resource "azurerm_resource_group" "rg" {
   name     = var.resource_group_name
   location = var.location
@@ -52,11 +39,16 @@ resource "azurerm_windows_virtual_machine" "vm" {
   admin_username        = var.admin_username
   admin_password        = var.admin_password
   network_interface_ids = [azurerm_network_interface.nic_vm.id]
+  priority              = "Spot"
+  eviction_policy       = "Deallocate"
   tags                  = var.tags
 
+  custom_data = filebase64("../scripts/install-tools-windows-vm.ps1")
+
   os_disk {
+    name                 = "disk-os${var.vm_name}"
     caching              = "ReadWrite"
-    storage_account_type = "StandardSSD_LRS"
+    storage_account_type = "Standard_LRS"
   }
 
   source_image_reference {
@@ -77,22 +69,22 @@ resource "azurerm_windows_virtual_machine" "vm" {
 }
 
 
-resource "azurerm_virtual_machine_extension" "vm_extension_windows" {
-  name                       = "vm-extension-windows"
-  virtual_machine_id         = azurerm_windows_virtual_machine.vm.id
-  publisher                  = "Microsoft.Compute"
-  type                       = "CustomScriptExtension"
-  type_handler_version       = "1.9"
-  auto_upgrade_minor_version = "true"
-  # publisher            = "Microsoft.Azure.Extensions"
-  # type                 = "CustomScript"
-  # type_handler_version = "2.1"
-  tags     = var.tags
-  settings = <<SETTINGS
-    {
-      "fileUris": ["https://raw.githubusercontent.com/HoussemDellai/aks-enterprise/main/scripts/install-tools-windows-vm.ps1"],
-      "commandToExecute": "powershell -ExecutionPolicy Unrestricted -file install-tools-windows-vm.ps1"
-    }
-SETTINGS
-  # powershell -ExecutionPolicy Unrestricted -file build-agent.ps1
-}
+# resource "azurerm_virtual_machine_extension" "vm_extension_windows" {
+#   name                       = "vm-extension-windows"
+#   virtual_machine_id         = azurerm_windows_virtual_machine.vm.id
+#   publisher                  = "Microsoft.Compute"
+#   type                       = "CustomScriptExtension"
+#   type_handler_version       = "1.9"
+#   auto_upgrade_minor_version = "true"
+#   # publisher            = "Microsoft.Azure.Extensions"
+#   # type                 = "CustomScript"
+#   # type_handler_version = "2.1"
+#   tags     = var.tags
+#   settings = <<SETTINGS
+#     {
+#       "fileUris": ["https://raw.githubusercontent.com/HoussemDellai/aks-enterprise/main/scripts/install-tools-windows-vm.ps1"],
+#       "commandToExecute": "powershell -ExecutionPolicy Unrestricted -file install-tools-windows-vm.ps1"
+#     }
+# SETTINGS
+#   # powershell -ExecutionPolicy Unrestricted -file build-agent.ps1
+# }

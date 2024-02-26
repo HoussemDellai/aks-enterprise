@@ -577,7 +577,62 @@ resource "azurerm_kubernetes_cluster" "aks" {
 #     # azurerm_virtual_network.vnet_spoke_aks,
 #     # azurerm_application_gateway.appgw
 #   ]
+  # lifecycle {
+  #   ignore_changes = [kubernetes_version]
 
+  #   precondition {
+  #     condition     = (var.client_id != "" && var.client_secret != "") || (var.identity_type != "")
+  #     error_message = "Either `client_id` and `client_secret` or `identity_type` must be set."
+  #   }
+  #   precondition {
+  #     # Why don't use var.identity_ids != null && length(var.identity_ids)>0 ? Because bool expression in Terraform is not short circuit so even var.identity_ids is null Terraform will still invoke length function with null and cause error. https://github.com/hashicorp/terraform/issues/24128
+  #     condition     = (var.client_id != "" && var.client_secret != "") || (var.identity_type == "SystemAssigned") || (var.identity_ids == null ? false : length(var.identity_ids) > 0)
+  #     error_message = "If use identity and `UserAssigned` is set, an `identity_ids` must be set as well."
+  #   }
+  #   precondition {
+  #     condition     = !(var.microsoft_defender_enabled && !var.log_analytics_workspace_enabled)
+  #     error_message = "Enabling Microsoft Defender requires that `log_analytics_workspace_enabled` be set to true."
+  #   }
+  #   precondition {
+  #     condition     = !(var.load_balancer_profile_enabled && var.load_balancer_sku != "standard")
+  #     error_message = "Enabling load_balancer_profile requires that `load_balancer_sku` be set to `standard`"
+  #   }
+  #   precondition {
+  #     condition     = local.automatic_channel_upgrade_check
+  #     error_message = "Either disable automatic upgrades, or specify `kubernetes_version` or `orchestrator_version` only up to the minor version when using `automatic_channel_upgrade=patch`. You don't need to specify `kubernetes_version` at all when using `automatic_channel_upgrade=stable|rapid|node-image`, where `orchestrator_version` always must be set to `null`."
+  #   }
+  #   precondition {
+  #     condition     = var.role_based_access_control_enabled || !var.rbac_aad
+  #     error_message = "Enabling Azure Active Directory integration requires that `role_based_access_control_enabled` be set to true."
+  #   }
+  #   precondition {
+  #     condition     = !(var.kms_enabled && var.identity_type != "UserAssigned")
+  #     error_message = "KMS etcd encryption doesn't work with system-assigned managed identity."
+  #   }
+  #   precondition {
+  #     condition     = !var.workload_identity_enabled || var.oidc_issuer_enabled
+  #     error_message = "`oidc_issuer_enabled` must be set to `true` to enable Azure AD Workload Identity"
+  #   }
+  #   precondition {
+  #     condition     = var.network_plugin_mode != "overlay" || var.network_plugin == "azure"
+  #     error_message = "When network_plugin_mode is set to `overlay`, the network_plugin field can only be set to azure."
+  #   }
+  #   precondition {
+  #     condition     = var.ebpf_data_plane != "cilium" || var.network_plugin == "azure"
+  #     error_message = "When ebpf_data_plane is set to cilium, the network_plugin field can only be set to azure."
+  #   }
+  #   precondition {
+  #     condition     = var.ebpf_data_plane != "cilium" || var.network_plugin_mode == "overlay" || var.pod_subnet_id != null
+  #     error_message = "When ebpf_data_plane is set to cilium, one of either network_plugin_mode = `overlay` or pod_subnet_id must be specified."
+  #   }
+  #   precondition {
+  #     condition     = can(coalesce(var.cluster_name, var.prefix))
+  #     error_message = "You must set one of `var.cluster_name` and `var.prefix` to create `azurerm_kubernetes_cluster.main`."
+  #   }
+  #   precondition {
+  #     condition     = var.automatic_channel_upgrade != "node-image" || var.node_os_channel_upgrade == "NodeImage"
+  #     error_message = "`node_os_channel_upgrade` must be set to `NodeImage` if `automatic_channel_upgrade` has been set to `node-image`."
+  #   }
 #   lifecycle {
 #     # prevent_destroy       = true
 #     # create_before_destroy = true

@@ -11,8 +11,8 @@ module "vm_jumpbox_linux" {
   subnet_id           = azurerm_subnet.subnet_onprem_mgmt.id
   tags                = var.tags
   subscription_id     = data.azurerm_subscription.subscription_onprem.id
-  vm_size             = "Standard_B2s"
-  admin_username      = "houssem"
+  vm_size             = "Standard_B2ats_v2"
+  admin_username      = "azureuser"
   admin_password      = "@Aa123456789"
   enable_public_ip    = true
 }
