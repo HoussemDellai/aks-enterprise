@@ -60,6 +60,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
   workload_identity_enabled           = true
   http_application_routing_enabled    = false
   image_cleaner_enabled               = true
+  cost_analysis_enabled               = false
   image_cleaner_interval_hours        = 24 # in the range (24 - 2160)
   private_dns_zone_id                 = var.enable_private_cluster ? azurerm_private_dns_zone.private_dns_zone_aks.0.id : null
   tags                                = var.tags
@@ -102,7 +103,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
         protocol   = "TCP"
       }
       application_security_group_ids = []
-      node_public_ip_tags            = {}
+      node_public_ip_tags            = null # {}
     }
   }
 
@@ -132,6 +133,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
     network_data_plane = "cilium"               # azure and cilium
     dns_service_ip     = var.aks_dns_service_ip
     service_cidr       = var.cidr_aks_service
+    service_cidrs       = [ var.cidr_aks_service ]
     outbound_type      = var.aks_outbound_type # "userAssignedNATGateway" "loadBalancer" "userDefinedRouting" "managedNATGateway"
     load_balancer_sku  = "standard"            # "basic"
     ip_versions        = ["IPv4"]              # ["IPv4", "IPv6"]
@@ -426,10 +428,12 @@ resource "azurerm_role_assignment" "role_acrpull" {
   skip_service_principal_aad_check = true
 }
 
-data "azurerm_kubernetes_service_versions" "aks" {
-  location = var.resources_location
-}
+resource "terraform_data" "aks-get-credentials" {
+  triggers_replace = [
+    azurerm_kubernetes_cluster.aks.id
+  ]
 
-output "latest_version" {
-  value = data.azurerm_kubernetes_service_versions.aks.latest_version
+  provisioner "local-exec" {
+    command = "az aks get-credentials -n ${azurerm_kubernetes_cluster.aks.name} -g ${azurerm_kubernetes_cluster.aks.resource_group_name} --overwrite-existing"
+  }
 }
