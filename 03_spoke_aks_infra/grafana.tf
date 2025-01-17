@@ -7,7 +7,8 @@ resource "azurerm_dashboard_grafana" "grafana" {
   deterministic_outbound_ip_enabled = true
   public_network_access_enabled     = true
   sku                               = "Standard"
-  zone_redundancy_enabled           = true
+  zone_redundancy_enabled           = false
+  grafana_major_version             = "10"
 
   azure_monitor_workspace_integrations {
     resource_id = azurerm_monitor_workspace.prometheus.0.id

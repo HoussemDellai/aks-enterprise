@@ -2,7 +2,6 @@ resource "azurerm_route_table" "route_table_to_firewall" {
   name                          = "route-table-to-firewall"
   location                      = azurerm_resource_group.rg.location
   resource_group_name           = azurerm_resource_group.rg.name
-  disable_bgp_route_propagation = true
   tags                          = var.tags
 }
 

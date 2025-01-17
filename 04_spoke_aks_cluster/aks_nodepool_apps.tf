@@ -104,15 +104,15 @@ resource "azurerm_kubernetes_cluster_node_pool" "poolapps" {
   kubernetes_cluster_id  = azurerm_kubernetes_cluster.aks.id
   vm_size                = each.value.vm_size # "Standard_D2pds_v5" # "Standard_D2ds_v5" # "Standard_D4pls_v5" # "Standard_D4s_v5" #  # "Standard_D2as_v5" doesn't support Ephemeral disk
   node_count             = 1
-  enable_auto_scaling    = true
+  auto_scaling_enabled    = true
   min_count              = 1
   max_count              = 3
   zones                  = [1, 2, 3] # []
   mode                   = "User"
   orchestrator_version   = var.kubernetes_version
   os_type                = "Linux"
-  enable_host_encryption = false
-  enable_node_public_ip  = false
+  host_encryption_enabled = false
+  node_public_ip_enabled  = false
   max_pods               = 250
   os_disk_size_gb        = 60
   os_disk_type           = each.value.os_disk_type # "Ephemeral" # "Managed" # 
@@ -122,7 +122,6 @@ resource "azurerm_kubernetes_cluster_node_pool" "poolapps" {
   pod_subnet_id          = var.aks_network_plugin == "kubenet" || var.network_plugin_mode == "overlay" ? null : azurerm_subnet.subnet_pods_user_nodepool[each.key].id
   scale_down_mode        = "Delete"       # ScaleDownModeDeallocate
   workload_runtime       = "OCIContainer" # WasmWasi
-  message_of_the_day     = "Hello from Azure AKS cluster!"
   priority               = "Regular" # "Spot"
   # eviction_policy        = "Delete"
   # spot_max_price         = 0.5 # note: this is the "maximum" price

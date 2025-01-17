@@ -21,6 +21,7 @@ resource "azurerm_subnet" "subnet_agc" {
   virtual_network_name = azurerm_virtual_network.vnet_spoke_aks.name
   resource_group_name  = azurerm_virtual_network.vnet_spoke_aks.resource_group_name
   address_prefixes     = ["10.1.200.0/24"] # todo
+  
   delegation {
     name = "delegation"
     service_delegation {

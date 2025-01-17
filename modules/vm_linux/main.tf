@@ -54,7 +54,7 @@ resource "azurerm_linux_virtual_machine" "vm" {
   eviction_policy                 = "Deallocate"
   tags                            = var.tags
 
-  custom_data = filebase64("../scripts/install-tools-linux-vm.ps1")
+  # custom_data = filebase64("../scripts/install-tools-linux-vm.ps1")
 
   os_disk {
     name                 = "disk-os${var.vm_name}"

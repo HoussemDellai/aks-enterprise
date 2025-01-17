@@ -1,10 +1,10 @@
-prefix = "lzaks-hub-weu"
+prefix = "lzaks-hub-swc"
 
-tenant_id_hub       = "a8f7faa1-3e2e-4d84-a6cb-daf7eb97d6e4"
-subscription_id_hub = "38977b70-47bf-4da5-a492-88712fce8725"
+tenant_id_hub       = "93139d1e-a3c1-4d78-9ed5-878be090eba4"
+subscription_id_hub = "dcef7009-6b94-4382-afdc-17eb160d709a"
 
-tenant_id_spoke       = "558506eb-9459-4ef3-b920-ad55c555e729"
-subscription_id_spoke = "17b12858-3960-4e6f-a663-a06fdae23428"
+tenant_id_spoke       = "93139d1e-a3c1-4d78-9ed5-878be090eba4"
+subscription_id_spoke = "dcef7009-6b94-4382-afdc-17eb160d709a"
 
 resources_location = "swedencentral" # "francecentral" # "westcentralus" # 
 
@@ -14,7 +14,7 @@ cidr_subnet_firewall_mgmt = ["172.16.3.0/26"]
 cidr_subnet_bastion       = ["172.16.1.0/27"]
 cidr_subnet_vm            = ["172.16.2.0/26"]
 
-enable_bastion                = true
+enable_bastion                = false
 enable_firewall               = true
 enable_firewall_as_dns_server = true
 firewall_sku_tier             = "Standard" # "Basic" # "Standard" # "Premium" #

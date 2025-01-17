@@ -17,8 +17,7 @@ data "azurerm_subscription" "subscription_spoke" {
 data "azuread_client_config" "current" {}
 
 data "http" "machine_ip" {
-  url = "https://ipv4.icanhazip.com"
-  # url = "http://ifconfig.me"
+  url = "http://ifconf.me"
 
   request_headers = {
     Accept = "application/json"

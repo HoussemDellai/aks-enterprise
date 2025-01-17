@@ -6,7 +6,6 @@ resource "azurerm_subnet" "subnet_firewall" {
   resource_group_name                       = azurerm_virtual_network.vnet_hub.resource_group_name
   virtual_network_name                      = azurerm_virtual_network.vnet_hub.name
   address_prefixes                          = var.cidr_subnet_firewall
-  private_endpoint_network_policies_enabled = false
 }
 
 resource "azurerm_subnet" "subnet_firewall_mgmt" {

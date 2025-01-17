@@ -8,7 +8,7 @@ subscription_id_spoke = "38977b70-47bf-4da5-a492-88712fce8725" # "17b12858-3960-
 
 resources_location = "swedencentral" # "francecentral" # "westcentralus" # "northeurope" # 
 
-kubernetes_version   = "1.27.3" # "1.26.3" # "1.26.0"
+kubernetes_version   = "1.31.3"
 aad_group_aks_admins = "aad_group_aks_admins"
 
 cidr_subnet_system_nodes      = ["10.1.3.0/24"]

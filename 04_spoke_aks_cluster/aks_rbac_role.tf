@@ -7,7 +7,6 @@ resource "azurerm_role_assignment" "current_user_aks_admin" {
 
   timeouts {
     create = "2m"
-    update = "2m"
     delete = "2m"
   }
 }
