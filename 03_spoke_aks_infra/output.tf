@@ -7,6 +7,12 @@ output "vnet_spoke_aks" {
   }
 }
 
+output "snet_aks" {
+  value = {
+    id = azurerm_subnet.snet_aks.id
+  }
+}
+
 output "acr" {
   value = {
     id = azurerm_container_registry.acr.id

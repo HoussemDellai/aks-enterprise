@@ -1,10 +1,9 @@
 # https://github.com/claranet/terraform-azurerm-acr/blob/master/resources.tf
 
 resource "azurerm_container_registry" "acr" {
-  # count                         = var.enable_aks_cluster ? 1 : 0
   name                          = var.acr_name
   resource_group_name           = azurerm_resource_group.rg.name
-  location                      = var.resources_location
+  location                      = var.location
   sku                           = var.enable_private_acr ? "Premium" : "Standard"
   admin_enabled                 = false
   public_network_access_enabled = true
@@ -34,7 +33,7 @@ resource "azurerm_container_registry" "acr" {
 
       ip_rule {
         action   = "Allow"
-        ip_range = local.machine_ip
+        ip_range = "${local.machine_ip}/32"
       }
     }
   }

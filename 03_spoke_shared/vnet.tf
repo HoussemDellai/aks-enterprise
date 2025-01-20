@@ -1,6 +1,6 @@
 resource azurerm_virtual_network vnet_spoke_shared {
   name                = "vnet-spoke-shared"
-  location            = var.resources_location
+  location            = var.location
   resource_group_name = azurerm_resource_group.rg_spoke_shared.name
   address_space       = var.cidr_vnet_spoke_shared
   dns_servers         = var.enable_firewall ? [data.terraform_remote_state.hub.0.outputs.firewall_private_ip] : null

@@ -1,6 +1,6 @@
 resource "azurerm_virtual_network" "vnet_spoke_mgt" {
   name                = "vnet-${var.prefix}-spoke-mgt"
-  location            = var.resources_location
+  location            = var.location
   resource_group_name = azurerm_resource_group.rg.name
   address_space       = var.cidr_vnet_spoke_mgt
   dns_servers         = var.enable_firewall_as_dns_server ? [data.terraform_remote_state.hub.0.outputs.firewall.private_ip] : null

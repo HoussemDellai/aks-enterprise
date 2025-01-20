@@ -7,6 +7,11 @@ variable "location" {
   description = "Location of the resource group."
 }
 
+variable "snet_aks_id" {
+  description = "Subnet AKS ID"
+  default = "/subscriptions/dcef7009-6b94-4382-afdc-17eb160d709a/resourceGroups/rg-lzaks-spoke-aks-infra/providers/Microsoft.Network/virtualNetworks/vnet-spoke-aks/subnets/snet-aks-airbus"
+}
+
 variable "cidr_snet_aks" {
   description = "Subnet AKS address prefix"
 }

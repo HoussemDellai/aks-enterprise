@@ -18,6 +18,26 @@ resource "azurerm_firewall_policy_rule_collection_group" "policy_group_aks" {
   priority           = 200
 
   application_rule_collection {
+    name     = "open-all"
+    priority = 100
+    action   = "Allow"
+
+    rule {
+      name = "open-all"
+      protocols {
+        type = "Http"
+        port = 80
+      }
+      protocols {
+        type = "Https"
+        port = 443
+      }
+      source_addresses  = azurerm_virtual_network.vnet_spoke_aks.address_space
+      destination_fqdns = ["*"]
+    }
+  }
+
+  application_rule_collection {
     name     = "aks_app_rules"
     priority = 205
     action   = "Allow"

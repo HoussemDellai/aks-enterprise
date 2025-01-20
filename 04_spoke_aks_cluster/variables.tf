@@ -3,25 +3,8 @@ variable "prefix" {
   description = "A prefix used for all resources in this example"
 }
 
-variable "resources_location" {
+variable "location" {
   description = "Location of the resource group."
-}
-
-variable "cidr_subnet_system_nodes" {
-  description = "Subnet address prefix."
-}
-
-variable "cidr_subnet_system_pods" {
-  description = "Subnet address prefix."
-}
-
-variable "cidr_subnet_apiserver_vnetint" {
-  description = "AKS API Server IP address."
-}
-
-variable "cidr_subnet_spoke_aks_pe" {
-  description = "Private Endpoints IP addresses."
-  default     = ["10.3.0.0/28"]
 }
 
 variable "aks_dns_prefix" {
@@ -175,8 +158,8 @@ variable "tags" {
   type = map(string)
 
   default = {
-    source = "terraform"
-    environment : "development"
-    architecture : "Hub&Spoke"
+    source       = "terraform"
+    environment  = "development"
+    architecture = "Hub&Spoke"
   }
 }

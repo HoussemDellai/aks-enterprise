@@ -7,7 +7,7 @@ resource "azurerm_firewall_policy" "firewall_policy" {
   count               = var.enable_firewall ? 1 : 0
   name                = "firewall-policy"
   resource_group_name = azurerm_resource_group.rg.name
-  location            = var.resources_location
+  location            = var.location
   sku                 = var.firewall_sku_tier # "Basic" # "Standard" # "Premium" #
 
   dynamic "dns" {

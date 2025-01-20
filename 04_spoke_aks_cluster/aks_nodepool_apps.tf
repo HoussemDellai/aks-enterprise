@@ -71,58 +71,58 @@ variable "nodepoolapps" {
   }
 }
 
-resource "azurerm_subnet" "subnet_nodes_user_nodepool" {
-  for_each             = var.nodepoolapps
-  name                 = "subnet-nodes-${each.key}"
-  virtual_network_name = data.terraform_remote_state.spoke_aks.outputs.vnet_spoke_aks.virtual_network_name # azurerm_virtual_network.vnet_spoke_aks.name
-  resource_group_name  = data.terraform_remote_state.spoke_aks.outputs.vnet_spoke_aks.resource_group_name  # azurerm_virtual_network.vnet_spoke_aks.resource_group_name
-  address_prefixes     = each.value.cidr_subnet_nodes
-}
+# resource "azurerm_subnet" "subnet_nodes_user_nodepool" {
+#   for_each             = var.nodepoolapps
+#   name                 = "subnet-nodes-${each.key}"
+#   virtual_network_name = data.terraform_remote_state.spoke_aks.outputs.vnet_spoke_aks.virtual_network_name # azurerm_virtual_network.vnet_spoke_aks.name
+#   resource_group_name  = data.terraform_remote_state.spoke_aks.outputs.vnet_spoke_aks.resource_group_name  # azurerm_virtual_network.vnet_spoke_aks.resource_group_name
+#   address_prefixes     = each.value.cidr_subnet_nodes
+# }
 
-resource "azurerm_subnet" "subnet_pods_user_nodepool" {
-  for_each             = var.nodepoolapps
-  name                 = "subnet-pods-${each.key}"
-  virtual_network_name = data.terraform_remote_state.spoke_aks.outputs.vnet_spoke_aks.virtual_network_name # azurerm_virtual_network.vnet_spoke_aks.name
-  resource_group_name  = data.terraform_remote_state.spoke_aks.outputs.vnet_spoke_aks.resource_group_name  # azurerm_virtual_network.vnet_spoke_aks.resource_group_name
-  address_prefixes     = each.value.cidr_subnet_pods
+# resource "azurerm_subnet" "subnet_pods_user_nodepool" {
+#   for_each             = var.nodepoolapps
+#   name                 = "subnet-pods-${each.key}"
+#   virtual_network_name = data.terraform_remote_state.spoke_aks.outputs.vnet_spoke_aks.virtual_network_name # azurerm_virtual_network.vnet_spoke_aks.name
+#   resource_group_name  = data.terraform_remote_state.spoke_aks.outputs.vnet_spoke_aks.resource_group_name  # azurerm_virtual_network.vnet_spoke_aks.resource_group_name
+#   address_prefixes     = each.value.cidr_subnet_pods
 
-  # src: https://github.com/hashicorp/terraform-provider-azurerm/blob/4ea5f92ccc27a75807d704f6d66d53a6c31459cb/internal/services/containers/kubernetes_cluster_node_pool_resource_test.go#L1433
-  delegation {
-    name = "Microsoft.ContainerService.managedClusters"
-    service_delegation {
-      actions = [
-        "Microsoft.Network/virtualNetworks/subnets/join/action",
-      ]
-      name = "Microsoft.ContainerService/managedClusters"
-    }
-  }
-}
+#   # src: https://github.com/hashicorp/terraform-provider-azurerm/blob/4ea5f92ccc27a75807d704f6d66d53a6c31459cb/internal/services/containers/kubernetes_cluster_node_pool_resource_test.go#L1433
+#   delegation {
+#     name = "Microsoft.ContainerService.managedClusters"
+#     service_delegation {
+#       actions = [
+#         "Microsoft.Network/virtualNetworks/subnets/join/action",
+#       ]
+#       name = "Microsoft.ContainerService/managedClusters"
+#     }
+#   }
+# }
 
 resource "azurerm_kubernetes_cluster_node_pool" "poolapps" {
-  for_each               = var.nodepoolapps
-  name                   = each.key
-  kubernetes_cluster_id  = azurerm_kubernetes_cluster.aks.id
-  vm_size                = each.value.vm_size # "Standard_D2pds_v5" # "Standard_D2ds_v5" # "Standard_D4pls_v5" # "Standard_D4s_v5" #  # "Standard_D2as_v5" doesn't support Ephemeral disk
-  node_count             = 1
+  for_each                = var.nodepoolapps
+  name                    = each.key
+  kubernetes_cluster_id   = azurerm_kubernetes_cluster.aks.id
+  vm_size                 = each.value.vm_size # "Standard_D2pds_v5" # "Standard_D2ds_v5" # "Standard_D4pls_v5" # "Standard_D4s_v5" #  # "Standard_D2as_v5" doesn't support Ephemeral disk
+  node_count              = 1
   auto_scaling_enabled    = true
-  min_count              = 1
-  max_count              = 3
-  zones                  = [1, 2, 3] # []
-  mode                   = "User"
-  orchestrator_version   = var.kubernetes_version
-  os_type                = "Linux"
+  min_count               = 1
+  max_count               = 3
+  zones                   = [1, 2, 3] # []
+  mode                    = "User"
+  orchestrator_version    = var.kubernetes_version
+  os_type                 = "Linux"
   host_encryption_enabled = false
   node_public_ip_enabled  = false
-  max_pods               = 250
-  os_disk_size_gb        = 60
-  os_disk_type           = each.value.os_disk_type # "Ephemeral" # "Managed" # 
-  os_sku                 = each.value.os_sku       # "Ubuntu"    # "CBLMariner" #
-  fips_enabled           = false
-  vnet_subnet_id         = azurerm_subnet.subnet_nodes_user_nodepool[each.key].id
-  pod_subnet_id          = var.aks_network_plugin == "kubenet" || var.network_plugin_mode == "overlay" ? null : azurerm_subnet.subnet_pods_user_nodepool[each.key].id
-  scale_down_mode        = "Delete"       # ScaleDownModeDeallocate
-  workload_runtime       = "OCIContainer" # WasmWasi
-  priority               = "Regular" # "Spot"
+  max_pods                = 250
+  os_disk_size_gb         = 60
+  os_disk_type            = each.value.os_disk_type # "Ephemeral" # "Managed" # 
+  os_sku                  = each.value.os_sku       # "Ubuntu"    # "CBLMariner" #
+  fips_enabled            = false
+  vnet_subnet_id          = data.terraform_remote_state.spoke_aks.outputs.snet_aks.id # azurerm_subnet.subnet_nodes_user_nodepool[each.key].id
+  scale_down_mode         = "Delete"       # ScaleDownModeDeallocate
+  workload_runtime        = "OCIContainer" # WasmWasi
+  priority                = "Regular"      # "Spot"
+  # pod_subnet_id           = var.aks_network_plugin == var.network_plugin_mode == "overlay" ? null : azurerm_subnet.subnet_pods_user_nodepool[each.key].id
   # eviction_policy        = "Delete"
   # spot_max_price         = 0.5 # note: this is the "maximum" price
   # node_labels = {

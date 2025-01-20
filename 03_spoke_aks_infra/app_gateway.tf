@@ -1,11 +1,3 @@
-resource "azurerm_subnet" "subnet_appgw" {
-  count                = var.enable_app_gateway ? 1 : 0
-  name                 = "subnet-appgw"
-  virtual_network_name = azurerm_virtual_network.vnet_spoke_aks.name
-  resource_group_name  = azurerm_virtual_network.vnet_spoke_aks.resource_group_name
-  address_prefixes     = var.cidr_subnet_appgateway
-}
-
 # Locals block for hardcoded names
 locals {
   backend_address_pool_name      = "appgw-beap"
@@ -20,7 +12,7 @@ locals {
 resource "azurerm_public_ip" "appgw_pip" {
   count               = var.enable_app_gateway ? 1 : 0
   name                = "public-ip-appgw"
-  location            = var.resources_location
+  location            = var.location
   resource_group_name = azurerm_resource_group.rg.name
   allocation_method   = "Static"
   sku                 = "Standard"
@@ -31,7 +23,7 @@ resource "azurerm_application_gateway" "appgw" {
   count               = var.enable_app_gateway ? 1 : 0
   name                = "appgw-aks"
   resource_group_name = azurerm_resource_group.rg.name
-  location            = var.resources_location
+  location            = var.location
   tags                = var.tags
 
   sku {
@@ -41,7 +33,7 @@ resource "azurerm_application_gateway" "appgw" {
   }
   gateway_ip_configuration {
     name      = "appGatewayIpConfig"
-    subnet_id = azurerm_subnet.subnet_appgw.0.id
+    subnet_id = azurerm_subnet.snet_appgw.0.id
   }
   frontend_port {
     name = local.frontend_port_name

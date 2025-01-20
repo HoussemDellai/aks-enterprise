@@ -1,7 +1,7 @@
 # resource azurerm_network_watcher network_watcher_regional {
 #   count               = var.enable_nsg_flow_logs ? 1 : 0
-#   name                = "NetworkWatcher_${var.resources_location}"
-#   location            = var.resources_location
+#   name                = "NetworkWatcher_${var.location}"
+#   location            = var.location
 #   resource_group_name = azurerm_resource_group.rg_network_watcher.0.name
 # }
 
@@ -9,7 +9,7 @@
 # There can only be one Network Watcher per subscription and region
 data "azurerm_network_watcher" "network_watcher_regional" {
   count               = var.enable_nsg_flow_logs ? 1 : 0
-  name                = "NetworkWatcher_${var.resources_location}"
+  name                = "NetworkWatcher_${var.location}"
   resource_group_name = "NetworkWatcherRG"
 }
 
@@ -18,7 +18,7 @@ resource "azurerm_storage_account" "network_log_data" {
   count                    = var.enable_nsg_flow_logs ? 1 : 0
   name                     = "storageforlogs011"
   resource_group_name      = data.azurerm_network_watcher.network_watcher_regional.0.resource_group_name
-  location                 = var.resources_location
+  location                 = var.location
   account_kind             = "StorageV2"
   account_tier             = "Standard"
   min_tls_version          = "TLS1_2"

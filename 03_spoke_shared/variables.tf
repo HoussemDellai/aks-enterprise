@@ -34,7 +34,7 @@ variable "rg_spoke_aks" {
 variable "rg_spoke_aks_nodes" {
 }
 
-variable "resources_location" {
+variable "location" {
   description = "Location of the resource group."
 }
 

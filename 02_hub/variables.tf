@@ -3,7 +3,7 @@ variable "prefix" {
   description = "A prefix used for all resources in this example"
 }
 
-variable "resources_location" {
+variable "location" {
   description = "Location of the resource group."
 }
 
@@ -112,8 +112,8 @@ variable "tags" {
   type = map(string)
 
   default = {
-    source = "terraform"
-    environment : "development"
-    architecture : "Hub&Spoke"
+    source       = "terraform"
+    environment  = "development"
+    architecture = "Hub&Spoke"
   }
 }

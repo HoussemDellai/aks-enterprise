@@ -15,26 +15,18 @@ resource "azurerm_dashboard_grafana" "grafana" {
   }
 
   identity {
-    type = "SystemAssigned" # The only possible values is SystemAssigned
+    type = "SystemAssigned"
   }
 
   tags = var.tags
 }
 
-resource "null_resource" "grafana_import_dashboard" {
-  count = var.enable_grafana_prometheus ? 1 : 0
+# might need : az extension add --name amg
+resource "terraform_data" "import-grafana-dashboard" {
+  triggers_replace = [azurerm_dashboard_grafana.grafana.0.id]
 
   provisioner "local-exec" {
-    interpreter = ["PowerShell", "-Command"]
-    command     = <<-EOT
-      az grafana dashboard import `
-        --name ${azurerm_dashboard_grafana.grafana.0.name} `
-        --resource-group ${azurerm_resource_group.rg.name} `
-        --folder 'Managed Prometheus' `
-        --definition 18814
-    EOT
-
-    # might need : az extension add --name amg
+    command = "az grafana dashboard import -n ${azurerm_dashboard_grafana.grafana.0.name} -g ${azurerm_dashboard_grafana.grafana.0.resource_group_name} --definition 18814"
   }
 
   depends_on = [azurerm_role_assignment.role_grafana_admin]

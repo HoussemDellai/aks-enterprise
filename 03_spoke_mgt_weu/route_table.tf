@@ -2,7 +2,7 @@ resource "azurerm_route_table" "route_table_to_firewall" {
   # provider                      = azurerm.subscription_spoke
   count                         = var.enable_firewall_as_dns_server ? 1 : 0
   name                          = "route-table-to-firewall"
-  location                      = var.resources_location
+  location                      = var.location
   resource_group_name           = azurerm_resource_group.rg.name
   disable_bgp_route_propagation = true
   tags                          = var.tags

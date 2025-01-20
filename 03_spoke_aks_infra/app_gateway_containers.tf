@@ -72,7 +72,7 @@ resource "azapi_resource" "agc_association" {
     properties = {
       associationType = "subnets"
       subnet = {
-        id = azurerm_subnet.subnet_agc.0.id
+        id = azurerm_subnet.snet_agc.0.id
       }
     }
   })

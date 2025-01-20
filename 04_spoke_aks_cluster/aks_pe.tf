@@ -1,7 +1,7 @@
 # Deploy DNS Private Zone for AKS
 resource "azurerm_private_dns_zone" "private_dns_zone_aks" {
   count               = var.enable_private_cluster ? 1 : 0
-  name                = "privatelink.${var.resources_location}.azmk8s.io"
+  name                = "privatelink.${var.location}.azmk8s.io"
   resource_group_name = azurerm_resource_group.rg.name
   tags                = var.tags
 }

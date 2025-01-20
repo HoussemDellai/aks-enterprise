@@ -5,7 +5,7 @@ output "rg" {
 }
 
 data "azurerm_kubernetes_service_versions" "aks" {
-  location = var.resources_location
+  location = var.location
 }
 
 output "aks_latest_version" {

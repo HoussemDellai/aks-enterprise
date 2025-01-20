@@ -1,12 +1,11 @@
-prefix = "lzaks-hub-swc"
+prefix = "lzaks"
+location = "swedencentral" # "francecentral" # "westcentralus" # 
 
 tenant_id_hub       = "93139d1e-a3c1-4d78-9ed5-878be090eba4"
 subscription_id_hub = "dcef7009-6b94-4382-afdc-17eb160d709a"
 
 tenant_id_spoke       = "93139d1e-a3c1-4d78-9ed5-878be090eba4"
 subscription_id_spoke = "dcef7009-6b94-4382-afdc-17eb160d709a"
-
-resources_location = "swedencentral" # "francecentral" # "westcentralus" # 
 
 cidr_vnet_hub             = ["172.16.0.0/16"]
 cidr_subnet_firewall      = ["172.16.0.0/26"]

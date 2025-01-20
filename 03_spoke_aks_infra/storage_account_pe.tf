@@ -17,8 +17,8 @@ resource "azurerm_private_endpoint" "pe_storage" {
   count               = var.enable_storage_account ? 1 : 0
   name                = "private-endpoint-storage"
   resource_group_name = azurerm_resource_group.rg.name
-  location            = var.resources_location
-  subnet_id           = azurerm_subnet.subnet_pe.0.id
+  location            = var.location
+  subnet_id           = azurerm_subnet.snet_pe.0.id
   tags                = var.tags
 
   private_service_connection {

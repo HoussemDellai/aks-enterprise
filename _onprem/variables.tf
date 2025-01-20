@@ -3,7 +3,7 @@ variable "prefix" {
   description = "A prefix used for all resources"
 }
 
-variable "resources_location" {
+variable "location" {
   description = "Location of the resource group."
 }
 

@@ -12,7 +12,7 @@ variable "resource_group_name" {
 #   default = "rg-aks-cluster-managed"
 # }
 
-# variable resources_location {
+# variable location {
 #   default     = "westeurope"
 #   description = "Location of the resource group."
 # }

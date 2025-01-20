@@ -1,7 +1,7 @@
 resource "azurerm_resource_group" "rg_spoke_serverless" {
   # count    = var.enable_spoke_serverless ? 1 : 0
   name     = "rg-spoke-serverless"
-  location = var.resources_location
+  location = var.location
   tags     = var.tags
 }
 

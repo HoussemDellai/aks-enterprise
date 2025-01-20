@@ -1,54 +1,11 @@
-resource "azurerm_subnet" "subnet_system_nodes" {
-  name                 = "subnet-nodes"
-  virtual_network_name = data.terraform_remote_state.spoke_aks.outputs.vnet_spoke_aks.virtual_network_name # azurerm_virtual_network.vnet_spoke_aks.name
-  resource_group_name  = data.terraform_remote_state.spoke_aks.outputs.vnet_spoke_aks.resource_group_name  # azurerm_virtual_network.vnet_spoke_aks.resource_group_name
-  address_prefixes     = var.cidr_subnet_system_nodes
-}
-
-resource "azurerm_subnet" "subnet_system_pods" {
-  name                 = "subnet-pods"
-  virtual_network_name = data.terraform_remote_state.spoke_aks.outputs.vnet_spoke_aks.virtual_network_name # azurerm_virtual_network.vnet_spoke_aks.name
-  resource_group_name  = data.terraform_remote_state.spoke_aks.outputs.vnet_spoke_aks.resource_group_name  # azurerm_virtual_network.vnet_spoke_aks.resource_group_name
-  address_prefixes     = var.cidr_subnet_system_pods
-
-  # src: https://github.com/hashicorp/terraform-provider-azurerm/blob/4ea5f92ccc27a75807d704f6d66d53a6c31459cb/internal/services/containers/kubernetes_cluster_node_pool_resource_test.go#L1433
-  delegation {
-    name = "Microsoft.ContainerService.managedClusters"
-    service_delegation {
-      actions = [
-        "Microsoft.Network/virtualNetworks/subnets/join/action",
-      ]
-      name = "Microsoft.ContainerService/managedClusters"
-    }
-  }
-}
-
-resource "azurerm_subnet" "subnet_apiserver" {
-  count                = var.enable_apiserver_vnet_integration ? 1 : 0
-  name                 = "subnet-apiserver"
-  virtual_network_name = data.terraform_remote_state.spoke_aks.outputs.vnet_spoke_aks.virtual_network_name
-  resource_group_name  = data.terraform_remote_state.spoke_aks.outputs.vnet_spoke_aks.resource_group_name
-  address_prefixes     = var.cidr_subnet_apiserver_vnetint
-
-  delegation {
-    name = "Microsoft.ContainerService.managedClusters"
-    service_delegation {
-      actions = [
-        "Microsoft.Network/virtualNetworks/subnets/join/action",
-      ]
-      name = "Microsoft.ContainerService/managedClusters"
-    }
-  }
-}
-
 resource "azurerm_kubernetes_cluster" "aks" {
-  name                                = "aks-cluster"
+  name                                = "aks-cluster-swc"
   resource_group_name                 = azurerm_resource_group.rg.name
-  location                            = var.resources_location
+  location                            = var.location
   kubernetes_version                  = var.kubernetes_version
   dns_prefix                          = "aks"
   sku_tier                            = "Free" # "Paid"
-  node_resource_group                 = "rg-${var.prefix}-nodes"
+  node_resource_group                 = "rg-${var.prefix}-spoke-aks-nodes"
   private_cluster_enabled             = var.enable_private_cluster
   private_cluster_public_fqdn_enabled = false
   role_based_access_control_enabled   = true
@@ -67,77 +24,19 @@ resource "azurerm_kubernetes_cluster" "aks" {
   node_os_upgrade_channel             = "NodeImage"  # Unmanaged, SecurityPatch, NodeImage and None. Defaults to NodeImage
   automatic_upgrade_channel           = "node-image" # patch, rapid, node-image and stable. Omitting this field sets this value to none
 
-  api_server_access_profile {
-    authorized_ip_ranges = var.enable_private_cluster ? null : ["0.0.0.0/0"] # when private cluster, this should not be enabled
-  }
-
-  default_node_pool {
-    name                         = "systempool"
-    temporary_name_for_rotation  = "systempool"
-    vm_size                      = "Standard_D2s_v5" # "Standard_D2pds_v5" # "Standard_D2ds_v5" # "standard_d2pds_v5"
-    auto_scaling_enabled         = true
-    node_count                   = 2
-    min_count                    = 1
-    max_count                    = 3
-    max_pods                     = 110
-    os_disk_size_gb              = var.aks_agent_os_disk_size
-    os_disk_type                 = "Managed" # "Ephemeral" # 
-    ultra_ssd_enabled            = false
-    os_sku                       = "Ubuntu"                                        # Ubuntu, AzureLinux, Windows2019, Windows2022
-    only_critical_addons_enabled = var.enable_system_nodepool_only_critical_addons # taint default node pool with CriticalAddonsOnly=true:NoSchedule
-    zones                        = [1, 2, 3]                                       # []
-    vnet_subnet_id               = azurerm_subnet.subnet_system_nodes.id
-    pod_subnet_id                = var.aks_network_plugin == "kubenet" || var.network_plugin_mode == "overlay" ? null : azurerm_subnet.subnet_system_pods.id
-    scale_down_mode              = "Deallocate" # "Delete" # Deallocate
-    workload_runtime             = "OCIContainer"
-    kubelet_disk_type            = "OS" # "Temporary" # 
-    node_public_ip_enabled       = false
-    host_encryption_enabled      = false
-    fips_enabled                 = false
-    tags                         = var.tags
-
-    node_network_profile {
-      allowed_host_ports {
-        port_start = 80
-        port_end   = 80
-        protocol   = "TCP"
-      }
-      application_security_group_ids = []
-      node_public_ip_tags            = null # {}
-    }
-  }
-
-  identity {
-    type         = "UserAssigned" # "SystemAssigned"
-    identity_ids = [azurerm_user_assigned_identity.identity_aks.id]
-  }
-
-  kubelet_identity {
-    client_id                 = azurerm_user_assigned_identity.identity-kubelet.client_id
-    object_id                 = azurerm_user_assigned_identity.identity-kubelet.principal_id # there is no object_id
-    user_assigned_identity_id = azurerm_user_assigned_identity.identity-kubelet.id
-  }
-
-  azure_active_directory_role_based_access_control {
-    azure_rbac_enabled     = var.enable_aks_admin_group || var.enable_aks_admin_rbac
-    admin_group_object_ids = var.enable_aks_admin_group ? [azuread_group.aks_admins.0.object_id] : null
-    tenant_id              = var.enable_aks_admin_group ? data.azurerm_subscription.subscription_spoke.tenant_id : null
-  }
-
   network_profile {
-    # network_plugin_mode = var.network_plugin_mode # When ebpf_data_plane is set to cilium, one of either network_plugin_mode = "overlay" or pod_subnet_id must be specified.
-    # network_plugin_mode = var.network_plugin_mode # use it when using CNI
-    # network_mode        = "bridge"               # " transparent"
-    network_plugin     = var.aks_network_plugin # "kubenet", "azure", "none"
-    network_policy     = "cilium"               # calico, azure and cilium
-    network_data_plane = "cilium"               # azure and cilium
-    dns_service_ip     = var.aks_dns_service_ip
-    service_cidr       = var.cidr_aks_service
-    service_cidrs       = [ var.cidr_aks_service ]
-    outbound_type      = var.aks_outbound_type # "userAssignedNATGateway" "loadBalancer" "userDefinedRouting" "managedNATGateway"
-    load_balancer_sku  = "standard"            # "basic"
-    ip_versions        = ["IPv4"]              # ["IPv4", "IPv6"]
-    pod_cidrs          = ["10.10.240.0/20"]
+    network_plugin      = "azure" # var.aks_network_plugin # "kubenet", "azure", "none"
+    network_plugin_mode = "overlay"
+    network_data_plane  = "cilium" # azure and cilium
+    network_policy      = "cilium" # calico, azure and cilium
+    dns_service_ip      = var.aks_dns_service_ip
+    service_cidr        = var.cidr_aks_service
+    service_cidrs       = [var.cidr_aks_service]
+    outbound_type       = var.aks_outbound_type # "userAssignedNATGateway" "loadBalancer" "userDefinedRouting" "managedNATGateway"
+    load_balancer_sku   = "standard"            # "basic"
+    ip_versions         = ["IPv4"]              # ["IPv4", "IPv6"]
+    pod_cidrs           = ["10.10.240.0/20"]
+    pod_cidr            = "10.10.240.0/20"
     # pod_cidr    = var.aks_network_plugin == "kubenet" || var.network_plugin_mode == "overlay" ? "10.10.240.0/20" : null # only set when network_plugin is set to kubenet
 
     dynamic "load_balancer_profile" {
@@ -159,6 +58,73 @@ resource "azurerm_kubernetes_cluster" "aks" {
         managed_outbound_ip_count = 2 # Must be between 1 and 100 inclusive
       }
     }
+  }
+
+  default_node_pool {
+    name                         = "systempool"
+    temporary_name_for_rotation  = "syspooltmp"
+    vm_size                      = "Standard_D2s_v5" # "Standard_D2pds_v5" # "Standard_D2ds_v5" # "standard_d2pds_v5"
+    auto_scaling_enabled         = true
+    node_count                   = 2
+    min_count                    = 1
+    max_count                    = 3
+    max_pods                     = 110
+    os_disk_size_gb              = var.aks_agent_os_disk_size
+    os_disk_type                 = "Managed" # "Ephemeral" # 
+    ultra_ssd_enabled            = false
+    os_sku                       = "Ubuntu"                                        # Ubuntu, AzureLinux, Windows2019, Windows2022
+    only_critical_addons_enabled = var.enable_system_nodepool_only_critical_addons # taint default node pool with CriticalAddonsOnly=true:NoSchedule
+    zones                        = [1, 2, 3]                                       # []
+    vnet_subnet_id               = data.terraform_remote_state.spoke_aks.outputs.snet_aks.id
+    pod_subnet_id                = null         # azurerm_subnet.subnet_system_pods.id
+    scale_down_mode              = "Deallocate" # "Delete" # Deallocate
+    workload_runtime             = "OCIContainer"
+    kubelet_disk_type            = "OS" # "Temporary" # 
+    node_public_ip_enabled       = false
+    host_encryption_enabled      = false
+    fips_enabled                 = false
+    tags                         = var.tags
+
+    node_network_profile {
+      # allowed_host_ports {
+      #   port_start = 80
+      #   port_end   = 80
+      #   protocol   = "TCP"
+      # }
+      application_security_group_ids = []
+      node_public_ip_tags            = null # {}
+    }
+
+    upgrade_settings {
+      max_surge                     = 1
+      drain_timeout_in_minutes      = 10
+      node_soak_duration_in_minutes = 0
+    }
+  }
+
+  identity {
+    type         = "UserAssigned" # "SystemAssigned"
+    identity_ids = [azurerm_user_assigned_identity.identity_aks.id]
+  }
+
+  kubelet_identity {
+    client_id                 = azurerm_user_assigned_identity.identity-kubelet.client_id
+    object_id                 = azurerm_user_assigned_identity.identity-kubelet.principal_id # there is no object_id
+    user_assigned_identity_id = azurerm_user_assigned_identity.identity-kubelet.id
+  }
+
+  api_server_access_profile {
+    authorized_ip_ranges = var.enable_private_cluster ? null : ["0.0.0.0/0"] # when private cluster, this should not be enabled
+  }
+
+  azure_active_directory_role_based_access_control {
+    azure_rbac_enabled     = var.enable_aks_admin_group || var.enable_aks_admin_rbac
+    admin_group_object_ids = var.enable_aks_admin_group ? [azuread_group.aks_admins.0.object_id] : null
+    tenant_id              = var.enable_aks_admin_group ? data.azurerm_subscription.subscription_spoke.tenant_id : null
+  }
+
+  web_app_routing {
+    dns_zone_ids = []
   }
 
   auto_scaler_profile {
@@ -294,10 +260,6 @@ resource "azurerm_kubernetes_cluster" "aks" {
   # }
 
   depends_on = [
-    azurerm_subnet_route_table_association.association_rt_subnet_system_nodes,
-    azurerm_subnet_route_table_association.association_rt_subnet_system_pods,
-    azurerm_subnet_route_table_association.association_rt_subnet_user_nodes[0],
-    azurerm_subnet_route_table_association.association_rt_subnet_user_pods[0]
     # azurerm_virtual_network.vnet_spoke_aks,
     # azurerm_application_gateway.appgw
   ]
@@ -313,127 +275,5 @@ resource "azurerm_kubernetes_cluster" "aks" {
       # oms_agent
       network_profile.0.nat_gateway_profile
     ]
-    # precondition {
-    #   condition     = (var.client_id != "" && var.client_secret != "") || (var.identity_type != "")
-    #   error_message = "Either `client_id` and `client_secret` or `identity_type` must be set."
-    # }
-    # precondition {
-    #   # Why don't use var.identity_ids != null && length(var.identity_ids)>0 ? Because bool expression in Terraform is not short circuit so even var.identity_ids is null Terraform will still invoke length function with null and cause error. https://github.com/hashicorp/terraform/issues/24128
-    #   condition     = (var.client_id != "" && var.client_secret != "") || (var.identity_type == "SystemAssigned") || (var.identity_ids == null ? false : length(var.identity_ids) > 0)
-    #   error_message = "If use identity and `UserAssigned` or `SystemAssigned, UserAssigned` is set, an `identity_ids` must be set as well."
-    # }
-    # precondition {
-    #   condition     = !(var.microsoft_defender_enabled && !var.log_analytics_workspace_enabled)
-    #   error_message = "Enabling Microsoft Defender requires that `log_analytics_workspace_enabled` be set to true."
-    # }
-  }
-}
-
-# lifecycle {
-#   ignore_changes = [kubernetes_version]
-
-#   precondition {
-#     condition     = (var.client_id != "" && var.client_secret != "") || (var.identity_type != "")
-#     error_message = "Either `client_id` and `client_secret` or `identity_type` must be set."
-#   }
-#   precondition {
-#     # Why don't use var.identity_ids != null && length(var.identity_ids)>0 ? Because bool expression in Terraform is not short circuit so even var.identity_ids is null Terraform will still invoke length function with null and cause error. https://github.com/hashicorp/terraform/issues/24128
-#     condition     = (var.client_id != "" && var.client_secret != "") || (var.identity_type == "SystemAssigned") || (var.identity_ids == null ? false : length(var.identity_ids) > 0)
-#     error_message = "If use identity and `UserAssigned` is set, an `identity_ids` must be set as well."
-#   }
-#   precondition {
-#     condition     = !(var.microsoft_defender_enabled && !var.log_analytics_workspace_enabled)
-#     error_message = "Enabling Microsoft Defender requires that `log_analytics_workspace_enabled` be set to true."
-#   }
-#   precondition {
-#     condition     = !(var.load_balancer_profile_enabled && var.load_balancer_sku != "standard")
-#     error_message = "Enabling load_balancer_profile requires that `load_balancer_sku` be set to `standard`"
-#   }
-#   precondition {
-#     condition     = local.automatic_channel_upgrade_check
-#     error_message = "Either disable automatic upgrades, or specify `kubernetes_version` or `orchestrator_version` only up to the minor version when using `automatic_channel_upgrade=patch`. You don't need to specify `kubernetes_version` at all when using `automatic_channel_upgrade=stable|rapid|node-image`, where `orchestrator_version` always must be set to `null`."
-#   }
-#   precondition {
-#     condition     = var.role_based_access_control_enabled || !var.rbac_aad
-#     error_message = "Enabling Azure Active Directory integration requires that `role_based_access_control_enabled` be set to true."
-#   }
-#   precondition {
-#     condition     = !(var.kms_enabled && var.identity_type != "UserAssigned")
-#     error_message = "KMS etcd encryption doesn't work with system-assigned managed identity."
-#   }
-#   precondition {
-#     condition     = !var.workload_identity_enabled || var.oidc_issuer_enabled
-#     error_message = "`oidc_issuer_enabled` must be set to `true` to enable Azure AD Workload Identity"
-#   }
-#   precondition {
-#     condition     = var.network_plugin_mode != "overlay" || var.network_plugin == "azure"
-#     error_message = "When network_plugin_mode is set to `overlay`, the network_plugin field can only be set to azure."
-#   }
-#   precondition {
-#     condition     = var.ebpf_data_plane != "cilium" || var.network_plugin == "azure"
-#     error_message = "When ebpf_data_plane is set to cilium, the network_plugin field can only be set to azure."
-#   }
-#   precondition {
-#     condition     = var.ebpf_data_plane != "cilium" || var.network_plugin_mode == "overlay" || var.pod_subnet_id != null
-#     error_message = "When ebpf_data_plane is set to cilium, one of either network_plugin_mode = `overlay` or pod_subnet_id must be specified."
-#   }
-#   precondition {
-#     condition     = can(coalesce(var.cluster_name, var.prefix))
-#     error_message = "You must set one of `var.cluster_name` and `var.prefix` to create `azurerm_kubernetes_cluster.main`."
-#   }
-#   precondition {
-#     condition     = var.automatic_channel_upgrade != "node-image" || var.node_os_channel_upgrade == "NodeImage"
-#     error_message = "`node_os_channel_upgrade` must be set to `NodeImage` if `automatic_channel_upgrade` has been set to `node-image`."
-#   }
-#   lifecycle {
-#     # prevent_destroy       = true
-#     # create_before_destroy = true
-#     ignore_changes = [
-#       # all, # ignore all attributes
-#       monitor_metrics,
-#       default_node_pool[0].node_count,
-#       microsoft_defender,
-#       # oms_agent
-#       network_profile.0.nat_gateway_profile
-#     ]
-#     # precondition {
-#     #   condition     = (var.client_id != "" && var.client_secret != "") || (var.identity_type != "")
-#     #   error_message = "Either `client_id` and `client_secret` or `identity_type` must be set."
-#     # }
-#     # precondition {
-#     #   # Why don't use var.identity_ids != null && length(var.identity_ids)>0 ? Because bool expression in Terraform is not short circuit so even var.identity_ids is null Terraform will still invoke length function with null and cause error. https://github.com/hashicorp/terraform/issues/24128
-#     #   condition     = (var.client_id != "" && var.client_secret != "") || (var.identity_type == "SystemAssigned") || (var.identity_ids == null ? false : length(var.identity_ids) > 0)
-#     #   error_message = "If use identity and `UserAssigned` or `SystemAssigned, UserAssigned` is set, an `identity_ids` must be set as well."
-#     # }
-#     # precondition {
-#     #   condition     = !(var.microsoft_defender_enabled && !var.log_analytics_workspace_enabled)
-#     #   error_message = "Enabling Microsoft Defender requires that `log_analytics_workspace_enabled` be set to true."
-#     # }
-#   }
-# }
-
-resource "azurerm_user_assigned_identity" "identity-kubelet" {
-  # count               = var.enable_aks_cluster ? 1 : 0
-  name                = "identity-kubelet"
-  resource_group_name = azurerm_resource_group.rg.name
-  location            = var.resources_location
-  tags                = var.tags
-}
-
-resource "azurerm_role_assignment" "role_acrpull" {
-  # count                            = var.enable_aks_cluster ? 1 : 0
-  scope                            = data.terraform_remote_state.spoke_aks.outputs.acr.id # azurerm_container_registry.acr.id
-  role_definition_name             = "AcrPull"
-  principal_id                     = azurerm_user_assigned_identity.identity-kubelet.principal_id
-  skip_service_principal_aad_check = true
-}
-
-resource "terraform_data" "aks-get-credentials" {
-  triggers_replace = [
-    azurerm_kubernetes_cluster.aks.id
-  ]
-
-  provisioner "local-exec" {
-    command = "az aks get-credentials -n ${azurerm_kubernetes_cluster.aks.name} -g ${azurerm_kubernetes_cluster.aks.resource_group_name} --overwrite-existing"
   }
 }
