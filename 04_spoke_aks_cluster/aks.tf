@@ -189,36 +189,38 @@ resource "azurerm_kubernetes_cluster" "aks" {
   dynamic "maintenance_window_auto_upgrade" {
     for_each = var.enable_maintenance_window ? ["any_value"] : []
     content {
-      frequency    = "Weekly" # AbsoluteMonthly, RelativeMonthly
-      interval     = 1
-      duration     = 9
-      day_of_week  = "Monday" # Tuesday, Wednesday, Thurday, Friday, Saturday and Sunday
-      day_of_month = null
-      start_time   = "02:00"
-      utc_offset   = "+01:00"
-      start_date   = "2023-08-26T00:00:00Z"
-      not_allowed {
-        end   = "2023-11-30T00:00:00Z"
-        start = "2023-11-26T00:00:00Z"
-      }
+    frequency    = "Weekly" # AbsoluteMonthly, RelativeMonthly
+    interval     = 1
+    duration     = 9        # between 4 to 24 hours
+    day_of_week  = "Monday" # Tuesday, Wednesday, Thurday, Friday, Saturday and Sunday
+    day_of_month = null
+    utc_offset   = "+01:00"
+    start_date   = "2025-01-01T00:00:00Z"
+    start_time   = "02:00"
+
+    not_allowed {
+      end   = "2025-01-01T00:00:00Z"
+      start = "2025-01-02T00:00:00Z"
+    }
     }
   }
 
   dynamic "maintenance_window_node_os" {
     for_each = var.enable_maintenance_window ? ["any_value"] : []
     content {
-      frequency    = "Weekly" # AbsoluteMonthly, RelativeMonthly
-      interval     = 1
-      duration     = 9
-      day_of_week  = "Monday" # Tuesday, Wednesday, Thurday, Friday, Saturday and Sunday
-      day_of_month = null
-      start_time   = "02:00"
-      utc_offset   = "+01:00"
-      start_date   = "2023-08-26T00:00:00Z"
-      not_allowed {
-        end   = "2023-11-30T00:00:00Z"
-        start = "2023-11-26T00:00:00Z"
-      }
+    frequency    = "Weekly" # AbsoluteMonthly, RelativeMonthly
+    interval     = 1
+    duration     = 9        # between 4 to 24 hours
+    day_of_week  = "Monday" # Tuesday, Wednesday, Thurday, Friday, Saturday and Sunday
+    day_of_month = null
+    utc_offset   = "+01:00"
+    start_date   = "2025-01-01T00:00:00Z"
+    start_time   = "02:00"
+
+    not_allowed {
+      end   = "2025-01-01T00:00:00Z"
+      start = "2025-01-02T00:00:00Z"
+    }
     }
   }
 

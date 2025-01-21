@@ -19,6 +19,8 @@ output "dns_zone_apps" {
   }
 }
 
-# output "route_table_id" {
-#   value = azurerm_route_table.route_table_to_firewall.id
-# }
+output "dns_zone_aks" {
+  value = {
+    id = azurerm_private_dns_zone.private_dns_zone_aks.id
+  }
+}
