@@ -35,6 +35,24 @@ variable "tenant_id" {
 }
 
 variable "eid_group_aks_admins_object_id" {
+  description = "Enterprise ID Group AKS Admins Object ID"
+}
+
+variable "kubernetes_version" {
+  description = "Kubernetes version"
+}
+
+variable "nodepools_user" {
+  default = {
+    "poolappsamd" = {
+      vm_size = "Standard_D2s_v5"
+      os_sku  = "Ubuntu"
+    },
+    # "poolappsarm" = {
+    #   vm_size           = "Standard_D2pds_v5" # arm
+    #   os_sku            = "Ubuntu"
+    # },
+  }
 }
 
 variable "tags" {

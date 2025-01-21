@@ -33,6 +33,17 @@ module "aks-dev" {
   vnet_aks_id                    = data.terraform_remote_state.spoke_aks.outputs.vnet_spoke_aks.id
   snet_aks_id                    = data.terraform_remote_state.spoke_aks.outputs.snet_aks.id
   eid_group_aks_admins_object_id = azuread_group.aks_admins.object_id
+  kubernetes_version             = "1.31.3"
+  nodepools_user = {
+    "poolappsamd" = {
+      vm_size = "Standard_D2s_v5"
+      os_sku  = "Ubuntu"
+    },
+    # "poolappsarm" = {
+    #   vm_size           = "Standard_D2pds_v5" # arm
+    #   os_sku            = "Ubuntu"
+    # },
+  }
 }
 
 module "aks-prod" {
@@ -47,4 +58,15 @@ module "aks-prod" {
   vnet_aks_id                    = data.terraform_remote_state.spoke_aks.outputs.vnet_spoke_aks.id
   snet_aks_id                    = data.terraform_remote_state.spoke_aks.outputs.snet_aks.id
   eid_group_aks_admins_object_id = azuread_group.aks_admins.object_id
+  kubernetes_version             = "1.31.3"
+  nodepools_user = {
+    "poolappsamd" = {
+      vm_size = "Standard_D2s_v5"
+      os_sku  = "Ubuntu"
+    },
+    # "poolappsarm" = {
+    #   vm_size           = "Standard_D2pds_v5" # arm
+    #   os_sku            = "Ubuntu"
+    # },
+  }
 }

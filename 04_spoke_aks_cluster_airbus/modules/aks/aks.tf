@@ -3,7 +3,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
   resource_group_name                 = var.resource_group_name
   location                            = var.location
   dns_prefix                          = "aks"
-  kubernetes_version                  = "1.31.3"
+  kubernetes_version                  = var.kubernetes_version
   private_cluster_enabled             = true
   private_cluster_public_fqdn_enabled = false
   role_based_access_control_enabled   = true
@@ -46,7 +46,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
     auto_scaling_enabled         = true
     node_count                   = 2
     min_count                    = 1
-    max_count                    = 3
+    max_count                    = 5
     max_pods                     = 110
     vnet_subnet_id               = var.snet_aks_id
     pod_subnet_id                = null
@@ -108,9 +108,9 @@ resource "azurerm_kubernetes_cluster" "aks" {
     skip_nodes_with_system_pods      = true
   }
 
-  confidential_computing {
-    sgx_quote_helper_enabled = false
-  }
+  # confidential_computing {
+  #   sgx_quote_helper_enabled = false
+  # }
 
   key_vault_secrets_provider {
     secret_rotation_enabled  = true
@@ -176,7 +176,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
 
   workload_autoscaler_profile {
     keda_enabled                    = true
-    vertical_pod_autoscaler_enabled = true
+    vertical_pod_autoscaler_enabled = false
   }
 
   lifecycle {
