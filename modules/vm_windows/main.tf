@@ -4,17 +4,17 @@ resource "azurerm_resource_group" "rg" {
   tags     = var.tags
 }
 
-resource "azurerm_user_assigned_identity" "identity_vm" {
-  name                = "identity-vm"
-  resource_group_name = azurerm_resource_group.rg.name
-  location            = azurerm_resource_group.rg.location
-  tags                = var.tags
-}
+# resource "azurerm_user_assigned_identity" "identity_vm" {
+#   name                = "identity-vm"
+#   resource_group_name = azurerm_resource_group.rg.name
+#   location            = azurerm_resource_group.rg.location
+#   tags                = var.tags
+# }
 
 resource "azurerm_role_assignment" "role_contributor" {
   scope                            = var.subscription_id
   role_definition_name             = "Contributor"
-  principal_id                     = azurerm_user_assigned_identity.identity_vm.principal_id
+  principal_id                     = azurerm_windows_virtual_machine.vm.identity.0.principal_id # azurerm_user_assigned_identity.identity_vm.principal_id
   skip_service_principal_aad_check = true
 }
 
@@ -54,7 +54,7 @@ resource "azurerm_windows_virtual_machine" "vm" {
   source_image_reference {
     publisher = "MicrosoftWindowsDesktop"
     offer     = "windows-11"
-    sku       = "win11-22h2-pro"
+    sku       = "win11-24h2-pro"
     version   = "latest"
   }
 
@@ -63,11 +63,23 @@ resource "azurerm_windows_virtual_machine" "vm" {
   }
 
   identity {
-    type         = "UserAssigned"
-    identity_ids = [azurerm_user_assigned_identity.identity_vm.id]
+    type         = "SystemAssigned" # "UserAssigned"
+    # identity_ids = [azurerm_user_assigned_identity.identity_vm.id]
   }
 }
 
+resource "azurerm_virtual_machine_extension" "cloudinit" {
+  name                 = "cloudinit"
+  virtual_machine_id   = azurerm_windows_virtual_machine.vm.id
+  publisher            = "Microsoft.Compute"
+  type                 = "CustomScriptExtension"
+  type_handler_version = "1.10"
+  settings             = <<SETTINGS
+    {
+        "commandToExecute": "powershell -ExecutionPolicy unrestricted -NoProfile -NonInteractive -command \"cp c:/azuredata/customdata.bin c:/azuredata/install.ps1; c:/azuredata/install.ps1\""
+    }
+    SETTINGS
+}
 
 # resource "azurerm_virtual_machine_extension" "vm_extension_windows" {
 #   name                       = "vm-extension-windows"

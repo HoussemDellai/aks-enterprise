@@ -8,6 +8,10 @@ terraform {
       source  = "hashicorp/azurerm"
       version = ">= 4.16.0"
     }
+    azuread = {
+      source  = "hashicorp/azuread"
+      version = ">= 3.1.0"
+    }
   }
 }
 
@@ -32,4 +36,8 @@ provider "azurerm" {
       skip_shutdown_and_force_delete = false
     }
   }
+}
+
+provider "azuread" {
+  
 }

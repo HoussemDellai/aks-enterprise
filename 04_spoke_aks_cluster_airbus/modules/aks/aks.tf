@@ -42,7 +42,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
     name                         = "systemnp"
     temporary_name_for_rotation  = "sysnptmp"
     vm_size                      = "Standard_D2s_v5"
-    os_sku                       = "AzureLinux" # Ubuntu
+    os_sku                       = "Ubuntu" # "AzureLinux"
     auto_scaling_enabled         = true
     node_count                   = 2
     min_count                    = 1
@@ -181,7 +181,9 @@ resource "azurerm_kubernetes_cluster" "aks" {
 
   lifecycle {
     ignore_changes = [
-      default_node_pool.0.upgrade_settings
+      default_node_pool.0.upgrade_settings,
+      default_node_pool.0.node_count,
+      api_server_access_profile
     ]
   }
 

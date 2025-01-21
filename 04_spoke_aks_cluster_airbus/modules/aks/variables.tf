@@ -34,6 +34,9 @@ variable "tenant_id" {
   description = "Tenant ID"
 }
 
+variable "eid_group_aks_admins_object_id" {
+}
+
 variable "tags" {
   type = map(string)
 
