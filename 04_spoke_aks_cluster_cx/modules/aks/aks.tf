@@ -15,13 +15,14 @@ resource "azurerm_kubernetes_cluster" "aks" {
   workload_identity_enabled           = true
   http_application_routing_enabled    = false
   image_cleaner_enabled               = true
-  cost_analysis_enabled               = false
   image_cleaner_interval_hours        = 24 # in the range (24 - 2160)
+  cost_analysis_enabled               = false
+  sku_tier                            = "Standard" # "Free" # Premium (LTS)
   private_dns_zone_id                 = var.private_dns_zone_aks_id
-  tags                                = var.tags
   node_os_upgrade_channel             = "NodeImage"  # Unmanaged, SecurityPatch, NodeImage and None. Defaults to NodeImage
   automatic_upgrade_channel           = "node-image" # patch, rapid, node-image and stable. Omitting this field sets this value to none
   node_resource_group                 = "${var.resource_group_name}-nodes"
+  tags                                = var.tags
 
   network_profile {
     network_plugin      = "azure" # var.aks_network_plugin # "kubenet", "azure", "none"
@@ -33,7 +34,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
     ip_versions         = ["IPv4"]
     dns_service_ip      = "10.0.0.10"
     service_cidr        = "10.0.0.0/16"
-    service_cidrs       = ["10.0.0.0/16"]
+    service_cidrs       = ["10.0.0.0/16"] # IPv6
     pod_cidr            = "10.10.240.0/20"
     pod_cidrs           = ["10.10.240.0/20"]
   }
@@ -41,22 +42,22 @@ resource "azurerm_kubernetes_cluster" "aks" {
   default_node_pool {
     name                         = "systemnp"
     temporary_name_for_rotation  = "sysnptmp"
-    vm_size                      = "Standard_D2s_v5"
+    vm_size                      = "Standard_D2s_v5" # Standard_D4s_v5
     os_sku                       = "Ubuntu" # "AzureLinux"
     auto_scaling_enabled         = true
     node_count                   = 2
-    min_count                    = 1
+    min_count                    = 2
     max_count                    = 5
-    max_pods                     = 110
+    max_pods                     = 110 # 250
     vnet_subnet_id               = var.snet_aks_id
     pod_subnet_id                = null
-    os_disk_type                 = "Managed" # "Ephemeral" # 
+    os_disk_type                 = "Managed" # "Ephemeral"
     ultra_ssd_enabled            = false
     only_critical_addons_enabled = true # taint default node pool with CriticalAddonsOnly=true:NoSchedule
     zones                        = [1, 2, 3]
     scale_down_mode              = "Deallocate" # "Delete" # Deallocate
     workload_runtime             = "OCIContainer"
-    kubelet_disk_type            = "OS" # "Temporary" # 
+    kubelet_disk_type            = "OS" # "Temporary"
     node_public_ip_enabled       = false
     host_encryption_enabled      = false
     fips_enabled                 = false
@@ -80,12 +81,13 @@ resource "azurerm_kubernetes_cluster" "aks" {
     tenant_id              = var.tenant_id
   }
 
-  web_app_routing {
+  web_app_routing { # Nginx Ingress Controller
     dns_zone_ids = []
+    # Nginx IC with Internal Load Balancer
   }
 
   api_server_access_profile {
-    authorized_ip_ranges = null
+    authorized_ip_ranges = null # not applicable for private clusters
   }
 
   auto_scaler_profile {
@@ -120,7 +122,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
   storage_profile {
     file_driver_enabled         = true
     blob_driver_enabled         = true
-    disk_driver_enabled         = true
+    disk_driver_enabled         = true # enabled for apps that needs persistent storage on Azure Disk
     snapshot_controller_enabled = true
     # disk_driver_version         = "v2" # not yet available
   }
@@ -195,12 +197,12 @@ resource "azurerm_kubernetes_cluster" "aks" {
   ]
 }
 
-resource "terraform_data" "aks-get-credentials" {
-  triggers_replace = [
-    azurerm_kubernetes_cluster.aks.id
-  ]
+# resource "terraform_data" "aks-get-credentials" {
+#   triggers_replace = [
+#     azurerm_kubernetes_cluster.aks.id
+#   ]
 
-  provisioner "local-exec" {
-    command = "az aks get-credentials -n ${azurerm_kubernetes_cluster.aks.name} -g ${azurerm_kubernetes_cluster.aks.resource_group_name} --overwrite-existing"
-  }
-}
+#   provisioner "local-exec" {
+#     command = "az aks get-credentials -n ${azurerm_kubernetes_cluster.aks.name} -g ${azurerm_kubernetes_cluster.aks.resource_group_name} --overwrite-existing"
+#   }
+# }
