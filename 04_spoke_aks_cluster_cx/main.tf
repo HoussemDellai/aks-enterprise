@@ -1,13 +1,3 @@
-resource "azurerm_resource_group" "rg-dev" {
-  name     = "rg-lzaks-spoke-aks-cx-dev"
-  location = "swedencentral"
-}
-
-resource "azurerm_resource_group" "rg-prod" {
-  name     = "rg-lzaks-spoke-aks-cx-prod"
-  location = "swedencentral"
-}
-
 resource "azuread_group" "aks_admins" {
   display_name     = "aks-admins"
   security_enabled = true
@@ -33,6 +23,8 @@ module "aks-dev" {
   vnet_aks_id                    = data.terraform_remote_state.spoke_aks.outputs.vnet_spoke_aks.id
   snet_aks_id                    = data.terraform_remote_state.spoke_aks.outputs.snet_aks.id
   eid_group_aks_admins_object_id = azuread_group.aks_admins.object_id
+  data_collection_endpoint_id    = azurerm_monitor_data_collection_endpoint.dce-log-analytics.id
+  data_collection_rule_id        = azurerm_monitor_data_collection_rule.dcr-log-analytics.id
   kubernetes_version             = "1.31.3"
   nodepools_user = {
     "poolappsamd" = {
@@ -58,6 +50,8 @@ module "aks-prod" {
   vnet_aks_id                    = data.terraform_remote_state.spoke_aks.outputs.vnet_spoke_aks.id
   snet_aks_id                    = data.terraform_remote_state.spoke_aks.outputs.snet_aks.id
   eid_group_aks_admins_object_id = azuread_group.aks_admins.object_id
+  data_collection_endpoint_id    = azurerm_monitor_data_collection_endpoint.dce-log-analytics.id
+  data_collection_rule_id        = azurerm_monitor_data_collection_rule.dcr-log-analytics.id
   kubernetes_version             = "1.31.3"
   nodepools_user = {
     "poolappsamd" = {

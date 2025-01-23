@@ -55,6 +55,14 @@ variable "nodepools_user" {
   }
 }
 
+variable "data_collection_endpoint_id" {
+  description = "Data Collection Endpoint DCE ID"
+}
+
+variable "data_collection_rule_id" {
+  description = "Data Collection Rule ID"
+}
+
 variable "tags" {
   type = map(string)
 

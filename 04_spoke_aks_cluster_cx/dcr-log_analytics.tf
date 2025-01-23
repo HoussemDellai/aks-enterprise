@@ -1,7 +1,7 @@
 resource "azurerm_monitor_data_collection_rule" "dcr-log-analytics" {
   name                        = "dcr-log-analytics"
-  resource_group_name         = azurerm_resource_group.rg-dev.name
-  location                    = azurerm_resource_group.rg-dev.location
+  resource_group_name           = azurerm_resource_group.rg-monitoring.name
+  location                      = azurerm_resource_group.rg-monitoring.location
   data_collection_endpoint_id = azurerm_monitor_data_collection_endpoint.dce-log-analytics.id
 
   destinations {
@@ -49,11 +49,4 @@ resource "azurerm_monitor_data_collection_rule" "dcr-log-analytics" {
       )
     }
   }
-}
-
-# associate to a Data Collection Rule
-resource "azurerm_monitor_data_collection_rule_association" "dcra-dcr-log-analytics-aks" {
-  name                    = "dcra-dcr-log-analytics-aks"
-  target_resource_id      = module.aks-dev.aks.id
-  data_collection_rule_id = azurerm_monitor_data_collection_rule.dcr-log-analytics.id
 }
