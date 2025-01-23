@@ -1,64 +1,64 @@
 # The script will be downloaded into the VM: C:\Packages\Plugins\Microsoft.Compute.CustomScriptExtension\1.10.15\Downloads\0
 
 # Install chocolately
-# Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
+Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
 
 # Install Azure CLI
-winget install -e --id Microsoft.AzureCLI --accept-package-agreements --accept-source-agreements
-# choco install azure-cli -y
+# winget install -e --id Microsoft.AzureCLI --accept-package-agreements --accept-source-agreements --silent --force
+choco install azure-cli -y
 
 # Install Kubernetes CLI
-winget install -e --id Kubernetes.kubectl --accept-package-agreements --accept-source-agreements
-# choco install kubernetes-cli -y
+# winget install -e --id Kubernetes.kubectl --accept-package-agreements --accept-source-agreements --silent --force
+choco install kubernetes-cli -y
 
 # Install kubelogin
-winget install -e --id Microsoft.Azure.Kubelogin --accept-package-agreements --accept-source-agreements
-# choco install kubelogin -y
+# winget install -e --id Microsoft.Azure.Kubelogin --accept-package-agreements --accept-source-agreements --silent --force
+choco install azure-kubelogin -y
 
 # Install Helm CLI
-winget install -e --id Helm.Helm --accept-package-agreements --accept-source-agreements
-# choco install kubernetes-helm -y
+# winget install -e --id Helm.Helm --accept-package-agreements --accept-source-agreements --silent --force
+choco install kubernetes-helm -y
 
 # Install Headlamp
-winget install -e --id Headlamp.Headlamp --accept-package-agreements --accept-source-agreements
+# winget install -e --id Headlamp.Headlamp --accept-package-agreements --accept-source-agreements
 
 # Install Terraform
-winget install -e --id Hashicorp.Terraform --accept-package-agreements --accept-source-agreements
-# choco install terraform -y
+# winget install -e --id Hashicorp.Terraform --accept-package-agreements --accept-source-agreements
+choco install terraform -y
 
 # Install jq
-winget install -e --id stedolan.jq --accept-package-agreements --accept-source-agreements
-winget install -e --id MikeFarah.yq --accept-package-agreements --accept-source-agreements
-# choco install jq -y
+# winget install -e --id stedolan.jq --accept-package-agreements --accept-source-agreements
+# winget install -e --id MikeFarah.yq --accept-package-agreements --accept-source-agreements
+choco install jq -y
 
 # Install VS Code
-winget install -e --id Microsoft.VisualStudioCode --accept-package-agreements --accept-source-agreements
-# choco install vscode -y
+# winget install -e --id Microsoft.VisualStudioCode --accept-package-agreements --accept-source-agreements
+choco install vscode -y
 
 # Install Edge
-# choco install microsoft-edge -y
+choco install microsoft-edge -y
 
 # Install Git
-winget install -e --id Git.Git --accept-package-agreements --accept-source-agreements
-# choco install git -y
+# winget install -e --id Git.Git --accept-package-agreements --accept-source-agreements
+choco install git -y
 
 # Install Azure Storage Explorer
-winget install -e --id Microsoft.Azure.StorageExplorer --accept-package-agreements --accept-source-agreements
-# choco install microsoftazurestorageexplorer -y
+# winget install -e --id Microsoft.Azure.StorageExplorer --accept-package-agreements --accept-source-agreements
+choco install microsoftazurestorageexplorer -y
 
 # Install curl
-winget install -e --id cURL.cURL --accept-package-agreements --accept-source-agreements
-# choco install curl -y
+# winget install -e --id cURL.cURL --accept-package-agreements --accept-source-agreements
+choco install curl -y
 
 # Install python
-winget install -e --id Python.Python.3.12 --accept-package-agreements --accept-source-agreements
-# choco install python -y
+# winget install -e --id Python.Python.3.12 --accept-package-agreements --accept-source-agreements
+choco install python -y
 
 Set-Alias -Name k -Value kubectl
 
 # # (Optional) Install Docker for Desktop
-# choco install docker-desktop -y
-# choco install docker-cli -y
+choco install docker-desktop -y
+choco install docker-cli -y
 
 # Configure Auto-Complete
 Set-ExecutionPolicy RemoteSigned

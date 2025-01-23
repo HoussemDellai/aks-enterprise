@@ -1,10 +1,10 @@
 resource "azurerm_resource_group" "rg-dev" {
-  name     = "rg-lzaks-spoke-aks-airbus-dev"
+  name     = "rg-lzaks-spoke-aks-cx-dev"
   location = "swedencentral"
 }
 
 resource "azurerm_resource_group" "rg-prod" {
-  name     = "rg-lzaks-spoke-aks-airbus-prod"
+  name     = "rg-lzaks-spoke-aks-cx-prod"
   location = "swedencentral"
 }
 
