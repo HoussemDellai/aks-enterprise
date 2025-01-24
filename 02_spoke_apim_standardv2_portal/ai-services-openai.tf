@@ -6,7 +6,7 @@ resource "azurerm_ai_services" "ai-services" {
   local_authentication_enabled       = true
   public_network_access              = "Disabled" # "Enabled"
   outbound_network_access_restricted = false
-  custom_subdomain_name              = "az-ai-services-${var.prefix}-openai"
+  custom_subdomain_name              = "az-ai-services-${var.prefix}-openai-01"
 }
 
 resource "azurerm_cognitive_deployment" "gpt-4o" {

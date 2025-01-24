@@ -1,10 +1,10 @@
-output "apim" {
-  value = {
-    id          = azapi_resource.apim.id
-    ip_address  = azapi_resource.apim.output.properties.outboundPublicIPAddresses
-    pip_adsress = azurerm_public_ip.pip-apim.ip_address
-  }
-}
+# output "apim" {
+#   value = {
+#     id          = azapi_resource.apim.id
+#     ip_address  = azapi_resource.apim.output.properties.outboundPublicIPAddresses
+#     pip_adsress = azurerm_public_ip.pip-apim.ip_address
+#   }
+# }
 
 output "vnet_spoke_apim" {
   value = {

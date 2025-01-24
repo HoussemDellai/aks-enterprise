@@ -8,6 +8,7 @@ output "firewall" {
   value = {
     enabled    = var.enable_firewall
     private_ip = var.enable_firewall ? azurerm_firewall.firewall.0.ip_configuration.0.private_ip_address : null
+    public_ip  = var.enable_firewall ? azurerm_public_ip.public_ip_firewall.0.ip_address : null
     policy_id  = var.enable_firewall ? azurerm_firewall_policy.firewall_policy.0.id : null
   }
 }
