@@ -73,6 +73,12 @@ resource "azurerm_windows_virtual_machine" "vm" {
     type         = "SystemAssigned" # "UserAssigned"
     # identity_ids = [azurerm_user_assigned_identity.identity_vm.id]
   }
+
+  lifecycle {
+    ignore_changes = [
+      custom_data
+    ]
+  }
 }
 
 resource "azurerm_virtual_machine_extension" "cse" {

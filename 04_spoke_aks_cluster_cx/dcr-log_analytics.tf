@@ -1,8 +1,8 @@
 resource "azurerm_monitor_data_collection_rule" "dcr-log-analytics" {
   name                        = "dcr-log-analytics"
-  resource_group_name           = azurerm_resource_group.rg-monitoring.name
-  location                      = azurerm_resource_group.rg-monitoring.location
-  data_collection_endpoint_id = azurerm_monitor_data_collection_endpoint.dce-log-analytics.id
+  resource_group_name         = azurerm_resource_group.rg-monitoring.name
+  location                    = azurerm_resource_group.rg-monitoring.location
+  # data_collection_endpoint_id = azurerm_monitor_data_collection_endpoint.dce-log-analytics.id
 
   destinations {
     log_analytics {
@@ -18,21 +18,10 @@ resource "azurerm_monitor_data_collection_rule" "dcr-log-analytics" {
 
   data_sources {
     syslog {
-      name = "example-syslog"
+      name    = "example-syslog"
       streams = ["Microsoft-Syslog"]
-      facility_names = [
-        "*"
-      ]
-      log_levels = [
-        "Debug",
-        "Info",
-        "Notice",
-        "Warning",
-        "Error",
-        "Critical",
-        "Alert",
-        "Emergency",
-      ]
+      facility_names = [ "*" ]
+      log_levels = [ "Debug", "Info", "Notice", "Warning", "Error", "Critical", "Alert", "Emergency", ]
     }
     extension {
       extension_name = "ContainerInsights"

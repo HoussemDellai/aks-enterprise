@@ -42,25 +42,15 @@ variable "kubernetes_version" {
   description = "Kubernetes version"
 }
 
-variable "nodepools_user" {
-  default = {
-    "poolappsamd" = {
-      vm_size = "Standard_D2s_v5"
-      os_sku  = "Ubuntu"
-    },
-    # "poolappsarm" = {
-    #   vm_size           = "Standard_D2pds_v5" # arm
-    #   os_sku            = "Ubuntu"
-    # },
-  }
-}
-
-variable "data_collection_endpoint_id" {
-  description = "Data Collection Endpoint DCE ID"
-}
-
 variable "data_collection_rule_id" {
   description = "Data Collection Rule ID"
+}
+
+variable "nodepools_user" {
+  type = map(object({
+    vm_size = string
+    os_sku  = string
+  }))
 }
 
 variable "tags" {
