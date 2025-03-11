@@ -54,6 +54,32 @@ winget install -e --id cURL.cURL --accept-package-agreements --accept-source-agr
 winget install -e --id Python.Python.3.12 --accept-package-agreements --accept-source-agreements
 # choco install python -y
 
+winget install Microsoft.DotNet.SDK.9 --accept-package-agreements --accept-source-agreements
+
+winget install Microsoft.DotNet.SDK.8 --accept-package-agreements --accept-source-agreements
+
+winget install Microsoft.DotNet.DesktopRuntime.9 --accept-package-agreements --accept-source-agreements
+
+winget install Microsoft.DotNet.AspNetCore.9 --accept-package-agreements --accept-source-agreements
+
+winget install -e --id Microsoft.DotNet.SDK.Preview --accept-package-agreements --accept-source-agreements
+
+winget install -e --id Microsoft.Azd --accept-package-agreements --accept-source-agreements
+
+winget install -e --id Microsoft.Bicep --accept-package-agreements --accept-source-agreements
+
+winget install -e --id Microsoft.Azure.AztfExport --accept-package-agreements --accept-source-agreements
+
+winget install -e --id Microsoft.Sqlcmd --accept-package-agreements --accept-source-agreements
+
+winget install -e --id Microsoft.VisualStudio.2022.Professional --accept-package-agreements --accept-source-agreements
+
+winget install -e --id Anaconda.Miniconda3 --accept-package-agreements --accept-source-agreements
+
+winget install -e --id Microsoft.RemoteDesktopClient --accept-package-agreements --accept-source-agreements
+
+dotnet tool install --global azure-cost-cli --accept-package-agreements --accept-source-agreements
+
 Set-Alias -Name k -Value kubectl
 
 # # (Optional) Install Docker for Desktop
