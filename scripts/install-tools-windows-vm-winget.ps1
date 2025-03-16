@@ -5,54 +5,32 @@
 
 # Install Azure CLI
 winget install -e --id Microsoft.AzureCLI --accept-package-agreements --accept-source-agreements --silent --force
-# choco install azure-cli -y
 
-# Install Kubernetes CLI
 winget install -e --id Kubernetes.kubectl --accept-package-agreements --accept-source-agreements --silent --force
-# choco install kubernetes-cli -y
 
-# Install kubelogin
 winget install -e --id Microsoft.Azure.Kubelogin --accept-package-agreements --accept-source-agreements --silent --force
-# choco install kubelogin -y
 
-# Install Helm CLI
 winget install -e --id Helm.Helm --accept-package-agreements --accept-source-agreements --silent --force
-# choco install kubernetes-helm -y
 
-# Install Headlamp
 winget install -e --id Headlamp.Headlamp --accept-package-agreements --accept-source-agreements
 
-# Install Terraform
 winget install -e --id Hashicorp.Terraform --accept-package-agreements --accept-source-agreements
-# choco install terraform -y
 
-# Install jq
 winget install -e --id stedolan.jq --accept-package-agreements --accept-source-agreements
+
 winget install -e --id MikeFarah.yq --accept-package-agreements --accept-source-agreements
-# choco install jq -y
 
-# Install VS Code
 winget install -e --id Microsoft.VisualStudioCode --accept-package-agreements --accept-source-agreements
-# choco install vscode -y
 
-# Install Edge
-# choco install microsoft-edge -y
-
-# Install Git
 winget install -e --id Git.Git --accept-package-agreements --accept-source-agreements
-# choco install git -y
 
-# Install Azure Storage Explorer
 winget install -e --id Microsoft.Azure.StorageExplorer --accept-package-agreements --accept-source-agreements
-# choco install microsoftazurestorageexplorer -y
 
-# Install curl
 winget install -e --id cURL.cURL --accept-package-agreements --accept-source-agreements
-# choco install curl -y
 
-# Install python
+winget install -e --id Python.Python.3.13 --accept-package-agreements --accept-source-agreements
+
 winget install -e --id Python.Python.3.12 --accept-package-agreements --accept-source-agreements
-# choco install python -y
 
 winget install Microsoft.DotNet.SDK.9 --accept-package-agreements --accept-source-agreements
 
@@ -70,6 +48,12 @@ winget install -e --id Microsoft.Bicep --accept-package-agreements --accept-sour
 
 winget install -e --id Microsoft.Azure.AztfExport --accept-package-agreements --accept-source-agreements
 
+winget install -e --id Microsoft.Azure.FunctionsCoreTools --accept-package-agreements --accept-source-agreements
+
+winget install -e --id Brave.Brave --accept-package-agreements --accept-source-agreements
+
+winget install -e --id Brave.Brave.Dev --accept-package-agreements --accept-source-agreements
+
 winget install -e --id Microsoft.Sqlcmd --accept-package-agreements --accept-source-agreements
 
 winget install -e --id Microsoft.VisualStudio.2022.Professional --accept-package-agreements --accept-source-agreements
@@ -81,10 +65,6 @@ winget install -e --id Microsoft.RemoteDesktopClient --accept-package-agreements
 dotnet tool install --global azure-cost-cli --accept-package-agreements --accept-source-agreements
 
 Set-Alias -Name k -Value kubectl
-
-# # (Optional) Install Docker for Desktop
-# choco install docker-desktop -y
-# choco install docker-cli -y
 
 # Configure Auto-Complete
 Set-ExecutionPolicy RemoteSigned
