@@ -50,17 +50,17 @@ winget install -e --id Microsoft.Azure.AztfExport --accept-package-agreements --
 
 winget install -e --id Microsoft.Azure.FunctionsCoreTools --accept-package-agreements --accept-source-agreements
 
-winget install -e --id Brave.Brave --accept-package-agreements --accept-source-agreements
+winget install -e --id Brave.Brave --accept-package-agreements --accept-source-agreements -s winget
 
-winget install -e --id Brave.Brave.Dev --accept-package-agreements --accept-source-agreements
+winget install -e --id Brave.Brave.Dev --accept-package-agreements --accept-source-agreements -s winget
 
-winget install -e --id Microsoft.Sqlcmd --accept-package-agreements --accept-source-agreements
+winget install -e --id Microsoft.Sqlcmd --accept-package-agreements --accept-source-agreements -s winget 
 
-winget install -e --id Microsoft.VisualStudio.2022.Professional --accept-package-agreements --accept-source-agreements
+winget install -e --id Microsoft.VisualStudio.2022.Professional --accept-package-agreements --accept-source-agreements -s winget
 
-winget install -e --id Anaconda.Miniconda3 --accept-package-agreements --accept-source-agreements
+winget install -e --id Anaconda.Miniconda3 --accept-package-agreements --accept-source-agreements -s winget
 
-winget install -e --id Microsoft.RemoteDesktopClient --accept-package-agreements --accept-source-agreements
+winget install -e --id Microsoft.RemoteDesktopClient --accept-package-agreements --accept-source-agreements -s winget
 
 dotnet tool install --global azure-cost-cli --accept-package-agreements --accept-source-agreements
 
