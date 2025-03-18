@@ -56,11 +56,13 @@ winget install -e --id Brave.Brave.Dev --accept-package-agreements --accept-sour
 
 winget install -e --id Microsoft.Sqlcmd --accept-package-agreements --accept-source-agreements -s winget 
 
-winget install -e --id Microsoft.VisualStudio.2022.Professional --accept-package-agreements --accept-source-agreements -s winget
-
 winget install -e --id Anaconda.Miniconda3 --accept-package-agreements --accept-source-agreements -s winget
 
 winget install -e --id Microsoft.RemoteDesktopClient --accept-package-agreements --accept-source-agreements -s winget
+
+winget install -e --id Logitech.GHUB --accept-package-agreements --accept-source-agreements
+
+# winget install -e --id Microsoft.VisualStudio.2022.Professional --accept-package-agreements --accept-source-agreements -s winget
 
 dotnet tool install --global azure-cost-cli --accept-package-agreements --accept-source-agreements
 
@@ -103,6 +105,13 @@ pwd
 "@
 
 $powershellProfile > $PSHOME\Profile.ps1 # $PROFILE.CurrentUserAllHosts
+
+# save commands history
+Copy-Item -Path .\ConsoleHost_history.txt -Destination (Get-PSReadlineOption).HistorySavePath -Force
+
+# clone github repo
+git clone https://github.com/HoussemDellai/ai-course
+
 
 # # Set up language preference
 # $LanguageList = Get-WinUserLanguageList
