@@ -6,6 +6,8 @@
 # Install Azure CLI
 winget install -e --id Microsoft.AzureCLI --accept-package-agreements --accept-source-agreements --silent --force
 
+# Install Kubernetes tools
+
 winget install -e --id Kubernetes.kubectl --accept-package-agreements --accept-source-agreements --silent --force
 
 winget install -e --id Microsoft.Azure.Kubelogin --accept-package-agreements --accept-source-agreements --silent --force
@@ -13,6 +15,8 @@ winget install -e --id Microsoft.Azure.Kubelogin --accept-package-agreements --a
 winget install -e --id Helm.Helm --accept-package-agreements --accept-source-agreements --silent --force
 
 winget install -e --id Headlamp.Headlamp --accept-package-agreements --accept-source-agreements
+
+winget install -e --id argoproj.argocd --accept-package-agreements --accept-source-agreements
 
 winget install -e --id Hashicorp.Terraform --accept-package-agreements --accept-source-agreements
 
@@ -50,21 +54,35 @@ winget install -e --id Microsoft.Azure.AztfExport --accept-package-agreements --
 
 winget install -e --id Microsoft.Azure.FunctionsCoreTools --accept-package-agreements --accept-source-agreements
 
-winget install -e --id Brave.Brave --accept-package-agreements --accept-source-agreements -s winget
+winget install -e --id Brave.Brave --accept-package-agreements --accept-source-agreements
 
-winget install -e --id Brave.Brave.Dev --accept-package-agreements --accept-source-agreements -s winget
+winget install -e --id Brave.Brave.Dev --accept-package-agreements --accept-source-agreements
 
-winget install -e --id Microsoft.Sqlcmd --accept-package-agreements --accept-source-agreements -s winget 
+winget install -e --id Microsoft.Sqlcmd --accept-package-agreements --accept-source-agreements 
 
-winget install -e --id Anaconda.Miniconda3 --accept-package-agreements --accept-source-agreements -s winget
+winget install -e --id=Microsoft.AzureDataStudio --accept-package-agreements --accept-source-agreements
 
-winget install -e --id Microsoft.RemoteDesktopClient --accept-package-agreements --accept-source-agreements -s winget
+winget install -e --id Anaconda.Miniconda3 --accept-package-agreements --accept-source-agreements
+
+winget install -e --id Microsoft.RemoteDesktopClient --accept-package-agreements --accept-source-agreements
+
+winget install -e --id Microsoft.PowerToys --accept-package-agreements --accept-source-agreements
+
+winget install -e --id Microsoft.Sysinternals.BGInfo --accept-package-agreements --accept-source-agreements
+
+winget install -e --id=astral-sh.uv --accept-package-agreements --accept-source-agreements
 
 winget install -e --id Logitech.GHUB --accept-package-agreements --accept-source-agreements
 
-# winget install -e --id Microsoft.VisualStudio.2022.Professional --accept-package-agreements --accept-source-agreements -s winget
+winget install -e --id Docker.DockerDesktop --accept-package-agreements --accept-source-agreements
 
-dotnet tool install --global azure-cost-cli --accept-package-agreements --accept-source-agreements
+winget install -e --id Meltytech.Shotcut --accept-package-agreements --accept-source-agreements
+
+# winget install -e --id Microsoft.VisualStudio.2022.Professional --accept-package-agreements --accept-source-agreements
+
+dotnet tool install --global azure-cost-cli
+
+pip install auto-editor
 
 Set-Alias -Name k -Value kubectl
 

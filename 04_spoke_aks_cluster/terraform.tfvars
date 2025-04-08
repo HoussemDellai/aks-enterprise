@@ -19,7 +19,7 @@ aks_outbound_type  = "userDefinedRouting" # "userAssignedNATGateway" # "loadBala
 
 # AKS configuration
 enable_app_gateway                          = false
-enable_private_cluster                      = false
+enable_private_cluster                      = true
 enable_apiserver_vnet_integration           = false
 enable_nodepool_apps                        = true
 enable_nodepool_spot                        = false

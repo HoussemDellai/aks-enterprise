@@ -49,3 +49,10 @@ resource "azurerm_role_assignment" "role_identity_aks_contributor_routetable" {
   role_definition_name = "Contributor"
   principal_id         = azurerm_user_assigned_identity.identity_aks.principal_id
 }
+
+resource "azurerm_role_assignment" "role_identity_aks_network_contributor_routetable" {
+  count                = var.enable_private_cluster ? 1 : 0
+  scope                = data.terraform_remote_state.hub.0.outputs.dns_zone_aks.id
+  role_definition_name = "Network Contributor"
+  principal_id         = azurerm_user_assigned_identity.identity_aks.principal_id
+}

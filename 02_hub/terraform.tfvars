@@ -21,7 +21,7 @@ firewall_sku_tier             = "Standard" # "Basic" # "Standard" # "Premium" #
 enable_vm_jumpbox_linux   = false
 enable_vm_jumpbox_windows = true
 
-domain_name       = "houssem17.com"
+domain_name       = "azure-aks-enterprise.com"
 AgreedBy_IP_v6    = "2a04:cec0:11d9:24c8:8898:3820:8631:d83"
 AgreedAt_DateTime = "2023-08-13T15:06:59.264Z"
 

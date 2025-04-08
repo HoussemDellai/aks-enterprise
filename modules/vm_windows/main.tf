@@ -50,7 +50,8 @@ resource "azurerm_windows_virtual_machine" "vm" {
   eviction_policy       = "Deallocate"
   tags                  = var.tags
 
-  custom_data = filebase64("../scripts/install-tools-windows-vm-choco.ps1")
+  custom_data = filebase64("../scripts/install-tools-windows-vm-winget.ps1")
+  # custom_data = filebase64("../scripts/install-tools-windows-vm-choco.ps1")
 
   os_disk {
     name                 = "disk-os${var.vm_name}"

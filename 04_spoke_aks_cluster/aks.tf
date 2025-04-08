@@ -1,5 +1,5 @@
 resource "azurerm_kubernetes_cluster" "aks" {
-  name                                = "aks-cluster-swc"
+  name                                = "aks-cluster"
   resource_group_name                 = azurerm_resource_group.rg.name
   location                            = var.location
   kubernetes_version                  = var.kubernetes_version
@@ -18,8 +18,8 @@ resource "azurerm_kubernetes_cluster" "aks" {
   http_application_routing_enabled    = false
   image_cleaner_enabled               = true
   cost_analysis_enabled               = false
-  image_cleaner_interval_hours        = 24 # in the range (24 - 2160)
-  private_dns_zone_id                 = var.enable_private_cluster ? azurerm_private_dns_zone.private_dns_zone_aks.0.id : null
+  image_cleaner_interval_hours        = 24                                                                                            # in the range (24 - 2160)
+  private_dns_zone_id                 = var.enable_private_cluster ? data.terraform_remote_state.hub.0.outputs.dns_zone_aks.id : null # azurerm_private_dns_zone.private_dns_zone_aks.0.id : null
   tags                                = var.tags
   node_os_upgrade_channel             = "NodeImage"  # Unmanaged, SecurityPatch, NodeImage and None. Defaults to NodeImage
   automatic_upgrade_channel           = "node-image" # patch, rapid, node-image and stable. Omitting this field sets this value to none
@@ -189,38 +189,38 @@ resource "azurerm_kubernetes_cluster" "aks" {
   dynamic "maintenance_window_auto_upgrade" {
     for_each = var.enable_maintenance_window ? ["any_value"] : []
     content {
-    frequency    = "Weekly" # AbsoluteMonthly, RelativeMonthly
-    interval     = 1
-    duration     = 9        # between 4 to 24 hours
-    day_of_week  = "Monday" # Tuesday, Wednesday, Thurday, Friday, Saturday and Sunday
-    day_of_month = null
-    utc_offset   = "+01:00"
-    start_date   = "2025-01-01T00:00:00Z"
-    start_time   = "02:00"
+      frequency    = "Weekly" # AbsoluteMonthly, RelativeMonthly
+      interval     = 1
+      duration     = 9        # between 4 to 24 hours
+      day_of_week  = "Monday" # Tuesday, Wednesday, Thurday, Friday, Saturday and Sunday
+      day_of_month = null
+      utc_offset   = "+01:00"
+      start_date   = "2025-01-01T00:00:00Z"
+      start_time   = "02:00"
 
-    not_allowed {
-      end   = "2025-01-01T00:00:00Z"
-      start = "2025-01-02T00:00:00Z"
-    }
+      not_allowed {
+        end   = "2025-01-01T00:00:00Z"
+        start = "2025-01-02T00:00:00Z"
+      }
     }
   }
 
   dynamic "maintenance_window_node_os" {
     for_each = var.enable_maintenance_window ? ["any_value"] : []
     content {
-    frequency    = "Weekly" # AbsoluteMonthly, RelativeMonthly
-    interval     = 1
-    duration     = 9        # between 4 to 24 hours
-    day_of_week  = "Monday" # Tuesday, Wednesday, Thurday, Friday, Saturday and Sunday
-    day_of_month = null
-    utc_offset   = "+01:00"
-    start_date   = "2025-01-01T00:00:00Z"
-    start_time   = "02:00"
+      frequency    = "Weekly" # AbsoluteMonthly, RelativeMonthly
+      interval     = 1
+      duration     = 9        # between 4 to 24 hours
+      day_of_week  = "Monday" # Tuesday, Wednesday, Thurday, Friday, Saturday and Sunday
+      day_of_month = null
+      utc_offset   = "+01:00"
+      start_date   = "2025-01-01T00:00:00Z"
+      start_time   = "02:00"
 
-    not_allowed {
-      end   = "2025-01-01T00:00:00Z"
-      start = "2025-01-02T00:00:00Z"
-    }
+      not_allowed {
+        end   = "2025-01-01T00:00:00Z"
+        start = "2025-01-02T00:00:00Z"
+      }
     }
   }
 
@@ -255,10 +255,6 @@ resource "azurerm_kubernetes_cluster" "aks" {
 
   # service_mesh_profile {
   #   mode = "Istio"
-  # }
-
-  # web_app_routing {
-  #   dns_zone_id = null #TODO
   # }
 
   depends_on = [
