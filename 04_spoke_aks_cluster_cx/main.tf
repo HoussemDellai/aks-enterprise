@@ -12,6 +12,7 @@ module "aks-dev" {
   eid_group_aks_admins_object_id = azuread_group.aks_admins.object_id
   data_collection_rule_id        = azurerm_monitor_data_collection_rule.dcr-log-analytics.id
   kubernetes_version             = "1.31.3"
+
   nodepools_user = {
     "poolappsamd" = {
       vm_size = "Standard_D2s_v5"
@@ -38,6 +39,7 @@ module "aks-prod" {
   eid_group_aks_admins_object_id = azuread_group.aks_admins.object_id
   data_collection_rule_id        = azurerm_monitor_data_collection_rule.dcr-log-analytics.id
   kubernetes_version             = "1.31.3"
+  
   nodepools_user = {
     "poolapps01" = {
       vm_size = "Standard_D2s_v5"
