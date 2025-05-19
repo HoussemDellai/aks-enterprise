@@ -36,10 +36,10 @@ variable "vm_user_name" {
   default     = "vmuser1"
 }
 
-variable "public_ssh_key_path" {
-  description = "Public key path for SSH."
-  default     = "~/.ssh/id_rsa.pub"
-}
+# variable "public_ssh_key_path" {
+#   description = "Public key path for SSH."
+#   default     = "~/.ssh/id_rsa.pub"
+# }
 
 variable "aks_network_plugin" {
   description = "Network plugin to use for networking. Defaults to azure for Windows and kubenet for Linux."

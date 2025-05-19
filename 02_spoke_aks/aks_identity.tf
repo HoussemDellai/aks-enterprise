@@ -8,7 +8,7 @@ resource "azurerm_user_assigned_identity" "identity_aks" {
 
 resource "azurerm_role_assignment" "role_identity_aks_network_contributor" {
   # count                            = var.enable_aks_cluster ? 1 : 0
-  scope                            = data.terraform_remote_state.spoke_aks.outputs.vnet_spoke_aks.id
+  scope                            = azurerm_virtual_network.vnet_spoke_aks.id
   role_definition_name             = "Network Contributor"
   principal_id                     = azurerm_user_assigned_identity.identity_aks.principal_id
   skip_service_principal_aad_check = true
@@ -45,7 +45,7 @@ resource "azurerm_role_assignment" "role_identity_aks_contributor" {
 # Role Assignments for Control Plane MSI
 resource "azurerm_role_assignment" "role_identity_aks_contributor_routetable" {
   count                = var.enable_firewall_as_dns_server ? 1 : 0
-  scope                = data.terraform_remote_state.spoke_aks.outputs.route_table.id
+  scope                = azurerm_route_table.route_table_to_firewall.id
   role_definition_name = "Contributor"
   principal_id         = azurerm_user_assigned_identity.identity_aks.principal_id
 }

@@ -1,6 +1,6 @@
 resource "azurerm_log_analytics_workspace" "workspace" {
   provider            = azurerm.subscription_hub
-  name                = "log)analytics"
+  name                = "log-analytics"
   resource_group_name = azurerm_resource_group.rg.name
   location            = var.location
   sku                 = "PerGB2018" # PerGB2018, Free, PerNode, Premium, Standard, Standalone, Unlimited, CapacityReservation

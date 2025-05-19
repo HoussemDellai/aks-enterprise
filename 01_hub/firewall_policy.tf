@@ -1,10 +1,5 @@
-# locals {
-#   cidr_subnet_aks_nodes_pods = concat(azurerm_subnet.subnet_nodes.address_prefixes, azurerm_subnet.subnet_pods.address_prefixes)
-# }
-
 resource "azurerm_firewall_policy" "firewall_policy" {
   provider            = azurerm.subscription_hub
-  count               = var.enable_firewall ? 1 : 0
   name                = "firewall-policy"
   resource_group_name = azurerm_resource_group.rg.name
   location            = var.location
@@ -19,11 +14,10 @@ resource "azurerm_firewall_policy" "firewall_policy" {
   }
 }
 
-resource "azurerm_firewall_policy_rule_collection_group" "policy_group_deny" {
+resource "azurerm_firewall_policy_rule_collection_group" "policy_group" {
   provider           = azurerm.subscription_hub
-  count              = var.enable_firewall ? 1 : 0
-  name               = "policy_group_deny"
-  firewall_policy_id = azurerm_firewall_policy.firewall_policy.0.id
+  name               = "policy-group"
+  firewall_policy_id = azurerm_firewall_policy.firewall_policy.id
   priority           = 100
 
   application_rule_collection {

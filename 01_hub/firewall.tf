@@ -1,11 +1,11 @@
 # Subnet for Azure Firewall, without NSG as per Firewall requirements
 resource "azurerm_subnet" "subnet_firewall" {
-  count                                     = var.enable_firewall ? 1 : 0
-  provider                                  = azurerm.subscription_hub
-  name                                      = "AzureFirewallSubnet"
-  resource_group_name                       = azurerm_virtual_network.vnet_hub.resource_group_name
-  virtual_network_name                      = azurerm_virtual_network.vnet_hub.name
-  address_prefixes                          = var.cidr_subnet_firewall
+  count                = var.enable_firewall ? 1 : 0
+  provider             = azurerm.subscription_hub
+  name                 = "AzureFirewallSubnet"
+  resource_group_name  = azurerm_virtual_network.vnet_hub.resource_group_name
+  virtual_network_name = azurerm_virtual_network.vnet_hub.name
+  address_prefixes     = var.cidr_subnet_firewall
 }
 
 resource "azurerm_subnet" "subnet_firewall_mgmt" {
@@ -49,7 +49,7 @@ resource "azurerm_firewall" "firewall" {
   resource_group_name = azurerm_resource_group.rg.name
   sku_name            = "AZFW_VNet"           # AZFW_Hub
   sku_tier            = var.firewall_sku_tier # "Standard"  # Premium  # "Basic" # 
-  firewall_policy_id  = azurerm_firewall_policy.firewall_policy.0.id
+  firewall_policy_id  = azurerm_firewall_policy.firewall_policy.id
   zones               = ["1"] # ["1", "2", "3"]
   tags                = var.tags
   # dns_servers         = ["168.63.129.16"]

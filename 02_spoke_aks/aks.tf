@@ -8,7 +8,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
   node_resource_group                 = "rg-${var.prefix}-spoke-aks-nodes"
   private_cluster_enabled             = var.enable_private_cluster
   private_cluster_public_fqdn_enabled = false
-  role_based_access_control_enabled   = true
+  role_based_access_control_enabled   = var.enable_aks_admin_rbac
   azure_policy_enabled                = true
   open_service_mesh_enabled           = true
   local_account_disabled              = true
@@ -32,9 +32,9 @@ resource "azurerm_kubernetes_cluster" "aks" {
     dns_service_ip      = var.aks_dns_service_ip
     service_cidr        = var.cidr_aks_service
     service_cidrs       = [var.cidr_aks_service]
-    outbound_type       = var.aks_outbound_type # "userAssignedNATGateway" "loadBalancer" "userDefinedRouting" "managedNATGateway"
-    load_balancer_sku   = "standard"            # "basic"
-    ip_versions         = ["IPv4"]              # ["IPv4", "IPv6"]
+    outbound_type       = "userDefinedRouting" # "managedNATGateway" "userAssignedNATGateway" "loadBalancer" 
+    load_balancer_sku   = "standard"           # "basic"
+    ip_versions         = ["IPv4"]             # ["IPv4", "IPv6"]
     pod_cidrs           = ["10.10.240.0/20"]
     pod_cidr            = "10.10.240.0/20"
     # pod_cidr    = var.aks_network_plugin == "kubenet" || var.network_plugin_mode == "overlay" ? "10.10.240.0/20" : null # only set when network_plugin is set to kubenet
@@ -75,7 +75,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
     os_sku                       = "Ubuntu"                                        # Ubuntu, AzureLinux, Windows2019, Windows2022
     only_critical_addons_enabled = var.enable_system_nodepool_only_critical_addons # taint default node pool with CriticalAddonsOnly=true:NoSchedule
     zones                        = [1, 2, 3]                                       # []
-    vnet_subnet_id               = data.terraform_remote_state.spoke_aks.outputs.snet_aks.id
+    vnet_subnet_id               = azurerm_subnet.snet_aks.id
     pod_subnet_id                = null         # azurerm_subnet.subnet_system_pods.id
     scale_down_mode              = "Deallocate" # "Delete" # Deallocate
     workload_runtime             = "OCIContainer"
@@ -83,7 +83,8 @@ resource "azurerm_kubernetes_cluster" "aks" {
     node_public_ip_enabled       = false
     host_encryption_enabled      = false
     fips_enabled                 = false
-    tags                         = var.tags
+    # kubernetes_version           = var.kubernetes_version
+    tags = var.tags
 
     node_network_profile {
       # allowed_host_ports {
@@ -117,10 +118,13 @@ resource "azurerm_kubernetes_cluster" "aks" {
     authorized_ip_ranges = var.enable_private_cluster ? null : ["0.0.0.0/0"] # when private cluster, this should not be enabled
   }
 
-  azure_active_directory_role_based_access_control {
-    azure_rbac_enabled     = var.enable_aks_admin_group || var.enable_aks_admin_rbac
-    admin_group_object_ids = var.enable_aks_admin_group ? [azuread_group.aks_admins.0.object_id] : null
-    tenant_id              = var.enable_aks_admin_group ? data.azurerm_subscription.subscription_spoke.tenant_id : null
+  dynamic "azure_active_directory_role_based_access_control" {
+    for_each = var.enable_aks_admin_group == true ? ["any_value"] : []
+    content {
+      azure_rbac_enabled     = var.enable_aks_admin_group || var.enable_aks_admin_rbac
+      admin_group_object_ids = var.enable_aks_admin_group ? [azuread_group.aks_admins.0.object_id] : null
+      tenant_id              = var.enable_aks_admin_group ? data.azurerm_subscription.subscription_spoke.tenant_id : null
+    }
   }
 
   web_app_routing {
@@ -150,7 +154,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
   dynamic "ingress_application_gateway" {
     for_each = var.enable_app_gateway ? ["any_value"] : []
     content {
-      gateway_id = data.terraform_remote_state.spoke_aks.outputs.application_gateway.id # azurerm_application_gateway.appgw.0.id
+      gateway_id = azurerm_application_gateway.appgw.id
       # other options if we want to allow the AGIC addon to create a new AppGW 
       # and not use an existing one
       # subnet_id    = # link AppGW to specific Subnet
@@ -258,6 +262,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
   # }
 
   depends_on = [
+    azurerm_subnet_route_table_association.association_rt_subnet_aks
     # azurerm_virtual_network.vnet_spoke_aks,
     # azurerm_application_gateway.appgw
   ]

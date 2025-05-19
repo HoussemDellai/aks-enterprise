@@ -111,6 +111,70 @@ variable "enable_hub_spoke" {
   default     = false
 }
 
+variable "enable_aks_admin_group" {
+  type        = bool
+  description = "Creates Azure AD admin group for AKS"
+}
+
+variable "enable_aks_admin_rbac" {
+  type        = bool
+  description = "Adds admin role for AKS"
+}
+
+variable "aad_group_aks_admins" {
+  type        = string
+  description = "Name of AAD group for AKS admins"
+}
+
+variable "kubernetes_version" {
+  type        = string
+  description = "Kubernetes version"
+}
+
+variable "enable_nodepool_spot" {
+  type        = bool
+  description = "Enable spot node pool"
+}
+
+variable "aks_dns_service_ip" {
+  description = "DNS server IP address"
+  default     = "10.0.0.10"
+}
+
+variable "cidr_aks_service" {
+  description = "CIDR notation IP range from which to assign service cluster IPs"
+  default     = "10.0.0.0/16"
+}
+
+variable "cidr_aks_pods" {
+  description = "CIDR notation IP range from which to assign pod IPs"
+}
+
+variable "aks_outbound_type" {
+  type        = string
+  description = "userAssignedNATGateway, loadBalancer, userDefinedRouting, managedNATGateway"
+}
+
+variable "aks_agent_os_disk_size" {
+  type        = number
+  description = "Size of the OS disk in GB"
+  default     = 40
+}
+
+variable "enable_system_nodepool_only_critical_addons" {
+  type        = bool
+  description = "Enable system nodepool only for critical addons"
+}
+
+variable "enable_maintenance_window" {
+  type        = bool
+  description = "Enable maintenance window for AKS"
+}
+
+variable "enable_monitoring" {
+  type        = bool
+  description = "Enable resources monitoring using Azure Log Analytics and Prometheus."
+}
 # variable "cidr_subnet_apiserver_vnetint" {
 #   description = "CIDR block for the API server subnet"
 #   type        = string
@@ -130,4 +194,10 @@ variable "tags" {
     environment  = "development"
     architecture = "Hub&Spoke"
   }
+}
+
+variable "enable_private_cluster" {
+  type        = bool
+  description = "Enable private AKS cluster"
+  default     = false
 }

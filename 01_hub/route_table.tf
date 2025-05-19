@@ -1,9 +1,9 @@
 resource "azurerm_route_table" "route_table_to_firewall" {
-  provider                      = azurerm.subscription_hub
-  name                          = "route-table-to-firewall"
-  location                      = azurerm_resource_group.rg.location
-  resource_group_name           = azurerm_resource_group.rg.name
-  tags                          = var.tags
+  provider            = azurerm.subscription_hub
+  name                = "route-table-to-firewall"
+  location            = azurerm_resource_group.rg.location
+  resource_group_name = azurerm_resource_group.rg.name
+  tags                = var.tags
 }
 
 resource "azurerm_route" "route_to_firewall" {

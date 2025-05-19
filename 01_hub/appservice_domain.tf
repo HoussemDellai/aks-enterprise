@@ -8,7 +8,7 @@ resource "azapi_resource" "appservice_domain" {
   location                  = "global"
   schema_validation_enabled = true
 
-  body = jsonencode({
+  body = {
 
     properties = {
       autoRenew = false
@@ -82,5 +82,5 @@ resource "azapi_resource" "appservice_domain" {
         }
       }
     }
-  })
+  }
 }

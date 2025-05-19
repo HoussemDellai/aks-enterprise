@@ -118,10 +118,10 @@ resource "azurerm_kubernetes_cluster_node_pool" "poolapps" {
   os_disk_type            = each.value.os_disk_type # "Ephemeral" # "Managed" # 
   os_sku                  = each.value.os_sku       # "Ubuntu"    # "CBLMariner" #
   fips_enabled            = false
-  vnet_subnet_id          = data.terraform_remote_state.spoke_aks.outputs.snet_aks.id # azurerm_subnet.subnet_nodes_user_nodepool[each.key].id
-  scale_down_mode         = "Delete"       # ScaleDownModeDeallocate
-  workload_runtime        = "OCIContainer" # WasmWasi
-  priority                = "Regular"      # "Spot"
+  vnet_subnet_id          = azurerm_subnet.snet_aks.id
+  scale_down_mode         = "Delete"                                                  # ScaleDownModeDeallocate
+  workload_runtime        = "OCIContainer"                                            # WasmWasi
+  priority                = "Regular"                                                 # "Spot"
   # pod_subnet_id           = var.aks_network_plugin == var.network_plugin_mode == "overlay" ? null : azurerm_subnet.subnet_pods_user_nodepool[each.key].id
   # eviction_policy        = "Delete"
   # spot_max_price         = 0.5 # note: this is the "maximum" price

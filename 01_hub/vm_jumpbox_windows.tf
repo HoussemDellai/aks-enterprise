@@ -11,7 +11,7 @@ module "vm_jumpbox_windows" {
   subnet_id           = azurerm_subnet.subnet_vm.0.id
   tags                = var.tags
   subscription_id     = data.azurerm_subscription.subscription_hub.id
-  vm_size             = "Standard_D4as_v5" # "Standard_Standard_D2pds_v6"
+  vm_size             = "Standard_D2ads_v5" # "Standard_Standard_D2pds_v6"
   admin_username      = "azureuser"
   admin_password      = "@Aa123456789"
 }

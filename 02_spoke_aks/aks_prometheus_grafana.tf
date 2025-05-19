@@ -3,14 +3,14 @@ resource "azurerm_monitor_data_collection_rule_association" "dcr_to_aks" {
   count                   = var.enable_grafana_prometheus ? 1 : 0
   name                    = "dcr-aks"
   target_resource_id      = azurerm_kubernetes_cluster.aks.id
-  data_collection_rule_id = data.terraform_remote_state.spoke_aks.outputs.prometheus.data_collection_rule_id
+  data_collection_rule_id = azurerm_monitor_data_collection_rule.data_collection_rule.0.id
 }
 
 # associate to a Data Collection Endpoint
 resource "azurerm_monitor_data_collection_rule_association" "dce_to_aks" {
   count                       = var.enable_grafana_prometheus ? 1 : 0
   target_resource_id          = azurerm_kubernetes_cluster.aks.id
-  data_collection_endpoint_id = data.terraform_remote_state.spoke_aks.outputs.prometheus.data_collection_endpoint_id
+  data_collection_endpoint_id = azurerm_monitor_data_collection_endpoint.data_collection_endpoint.0.id
 }
 
 # resource "null_resource" "aks_enable_azuremonitormetrics" {
@@ -60,7 +60,7 @@ resource "azurerm_monitor_alert_prometheus_rule_group" "example_node" {
   cluster_name        = azurerm_kubernetes_cluster.aks.name
   rule_group_enabled  = true
   interval            = "PT1M"
-  scopes              = [data.terraform_remote_state.spoke_aks.outputs.prometheus.id]
+  scopes              = [azurerm_monitor_workspace.prometheus.0.id]
 
   rule {
     record     = "instance:node_num_cpu:sum"
@@ -125,7 +125,7 @@ resource "azurerm_monitor_alert_prometheus_rule_group" "example_k8s" {
   cluster_name        = azurerm_kubernetes_cluster.aks.name
   rule_group_enabled  = true
   interval            = "PT1M"
-  scopes              = [data.terraform_remote_state.spoke_aks.outputs.prometheus.id]
+  scopes              = [azurerm_monitor_workspace.prometheus.0.id]
 
   rule {
     record     = "node_namespace_pod_container:container_cpu_usage_seconds_total:sum_irate"
