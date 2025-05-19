@@ -162,6 +162,17 @@ resource "azurerm_firewall_policy_rule_collection_group" "policy_group_aks" {
       }
       destination_fqdns = ["*.docker.io", "*.docker.com"]
     }
+
+    // ifconf.me
+    rule {
+      name             = "TestingOutboundConnectivity"
+      source_addresses = local.snet_aks_address_prefixes
+      protocols {
+        port = 80
+        type = "Http"
+      }
+      destination_fqdns = ["ifconf.me"]
+    }
   }
 
   network_rule_collection {

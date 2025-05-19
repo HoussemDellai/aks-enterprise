@@ -1,6 +1,5 @@
 # Subnet for Azure Firewall, without NSG as per Firewall requirements
 resource "azurerm_subnet" "subnet_firewall" {
-  count                = var.enable_firewall ? 1 : 0
   provider             = azurerm.subscription_hub
   name                 = "AzureFirewallSubnet"
   resource_group_name  = azurerm_virtual_network.vnet_hub.resource_group_name
@@ -18,7 +17,6 @@ resource "azurerm_subnet" "subnet_firewall_mgmt" {
 }
 
 resource "azurerm_public_ip" "public_ip_firewall" {
-  count               = var.enable_firewall ? 1 : 0
   provider            = azurerm.subscription_hub
   name                = "public-ip-firewall"
   location            = var.location
@@ -42,7 +40,6 @@ resource "azurerm_public_ip" "public_ip_firewall_mgmt" {
 }
 
 resource "azurerm_firewall" "firewall" {
-  count               = var.enable_firewall ? 1 : 0
   provider            = azurerm.subscription_hub
   name                = "firewall-hub"
   location            = var.location
@@ -57,8 +54,8 @@ resource "azurerm_firewall" "firewall" {
 
   ip_configuration {
     name                 = "configuration"
-    subnet_id            = azurerm_subnet.subnet_firewall.0.id
-    public_ip_address_id = azurerm_public_ip.public_ip_firewall.0.id
+    subnet_id            = azurerm_subnet.subnet_firewall.id
+    public_ip_address_id = azurerm_public_ip.public_ip_firewall.id
   }
 
   dynamic "management_ip_configuration" { # Firewall with Basic SKU must have Management Ip configuration

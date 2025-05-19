@@ -63,27 +63,17 @@ resource "azurerm_kubernetes_cluster" "aks" {
   }
 
   identity {
-    type = "SystemAssigned"
+    type = "UserAssigned"
+    identity_ids = [azurerm_user_assigned_identity.identity_aks.id]
   }
-
-  # kubelet_identity {
-
-  # }
 
   depends_on = [
     azurerm_subnet_route_table_association.association_rt_subnet_aks
-    # azurerm_virtual_network.vnet_spoke_aks,
-    # azurerm_application_gateway.appgw
   ]
 
   lifecycle {
-    # prevent_destroy       = true
-    # create_before_destroy = true
     ignore_changes = [
-      # all, # ignore all attributes
-      monitor_metrics,
-      default_node_pool[0].node_count,
-      microsoft_defender
+      default_node_pool[0].node_count
     ]
   }
 }
