@@ -17,20 +17,3 @@ resource "azurerm_subnet_route_table_association" "association_rt_subnet_aks" {
   subnet_id      = azurerm_subnet.snet_aks.id
   route_table_id = azurerm_route_table.route_table.id
 }
-
-# resource "azurerm_subnet_route_table_association" "association_rt_subnet_system_pods" {
-#   subnet_id      = azurerm_subnet.snet_system_pods.id
-#   route_table_id = azurerm_route_table.route_table_to_firewall.id
-# }
-
-# resource "azurerm_subnet_route_table_association" "association_rt_subnet_user_nodes" {
-#   for_each       = azurerm_subnet.snet_nodes_user_nodepool
-#   subnet_id      = each.value.id
-#   route_table_id = azurerm_route_table.route_table_to_firewall.id
-# }
-
-# resource "azurerm_subnet_route_table_association" "association_rt_subnet_user_pods" {
-#   for_each       = azurerm_subnet.snet_pods_user_nodepool
-#   subnet_id      = each.value.id
-#   route_table_id = azurerm_route_table.route_table_to_firewall.id
-# }
