@@ -13,18 +13,18 @@ output "firewall" {
   }
 }
 
-output "dns_zone_apps" {
-  value = {
-    name                = azurerm_dns_zone.dns_zone_apps.name
-    resource_group_name = azurerm_dns_zone.dns_zone_apps.resource_group_name
-  }
-}
+# output "dns_zone_apps" {
+#   value = {
+#     name                = azurerm_dns_zone.dns_zone_apps.name
+#     resource_group_name = azurerm_dns_zone.dns_zone_apps.resource_group_name
+#   }
+# }
 
-output "dns_zone_aks" {
-  value = {
-    id = azurerm_private_dns_zone.private_dns_zone_aks.id
-  }
-}
+# output "dns_zone_aks" {
+#   value = {
+#     id = azurerm_private_dns_zone.private_dns_zone_aks.id
+#   }
+# }
 
 output "log_analytics_workspace" {
   value = {
