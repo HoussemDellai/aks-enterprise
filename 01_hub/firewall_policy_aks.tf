@@ -10,7 +10,7 @@ resource "azurerm_firewall_policy_rule_collection_group" "policy_group_aks" {
 
   application_rule_collection {
     name     = "app-rules-private-aks"
-    priority = 200
+    priority = 202
     action   = "Allow"
 
     rule {
@@ -177,7 +177,7 @@ resource "azurerm_firewall_policy_rule_collection_group" "policy_group_aks" {
 
   network_rule_collection {
     name     = "network-rules-private-aks"
-    priority = 300
+    priority = 201
     action   = "Allow"
 
     rule {

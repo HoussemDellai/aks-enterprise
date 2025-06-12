@@ -4,9 +4,8 @@ data "azurerm_monitor_diagnostic_categories" "categories-firewall" {
 }
 
 resource "azurerm_monitor_diagnostic_setting" "diagnostics_firewall" {
-  provider = azurerm.subscription_hub
-
-  name                           = "diagnostics-firewall"
+  provider                       = azurerm.subscription_hub
+  name                           = "diagnostic-settings-az-firewall"
   target_resource_id             = azurerm_firewall.firewall.id
   log_analytics_workspace_id     = azurerm_log_analytics_workspace.workspace.id
   log_analytics_destination_type = "Dedicated" # "AzureDiagnostics"
@@ -20,11 +19,11 @@ resource "azurerm_monitor_diagnostic_setting" "diagnostics_firewall" {
     }
   }
 
-  dynamic "metric" {
+  dynamic "enabled_metric" {
     for_each = data.azurerm_monitor_diagnostic_categories.categories-firewall.metrics
 
     content {
-      category = metric.key
+      category = enabled_metric.key
     }
   }
 

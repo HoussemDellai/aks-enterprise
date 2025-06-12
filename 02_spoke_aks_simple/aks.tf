@@ -2,7 +2,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
   name                                = "aks-cluster"
   resource_group_name                 = azurerm_resource_group.rg.name
   location                            = azurerm_resource_group.rg.location
-  kubernetes_version                  = "1.33.0"
+  kubernetes_version                  = "1.32.4"
   dns_prefix                          = "aks"
   sku_tier                            = "Free" # "Paid"
   private_cluster_enabled             = false
@@ -25,11 +25,11 @@ resource "azurerm_kubernetes_cluster" "aks" {
   network_profile {
     network_plugin      = "azure" # var.aks_network_plugin # "kubenet", "azure", "none"
     network_plugin_mode = "overlay"
-    network_data_plane  = "cilium"             # azure and cilium
-    network_policy      = "cilium"             # calico, azure and cilium
-    outbound_type       = "userDefinedRouting" # "managedNATGateway" "userAssignedNATGateway" "loadBalancer" 
-    load_balancer_sku   = "standard"           # "basic"
-    ip_versions         = ["IPv4"]             # ["IPv4", "IPv6"]
+    network_data_plane  = "cilium"       # azure and cilium
+    network_policy      = "cilium"       # calico, azure and cilium
+    outbound_type       = "loadBalancer" # "managedNATGateway" "userAssignedNATGateway" "loadBalancer" "none" "block"
+    load_balancer_sku   = "standard"     # "basic"
+    ip_versions         = ["IPv4"]       # ["IPv4", "IPv6"]
     pod_cidr            = "10.10.240.0/20"
     pod_cidrs           = ["10.10.240.0/20"]
     service_cidr        = "10.128.0.0/22"
@@ -40,30 +40,27 @@ resource "azurerm_kubernetes_cluster" "aks" {
   default_node_pool {
     name                         = "systempool"
     temporary_name_for_rotation  = "syspooltmp"
-    vm_size                      = "Standard_D2s_v5" # "Standard_D2pds_v5" # "Standard_D2ds_v5" # "standard_d2pds_v5"
+    vm_size                      = "Standard_D2ads_v5" # "Standard_D2s_v5" # "Standard_D2pds_v5" # "Standard_D2ds_v5" # "standard_d2pds_v5"
     auto_scaling_enabled         = true
     node_count                   = 2
     min_count                    = 1
     max_count                    = 3
     max_pods                     = 110
     os_disk_size_gb              = 40
-    os_disk_type                 = "Managed" # "Ephemeral" # 
+    os_disk_type                 = "Ephemeral" #"Managed" #  
     ultra_ssd_enabled            = false
     os_sku                       = "Ubuntu"  # Ubuntu, AzureLinux, Windows2019, Windows2022
     only_critical_addons_enabled = false     # taint default node pool with CriticalAddonsOnly=true:NoSchedule
     zones                        = [1, 2, 3] # []
     vnet_subnet_id               = azurerm_subnet.snet_aks.id
-    pod_subnet_id                = null         # azurerm_subnet.subnet_system_pods.id
-    scale_down_mode              = "Deallocate" # "Delete" # Deallocate
+    pod_subnet_id                = null     # azurerm_subnet.subnet_system_pods.id
+    scale_down_mode              = "Delete" # "Deallocate"
     workload_runtime             = "OCIContainer"
     kubelet_disk_type            = "OS" # "Temporary" # 
-    node_public_ip_enabled       = false
-    host_encryption_enabled      = false
-    fips_enabled                 = false
   }
 
   identity {
-    type = "UserAssigned"
+    type         = "UserAssigned"
     identity_ids = [azurerm_user_assigned_identity.identity_aks.id]
   }
 
@@ -73,7 +70,8 @@ resource "azurerm_kubernetes_cluster" "aks" {
 
   lifecycle {
     ignore_changes = [
-      default_node_pool[0].node_count
+      default_node_pool.0.node_count,
+      default_node_pool.0.upgrade_settings
     ]
   }
 }
