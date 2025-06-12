@@ -20,6 +20,8 @@ winget install -e --id argoproj.argocd --accept-package-agreements --accept-sour
 
 winget install -e --id Hashicorp.Terraform --accept-package-agreements --accept-source-agreements
 
+winget install Microsoft.FoundryLocal --accept-package-agreements --accept-source-agreements
+
 winget install -e --id stedolan.jq --accept-package-agreements --accept-source-agreements
 
 winget install -e --id MikeFarah.yq --accept-package-agreements --accept-source-agreements
