@@ -30,21 +30,3 @@ resource "azurerm_firewall_policy_rule_collection_group" "policy_group_dnat_aks"
     }
   }
 }
-
-# resource "azurerm_firewall_nat_rule_collection" "nat_rule_collection" {
-#   name                = "dnat-inbound-rule-collection"
-#   azure_firewall_name = data.terraform_remote_state.hub.outputs.firewall.name
-#   resource_group_name = data.terraform_remote_state.hub.outputs.firewall.rg_name
-#   priority            = 100
-#   action              = "Dnat"
-
-#   rule {
-#     name                  = "dnat-inbound-rule-aks"
-#     source_addresses      = ["*"]
-#     destination_addresses = [data.terraform_remote_state.hub.outputs.firewall.public_ip]
-#     destination_ports     = ["80"]
-#     translated_address    = "9.223.227.105" # replace with exposed service's Load Balancer IP
-#     translated_port       = 80
-#     protocols             = ["TCP", "UDP"]
-#   }
-# }
