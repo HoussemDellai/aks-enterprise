@@ -40,14 +40,14 @@ resource "azurerm_kubernetes_cluster" "aks" {
   default_node_pool {
     name                         = "systempool"
     temporary_name_for_rotation  = "syspooltmp"
-    vm_size                      = "Standard_D2ads_v5" # "Standard_D2s_v5" # "Standard_D2pds_v5" # "Standard_D2ds_v5" # "standard_d2pds_v5"
+    vm_size                      = "Standard_D2ads_v6" # "Standard_D2s_v5" # "Standard_D2pds_v5" # "Standard_D2ds_v5" # "standard_d2pds_v5"
     auto_scaling_enabled         = true
     node_count                   = 2
     min_count                    = 1
     max_count                    = 3
     max_pods                     = 110
     os_disk_size_gb              = 40
-    os_disk_type                 = "Ephemeral" #"Managed" #  
+    os_disk_type                 = "Ephemeral" #"Managed" #
     ultra_ssd_enabled            = false
     os_sku                       = "Ubuntu"  # Ubuntu, AzureLinux, Windows2019, Windows2022
     only_critical_addons_enabled = false     # taint default node pool with CriticalAddonsOnly=true:NoSchedule

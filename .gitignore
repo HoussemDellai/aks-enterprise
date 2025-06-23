@@ -40,3 +40,5 @@ override.tf.json
 .terraformrc
 terraform.rc
 # .gitignore
+
+*terraform.tfstate

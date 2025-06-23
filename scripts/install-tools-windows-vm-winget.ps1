@@ -84,6 +84,8 @@ winget install -e --id WiresharkFoundation.Wireshark --accept-package-agreements
 
 winget install -e --id DaiyuuNobori.Win10Pcap --accept-package-agreements --accept-source-agreements
 
+winget install -e --id k6.k6 --accept-package-agreements --accept-source-agreements
+
 # winget install -e --id Microsoft.VisualStudio.2022.Professional --accept-package-agreements --accept-source-agreements
 
 dotnet tool install --global azure-cost-cli
