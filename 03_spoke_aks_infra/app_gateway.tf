@@ -31,25 +31,31 @@ resource "azurerm_application_gateway" "appgw" {
     tier     = "Standard_v2"
     capacity = 1 # 2
   }
+
   gateway_ip_configuration {
     name      = "appGatewayIpConfig"
     subnet_id = azurerm_subnet.snet_appgw.0.id
   }
+
   frontend_port {
     name = local.frontend_port_name
     port = 80
   }
+
   frontend_port {
     name = "httpsPort"
     port = 443
   }
+
   frontend_ip_configuration {
     name                 = local.frontend_ip_configuration_name
     public_ip_address_id = azurerm_public_ip.appgw_pip.0.id
   }
+
   backend_address_pool {
     name = local.backend_address_pool_name
   }
+
   backend_http_settings {
     name                  = local.http_setting_name
     cookie_based_affinity = "Disabled"
@@ -57,12 +63,14 @@ resource "azurerm_application_gateway" "appgw" {
     protocol              = "Http"
     request_timeout       = 1
   }
+
   http_listener {
     name                           = local.listener_name
     frontend_ip_configuration_name = local.frontend_ip_configuration_name
     frontend_port_name             = local.frontend_port_name
     protocol                       = "Http"
   }
+  
   request_routing_rule {
     name                       = local.request_routing_rule_name
     rule_type                  = "Basic"

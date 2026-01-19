@@ -31,7 +31,7 @@ resource "azurerm_role_assignment" "role_identity_aks_network_contributor" {
 #     --assignee <managed-identity-client-id>
 resource "azurerm_role_assignment" "role_identity_aks_network_contributor_subnet_apiserver" {
   count                            = var.enable_apiserver_vnet_integration ? 1 : 0
-  scope                            = azurerm_subnet.snet_aks_apiserver.0.id
+  scope                            = azurerm_subnet.snet_aks_apiserver.id
   role_definition_name             = "Network Contributor"
   principal_id                     = azurerm_user_assigned_identity.identity_aks.principal_id
   skip_service_principal_aad_check = true

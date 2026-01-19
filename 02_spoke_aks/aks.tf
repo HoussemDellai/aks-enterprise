@@ -63,7 +63,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
   default_node_pool {
     name                         = "systempool"
     temporary_name_for_rotation  = "syspooltmp"
-    vm_size                      = "Standard_D2s_v5" # "Standard_D2pds_v5" # "Standard_D2ds_v5" # "standard_d2pds_v5"
+    vm_size                      = "Standard_D2ads_v6" # "Standard_D2pds_v5" # "Standard_D2ds_v5" # "standard_d2pds_v5"
     auto_scaling_enabled         = true
     node_count                   = 2
     min_count                    = 1

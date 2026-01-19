@@ -58,6 +58,11 @@ resource "azurerm_kubernetes_cluster" "aks" {
         managed_outbound_ip_count = 2 # Must be between 1 and 100 inclusive
       }
     }
+
+    advanced_networking {
+      observability_enabled = true
+      security_enabled      = true
+    }
   }
 
   default_node_pool {

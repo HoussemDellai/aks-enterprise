@@ -27,21 +27,20 @@ resource "azurerm_firewall_policy_rule_collection_group" "policy_group" {
 
     rule {
       name                  = "allow-inter-spokes-traffic"
-      source_addresses      = ["10.0.0.0/8"] # local.cidr_subnet_aks_nodes_pods # azurerm_subnet.subnet_mgt.address_prefixes
+      source_addresses      = ["10.0.0.0/8"]
       destination_addresses = ["10.0.0.0/8"]
       destination_ports     = ["*"]
       protocols             = ["Any"]
     }
   }
 
-  # allow raw.githubusercontent.com, to get the custom scripts to install to VMs
   application_rule_collection {
-    name     = "allow-githubusercontent-any-source"
+    name     = "application-rule-allow-all"
     priority = 102
     action   = "Allow"
 
     rule {
-      name = "allow-githubusercontent-any-source"
+      name = "allow-all"
       protocols {
         type = "Http"
         port = 80
@@ -50,10 +49,31 @@ resource "azurerm_firewall_policy_rule_collection_group" "policy_group" {
         type = "Https"
         port = 443
       }
-      source_addresses  = ["*"] # local.cidr_subnet_aks_nodes_pods # azurerm_subnet.subnet_mgt.address_prefixes
-      destination_fqdns = ["raw.githubusercontent.com"]
+      source_addresses  = ["*"]
+      destination_fqdns = ["*"]
     }
   }
+
+  # # allow raw.githubusercontent.com, to get the custom scripts to install to VMs
+  # application_rule_collection {
+  #   name     = "allow-githubusercontent-any-source"
+  #   priority = 102
+  #   action   = "Allow"
+
+  #   rule {
+  #     name = "allow-githubusercontent-any-source"
+  #     protocols {
+  #       type = "Http"
+  #       port = 80
+  #     }
+  #     protocols {
+  #       type = "Https"
+  #       port = 443
+  #     }
+  #     source_addresses  = ["*"] # local.cidr_subnet_aks_nodes_pods # azurerm_subnet.subnet_mgt.address_prefixes
+  #     destination_fqdns = ["raw.githubusercontent.com"]
+  #   }
+  # }
 
   # nat_rule_collection {
   #   name     = "dnat-inbound-rule-aks"

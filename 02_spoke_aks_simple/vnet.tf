@@ -14,7 +14,7 @@ resource "azurerm_subnet" "snet_aks" {
 
 # snet-apiserver
 resource "azurerm_subnet" "snet_aks_apiserver" {
-  count                = var.enable_apiserver_vnet_integration ? 1 : 0
+  # count                = var.enable_apiserver_vnet_integration ? 1 : 0
   name                 = "snet-aks-apiserver"
   virtual_network_name = azurerm_virtual_network.vnet_spoke_aks.name
   resource_group_name  = azurerm_virtual_network.vnet_spoke_aks.resource_group_name
